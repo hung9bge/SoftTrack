@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\SoftTrack.API.props" />
+</Project>
