@@ -1,0 +1,17 @@
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\bin\Debug\net6.0\SoftTrack.Application.deps.json
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\bin\Debug\net6.0\SoftTrack.Application.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\bin\Debug\net6.0\SoftTrack.Application.pdb
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\bin\Debug\net6.0\SoftTrack.Domain.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\bin\Debug\net6.0\SoftTrack.Domain.pdb
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.csproj.AssemblyReference.cache
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.GeneratedMSBuildEditorConfig.editorconfig
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.AssemblyInfoInputs.cache
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.AssemblyInfo.cs
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.csproj.CoreCompileInputs.cache
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.csproj.CopyComplete
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\refint\SoftTrack.Application.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\SoftTrack.Application.pdb
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\obj\Debug\net6.0\ref\SoftTrack.Application.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\bin\Debug\net6.0\appsettings.Development.json
+E:\Do_An\SAM\SoftTrack\SoftTrack.Application\bin\Debug\net6.0\appsettings.json

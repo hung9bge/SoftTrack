@@ -1,3 +1,11 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using SoftTrack.Application.DTO;
+using SoftTrack.Application.Interface;
+using SoftTrack.Application.Service;
+using SoftTrack.Domain;
+using SoftTrack.Infrastructure;
+
 namespace SoftTrack.API
 {
     public class Program
@@ -13,6 +21,17 @@ namespace SoftTrack.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Mapper
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            // Repository
+            builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
+
+            // Service
+            builder.Services.AddScoped<ISoftwareService, SoftwareService>();
+
+            builder.Services.AddDbContext<Do_AnContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -21,6 +40,8 @@ namespace SoftTrack.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
+            app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
