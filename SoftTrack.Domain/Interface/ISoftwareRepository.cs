@@ -1,4 +1,6 @@
-﻿namespace SoftTrack.Domain
+﻿
+
+namespace SoftTrack.Domain
 {
     public interface ISoftwareRepository
     {

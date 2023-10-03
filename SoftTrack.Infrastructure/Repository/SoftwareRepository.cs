@@ -5,8 +5,8 @@ namespace SoftTrack.Infrastructure
 {
     public class SoftwareRepository : ISoftwareRepository
     {
-        private readonly Do_AnContext _context;
-        public SoftwareRepository(Do_AnContext context)
+        private readonly soft_trackContext _context;
+        public SoftwareRepository(soft_trackContext context)
         {
             _context = context;
         }
