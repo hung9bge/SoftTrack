@@ -30,7 +30,7 @@ namespace SoftTrack.API
             // Service
             builder.Services.AddScoped<ISoftwareService, SoftwareService>();
 
-            builder.Services.AddDbContext<Do_AnContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
+            builder.Services.AddDbContext<soft_trackContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 
             var app = builder.Build();
 
