@@ -18,7 +18,7 @@ namespace SoftTrack.Application.Service
         public async Task<List<SoftwareDto>> GetAllSoftwareAsync()
         {
             var listSoftware = await _softwareRepository.GetAllSoftwareAsync();
-            var listSoftwareDto = _mapper.Map<List<SoftwareDto>>(listSoftware);
+            var listSoftwareDto =  _mapper.Map<List<SoftwareDto>>(listSoftware);
             return listSoftwareDto;
         }
         public async Task CreateSoftwareAsync(SoftwareCreateDto softwareCreateDto)

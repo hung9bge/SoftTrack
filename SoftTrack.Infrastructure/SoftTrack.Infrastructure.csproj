@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SoftTrack.Domain\SoftTrack.Domain.csproj" />
   </ItemGroup>
 

@@ -52,7 +52,6 @@ E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.GeneratedMSB
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.AssemblyInfoInputs.cache
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.AssemblyInfo.cs
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.csproj.CoreCompileInputs.cache
-E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.MvcApplicationPartsAssemblyInfo.cs
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.MvcApplicationPartsAssemblyInfo.cache
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\staticwebassets\msbuild.SoftTrack.API.Microsoft.AspNetCore.StaticWebAssets.props
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\staticwebassets\msbuild.build.SoftTrack.API.props

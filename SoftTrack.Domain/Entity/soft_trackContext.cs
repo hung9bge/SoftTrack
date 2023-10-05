@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Configuration;
+using SoftTrack.Domain;
 
 namespace SoftTrack.Domain
 {
@@ -38,7 +39,7 @@ namespace SoftTrack.Domain
             modelBuilder.Entity<Account>(entity =>
             {
                 entity.HasKey(e => e.AccId)
-                    .HasName("PK__Account__91CBC398EE27C994");
+                    .HasName("PK__Account__91CBC398A1784666");
 
                 entity.ToTable("Account");
 
@@ -174,9 +175,7 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.DeviceId).HasColumnName("DeviceID");
 
-                entity.Property(e => e.InstallDate)
-                    .HasMaxLength(255)
-                    .IsUnicode(false);
+                entity.Property(e => e.InstallDate).HasColumnType("date");
 
                 entity.Property(e => e.Name)
                     .HasMaxLength(255)

@@ -7,7 +7,7 @@
         public string Version { get; set; }
         public string Publisher { get; set; }
         public string Type { get; set; }
-        public DateTime? InstallDate { get; set; }
-        public string Status { get; set; }
+        public DateTime InstallDate { get; set; }
+        public bool? Status { get; set; }
     }
 }
