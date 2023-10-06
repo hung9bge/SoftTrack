@@ -1,7 +1,7 @@
 ﻿
 namespace SoftTrack.Domain
 {
-    public interface IDeviceRepostory
+    public interface IDeviceRepository
     {
         Task<List<Device>> GetAllDeviceAsync();
         Task CreateDeviceAsync(Device device);

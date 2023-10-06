@@ -7,6 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enum\**" />
+    <Compile Remove="Exceptions\**" />
+    <Compile Remove="Resource\**" />
+    <EmbeddedResource Remove="Enum\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Resource\**" />
+    <None Remove="Enum\**" />
+    <None Remove="Exceptions\**" />
+    <None Remove="Resource\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="appsettings.Development.json" />
     <None Remove="appsettings.json" />
   </ItemGroup>
@@ -22,12 +34,6 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Enum\" />
-    <Folder Include="Exceptions\" />
-    <Folder Include="Resource\" />
   </ItemGroup>
 
   <ItemGroup>
