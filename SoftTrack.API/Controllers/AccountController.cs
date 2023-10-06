@@ -1,46 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
+using System.Data;
 
 namespace SoftTrack.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class AccountController : Controller
+    public class AccountController : ControllerBase
     {
-        private readonly IAccountService _AccountService;
-        public AccountController(IAccountService AccountService)
+        private readonly soft_trackContext _context;
+
+        public AccountController(soft_trackContext context)
         {
-            _AccountService = AccountService;
+            _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAccountAsync()
+        [HttpGet("admin-action")]
+        [Authorize(Roles = "Admin")] // Chỉ cho phép người dùng có vai trò "Admin" truy cập.
+        public IActionResult AdminAction()
         {
-            var ressult = await _AccountService.GetAllAccountAsync();
-            return StatusCode(StatusCodes.Status200OK, ressult);
+            return Ok("Admin action");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateAccountAsync(AccountCreateDto AccountCreateDto)
+        [HttpGet("user-action")]
+        [Authorize(Roles = "User")] // Chỉ cho phép người dùng có vai trò "User" truy cập.
+        public IActionResult UserAction()
         {
-            await _AccountService.CreateAccountAsync(AccountCreateDto);
-            return StatusCode(StatusCodes.Status201Created);
+            return Ok("User action");
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateAccountAsync(AccountUpdateDto AccountUpdateDto)
+        [HttpGet("guest-action")]
+        [Authorize(Roles = "Guest")] // Chỉ cho phép người dùng có vai trò "Guest" truy cập.
+        public IActionResult GuestAction()
         {
-            await _AccountService.UpdateAccountAsync(AccountUpdateDto);
-            return StatusCode(StatusCodes.Status201Created);
-        }
-
-        [HttpDelete]
-        public async Task<IActionResult> DeleteAccountAsync(AccountDto AccountDto)
-        {
-            await _AccountService.DeleteAccountAsync(AccountDto);
-            return StatusCode(StatusCodes.Status200OK);
+            return Ok("Guest action");
         }
     }
 }

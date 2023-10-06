@@ -12,7 +12,7 @@ namespace SoftTrack.Application.DTO
         public string PhoneNumber { get; set; }
 
         //public virtual ICollection<Device> Devices { get; set; }
-        //public virtual ICollection<RoleAccount> RoleAccounts { get; set; }
+        public virtual ICollection<RoleAccount> RoleAccounts { get; set; }
 
     }
 }
