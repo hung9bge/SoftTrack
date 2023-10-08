@@ -197,3 +197,5 @@ D:\Do_an\SoftTrack\SoftTrack.API\obj\Debug\net6.0\scopedcss\bundle\SoftTrack.API
 D:\Do_an\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.csproj.CopyComplete
 D:\Do_an\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.genruntimeconfig.cache
 D:\Do_an\SoftTrack\SoftTrack.API\obj\Debug\net6.0\ref\SoftTrack.API.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.MvcApplicationPartsAssemblyInfo.cs
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

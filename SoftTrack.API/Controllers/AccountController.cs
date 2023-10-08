@@ -1,43 +1,74 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
 using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace SoftTrack.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         private readonly soft_trackContext _context;
 
-        public AccountController(soft_trackContext context)
+        private readonly IAccountService _repo;
+        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
+    
+
+        public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_trackContext context)
         {
+            _repo = userRepository;
+            _configuration = configuration;
+            _mapper = mapper;
             _context = context;
         }
 
-        [HttpGet("admin-action")]
-        [Authorize(Roles = "Admin")] // Chỉ cho phép người dùng có vai trò "Admin" truy cập.
-        public IActionResult AdminAction()
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<ActionResult<AccountCreateDto>> UserLogin(AccountDto model)
         {
-            return Ok("Admin action");
+            var user = await _repo.Login(model.Email, model.Password);
+            if (user == null) return NotFound();
+            var role = user.RoleAccounts.Select(ra => ra.RoleId).FirstOrDefault().ToString();
+
+           
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Issuer = _configuration["JwtIssuer"],
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                        new Claim(ClaimTypes.NameIdentifier, user.AccId.ToString()),
+                        new Claim(ClaimTypes.Name, user.Name),
+                        new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.Role, role)
+                }),
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            var response = _mapper.Map<AccountCreateDto>(user);
+
+            response.token = tokenHandler.WriteToken(token);
+            return Ok(response);
         }
 
-        [HttpGet("user-action")]
-        [Authorize(Roles = "User")] // Chỉ cho phép người dùng có vai trò "User" truy cập.
-        public IActionResult UserAction()
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterAccount([FromBody] AccountCreateDto request)
         {
-            return Ok("User action");
-        }
-
-        [HttpGet("guest-action")]
-        [Authorize(Roles = "Guest")] // Chỉ cho phép người dùng có vai trò "Guest" truy cập.
-        public IActionResult GuestAction()
-        {
-            return Ok("Guest action");
+            await _repo.Register(request);
+           return Ok();
         }
     }
 }

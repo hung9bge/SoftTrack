@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
@@ -27,6 +28,7 @@ namespace SoftTrack.Application.Service
             await _AccountRepository.CreateAccountAsync(Account);
         }
 
+
         public async Task UpdateAccountAsync(AccountUpdateDto AccountUpdateDto)
         {
             var Account = _mapper.Map<Account>(AccountUpdateDto);
@@ -39,14 +41,14 @@ namespace SoftTrack.Application.Service
             await _AccountRepository.DeleteAccountAsync(Account);
         }
 
-        public Task<bool> Authencate(AccountDto request)
-        {
-            throw new NotImplementedException();
-        }
+        public async Task<Account> Login(string email, string password) => await _AccountRepository.Login(email, password);
 
-        public Task<bool> Register(AccountDto request)
+
+
+        public async Task Register(AccountCreateDto member)
         {
-            throw new NotImplementedException();
+            var Account = _mapper.Map<Account>(member);
+            await _AccountRepository.Register(Account);
         }
     }
 }

@@ -14,8 +14,6 @@ namespace SoftTrack.Application.AutoMapper
     
             CreateMap<DeviceUpdateDto, Device>();
             CreateMap<Device, DeviceDto>();
-    
-
 
         }
     }
