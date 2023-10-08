@@ -15,7 +15,18 @@ namespace SoftTrack.Application.DTO
         public string LastSuccessfullScan { get; set; }
         public bool? Status { get; set; }
 
-        public virtual Account? Acc { get; set; }
-        public virtual ICollection<Software> Softwares { get; set; }
+        //public virtual Account? Acc { get; set; }
+        public virtual ICollection<SoftwaresDeviceDto> Softwares { get; set; }
+    }
+    public class SoftwaresDeviceDto
+    {
+        public int SoftwareId { get; set; }
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public string Publisher { get; set; }
+        public string Type { get; set; }
+        public DateTime InstallDate { get; set; }
+        public bool? Status { get; set; }
+
     }
 }

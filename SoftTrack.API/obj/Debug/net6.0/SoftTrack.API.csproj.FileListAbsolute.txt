@@ -199,3 +199,9 @@ D:\Do_an\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.genruntimeconfig
 D:\Do_an\SoftTrack\SoftTrack.API\obj\Debug\net6.0\ref\SoftTrack.API.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.MvcApplicationPartsAssemblyInfo.cs
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.AspNetCore.OData.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Core.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Edm.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.ModelBuilder.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.Spatial.dll

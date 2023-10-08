@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
@@ -38,5 +39,6 @@ namespace SoftTrack.Application.Service
             var software = _mapper.Map<Software>(softwareDto);
             await _softwareRepository.DeleteSoftwareAsync(software);
         }
+   
     }
 }

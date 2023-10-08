@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
@@ -37,6 +38,29 @@ namespace SoftTrack.Application.Service
         {
             var Device = _mapper.Map<Device>(DeviceDto);
             await _DeviceRepository.DeleteDeviceAsync(Device);
+        }
+        public async Task<List<DeviceDto>> GetAllDeviceWithSoftwaresAsync()
+        {
+            var devicesWithSoftwares = await _DeviceRepository.GetAllDeviceWithSoftwaresAsync();
+            var devicesDtoList = new List<DeviceDto>();
+
+            foreach (var device in devicesWithSoftwares)
+            {
+                var deviceDto = _mapper.Map<DeviceDto>(device);
+                devicesDtoList.Add(deviceDto);
+            }
+
+            return devicesDtoList;
+        }
+        public async Task<List<DeviceDto>> GetDevicesForAccountAsync(int accountId)
+        {
+            // Sử dụng phương thức GetDevicesForAccountAsync để lấy danh sách Device
+            var devicesForAccount = await _DeviceRepository.GetDevicesForAccountAsync(accountId);
+
+            // Ánh xạ danh sách Device thành danh sách DeviceDto bằng AutoMapper
+            var deviceDtos = _mapper.Map<List<DeviceDto>>(devicesForAccount);
+
+            return deviceDtos;
         }
     }
 }

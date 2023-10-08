@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -8,6 +9,7 @@ using SoftTrack.Application.Service;
 using SoftTrack.Domain;
 using SoftTrack.Infrastructure;
 using System.Text;
+
 
 namespace SoftTrack.API
 {
@@ -24,16 +26,24 @@ namespace SoftTrack.API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+
+            builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+            {
+                builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+            }));
+
             // Mapper
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Repository
             builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 
             // Service
             builder.Services.AddScoped<ISoftwareService, SoftwareService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IDeviceService, DeviceService>();
 
             builder.Services.AddDbContext<soft_trackContext>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 
@@ -63,6 +73,7 @@ namespace SoftTrack.API
                 op.Cookie.IsEssential = true;
 
             });
+        
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -74,6 +85,7 @@ namespace SoftTrack.API
 
             app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors("corsapp");
             app.UseAuthentication();
             app.UseAuthorization();
 

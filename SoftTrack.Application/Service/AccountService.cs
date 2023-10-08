@@ -41,8 +41,20 @@ namespace SoftTrack.Application.Service
             await _AccountRepository.DeleteAccountAsync(Account);
         }
 
-        public async Task<Account> Login(string email, string password) => await _AccountRepository.Login(email, password);
+        public async Task<AccountCreateDto> Login(string email, string password)
+        {
+            var user = await _AccountRepository.Login(email, password);
 
+            if (user == null)
+            {
+                return null;
+            }
+
+            // Chuyển đổi từ Account thành AccountDto bằng AutoMapper
+            var userDto = _mapper.Map<AccountCreateDto>(user);
+
+            return userDto;
+        }
 
 
         public async Task Register(AccountCreateDto member)

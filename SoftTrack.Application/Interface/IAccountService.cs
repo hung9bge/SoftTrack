@@ -11,7 +11,7 @@ namespace SoftTrack.Application.Interface
         Task UpdateAccountAsync(AccountUpdateDto Account);
         Task DeleteAccountAsync(AccountDto Account);
 
-        Task<Account> Login(string email, string password);
+        Task<AccountCreateDto> Login(string email, string password);
         Task Register(AccountCreateDto member);
 
     }

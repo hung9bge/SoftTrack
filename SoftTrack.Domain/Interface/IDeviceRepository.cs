@@ -1,4 +1,6 @@
 ﻿
+using System.Threading.Tasks;
+
 namespace SoftTrack.Domain
 {
     public interface IDeviceRepository
@@ -7,5 +9,7 @@ namespace SoftTrack.Domain
         Task CreateDeviceAsync(Device device);
         Task UpdateDeviceAsync(Device device);
         Task DeleteDeviceAsync(Device device);
+        Task<List<Device>> GetAllDeviceWithSoftwaresAsync();
+        Task<List<Device>> GetDevicesForAccountAsync(int accountId);
     }
 }

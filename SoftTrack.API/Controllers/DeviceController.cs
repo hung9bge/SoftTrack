@@ -2,6 +2,9 @@
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
+using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Formatter;
 
 namespace SoftTrack.API.Controllers
 {
@@ -42,5 +45,20 @@ namespace SoftTrack.API.Controllers
             await _DeviceService.DeleteDeviceAsync(DeviceDto);
             return StatusCode(StatusCodes.Status200OK);
         }
+        [HttpGet("list_device")]
+        public async Task<IActionResult> GetAllDeviceWithSoftwaresAsync()
+        {
+            var ressult = await _DeviceService.GetAllDeviceWithSoftwaresAsync();
+            return StatusCode(StatusCodes.Status200OK, ressult);
+        }
+
+        [HttpGet("list_device_with_user{key}")]
+       
+        public async Task<IActionResult> GetDevicesForAccountAsync( int key)
+        {
+            var ressult = await _DeviceService.GetDevicesForAccountAsync(key);
+            return StatusCode(StatusCodes.Status200OK, ressult);
+        }
+      
     }
 }
