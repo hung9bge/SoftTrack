@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
@@ -18,7 +19,7 @@ namespace SoftTrack.Application.Service
         public async Task<List<SoftwareDto>> GetAllSoftwareAsync()
         {
             var listSoftware = await _softwareRepository.GetAllSoftwareAsync();
-            var listSoftwareDto = _mapper.Map<List<SoftwareDto>>(listSoftware);
+            var listSoftwareDto =  _mapper.Map<List<SoftwareDto>>(listSoftware);
             return listSoftwareDto;
         }
         public async Task CreateSoftwareAsync(SoftwareCreateDto softwareCreateDto)
@@ -38,5 +39,6 @@ namespace SoftTrack.Application.Service
             var software = _mapper.Map<Software>(softwareDto);
             await _softwareRepository.DeleteSoftwareAsync(software);
         }
+   
     }
 }

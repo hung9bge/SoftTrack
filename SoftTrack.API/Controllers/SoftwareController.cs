@@ -12,7 +12,7 @@ namespace SoftTrack.API.Controllers
         private readonly ISoftwareService _softwareService;
         public SoftwareController(ISoftwareService softwareService)
         {
-            _softwareService= softwareService;
+            _softwareService = softwareService;
         }
 
         [HttpGet]

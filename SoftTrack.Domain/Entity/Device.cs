@@ -21,7 +21,7 @@ namespace SoftTrack.Domain
         public string LastSuccessfullScan { get; set; }
         public bool? Status { get; set; }
 
-        public virtual Account Acc { get; set; }
+        public virtual Account? Acc { get; set; }
         public virtual ICollection<Software> Softwares { get; set; }
     }
 }
