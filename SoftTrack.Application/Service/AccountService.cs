@@ -16,10 +16,10 @@ namespace SoftTrack.Application.Service
             _mapper = mapper;
         }
 
-        public async Task<List<AccountDto>> GetAllAccountAsync()
+        public async Task<List<AccountUpdateDto>> GetAllAccountAsync()
         {
             var listAccount = await _AccountRepository.GetAllAccountAsync();
-            var listAccountDto = _mapper.Map<List<AccountDto>>(listAccount);
+            var listAccountDto = _mapper.Map<List<AccountUpdateDto>>(listAccount);
             return listAccountDto;
         }
         public async Task CreateAccountAsync(AccountCreateDto AccountCreateDto)

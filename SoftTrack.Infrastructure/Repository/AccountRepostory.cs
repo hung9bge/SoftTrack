@@ -13,8 +13,11 @@ namespace SoftTrack.Infrastructure
         public async Task<List<Account>> GetAllAccountAsync()
         {
             using var context = _context;
-            var listAccounts = await _context.Accounts.ToListAsync();
-            return listAccounts;
+            var accountsWithRoleAccounts = await _context.Accounts
+                .Include(account => account.RoleAccounts) // Kết hợp RoleAccounts với mỗi Account
+                .ToListAsync();
+
+            return accountsWithRoleAccounts;
         }
         public async Task CreateAccountAsync(Account Account)
         {

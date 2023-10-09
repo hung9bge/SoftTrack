@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
+using SoftTrack.Application.Service;
 using SoftTrack.Domain;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,7 +23,14 @@ namespace SoftTrack.API.Controllers
         private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-    
+       
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAccountAsync()
+        {
+            var ressult = await _repo.GetAllAccountAsync();
+            return StatusCode(StatusCodes.Status200OK, ressult);
+        }
 
         public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_trackContext context)
         {
