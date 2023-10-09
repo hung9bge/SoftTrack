@@ -23,7 +23,7 @@ namespace SoftTrack.API.Controllers
         private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-       
+
 
         [HttpGet]
         public async Task<IActionResult> GetAllAccountAsync()
@@ -48,7 +48,7 @@ namespace SoftTrack.API.Controllers
             if (user == null) return NotFound();
             var role = user.RoleAccounts.Select(ra => ra.RoleId).FirstOrDefault().ToString();
 
-           
+
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -76,7 +76,7 @@ namespace SoftTrack.API.Controllers
         public async Task<IActionResult> RegisterAccount([FromBody] AccountCreateDto request)
         {
             await _repo.Register(request);
-           return Ok();
+            return Ok();
         }
     }
 }
