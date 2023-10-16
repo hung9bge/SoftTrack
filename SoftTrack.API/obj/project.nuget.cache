@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "oKgy3a58QEJ0UZZZO+tfY31XKKExzuOZ/O//Ll5i6Jl0HhaLQIeSRp1gbfWFuy4XBNeTyPEISpTGhNJt2Et00g==",
+  "dgSpecHash": "djMeb/Y/rB0QXqdMxovqBjxbZrgaKgG9LlcrrIAaqq0MmaGbs5nxEmRyzeDeRx2hLsQScjqSpQ8bUad5sW1+ZQ==",
   "success": true,
   "projectFilePath": "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.API\\SoftTrack.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HUNGLM\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\HUNGLM\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "C:\\Users\\HUNGLM\\.nuget\\packages\\microsoft.aspnetcore.authentication.google\\6.0.10\\microsoft.aspnetcore.authentication.google.6.0.10.nupkg.sha512",
     "C:\\Users\\HUNGLM\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.10\\microsoft.aspnetcore.authentication.jwtbearer.6.0.10.nupkg.sha512",
     "C:\\Users\\HUNGLM\\.nuget\\packages\\microsoft.aspnetcore.cors\\2.2.0\\microsoft.aspnetcore.cors.2.2.0.nupkg.sha512",
     "C:\\Users\\HUNGLM\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.2.0\\microsoft.aspnetcore.http.abstractions.2.2.0.nupkg.sha512",

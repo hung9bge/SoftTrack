@@ -23,6 +23,17 @@ namespace SoftTrack.API.Controllers
         private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
+<<<<<<< HEAD
+=======
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAccountAsync()
+        {
+            var ressult = await _repo.GetAllAccountAsync();
+            return StatusCode(StatusCodes.Status200OK, ressult);
+        }
+>>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
 
         public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_trackContext context)
         {
@@ -64,6 +75,10 @@ namespace SoftTrack.API.Controllers
             }
             var role = user.RoleAccounts.Select(ra => ra.RoleId).FirstOrDefault().ToString();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -90,6 +105,7 @@ namespace SoftTrack.API.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> AddAccount([FromBody] AccountUpdateDto accountDto)
         {
+<<<<<<< HEAD
 
             // Tạo đối tượng Account từ DTO
             var newAccount = new Account
@@ -141,6 +157,10 @@ namespace SoftTrack.API.Controllers
             await _context.SaveChangesAsync();
 
             return Ok("Tài khoản đã được cập nhật thành công.");
+=======
+            await _repo.Register(request);
+            return Ok();
+>>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
         }
     }
 }
