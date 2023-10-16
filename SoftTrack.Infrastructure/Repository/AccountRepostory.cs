@@ -14,8 +14,9 @@ namespace SoftTrack.Infrastructure
         {
             using var context = _context;
             var accountsWithRoleAccounts = await _context.Accounts
-                .Include(account => account.RoleAccounts) // Kết hợp RoleAccounts với mỗi Account
-                .ToListAsync();
+       .Include(account => account.RoleAccounts)
+       .ThenInclude(roleAccount => roleAccount.Role)
+       .ToListAsync();
 
             return accountsWithRoleAccounts;
         }
@@ -40,12 +41,12 @@ namespace SoftTrack.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Account?> Login(string email, string password)
+        public async Task<Account?> Login(string email)
         {
             try
             {
                 using var context = _context;
-                var user = await _context.Accounts.AsNoTracking().Where(user => user.Email.ToLower() == email.ToLower() && user.Password == password)
+                var user = await _context.Accounts.AsNoTracking().Where(user => user.Email.ToLower() == email.ToLower())
                 .Include(user => user.RoleAccounts).FirstOrDefaultAsync();
                 if (user == null) { return null; }
 
@@ -81,5 +82,6 @@ namespace SoftTrack.Infrastructure
             }
         }
 
+    
     }
 }
