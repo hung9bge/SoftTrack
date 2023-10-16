@@ -88,7 +88,11 @@ namespace SoftTrack.API.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> AddAccount([FromBody] AccountUpdateDto accountDto)
         {
-
+            if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
+            {
+                // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
+                accountDto.Email += "@fpt.edu.vn";
+            }
             // Tạo đối tượng Account từ DTO
             var newAccount = new Account
             {             
@@ -132,6 +136,11 @@ namespace SoftTrack.API.Controllers
 
             // Cập nhật thông tin tài khoản với dữ liệu từ yêu cầu
             existingAccount.Account1 = accountDto.Account1;
+            if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
+            {
+                // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
+                accountDto.Email += "@fpt.edu.vn";
+            }
             existingAccount.Email = accountDto.Email;
             // Các trường cần cập nhật khác nếu có
 
