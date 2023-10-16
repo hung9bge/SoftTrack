@@ -59,7 +59,6 @@ namespace SoftTrack.API.Controllers
             return accounts;
         }
 
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] string email)
         {

@@ -41,12 +41,13 @@ namespace SoftTrack.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Account?> Login(string email)
+        public async Task<Account> Login(string email)
         {
             try
             {
                 using var context = _context;
-                var user = await _context.Accounts.AsNoTracking().Where(user => user.Email.ToLower() == email.ToLower())
+               
+                var user = await _context.Accounts.Where(user => user.Email.ToLower() == email.ToLower())
                 .Include(user => user.RoleAccounts).FirstOrDefaultAsync();
                 if (user == null) { return null; }
 
