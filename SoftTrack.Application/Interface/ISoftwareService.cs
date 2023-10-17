@@ -9,6 +9,6 @@ namespace SoftTrack.Application.Interface
         Task CreateSoftwareAsync(SoftwareCreateDto software);
         Task UpdateSoftwareAsync(SoftwareUpdateDto software);
         Task DeleteSoftwareAsync(SoftwareDto software);
-
+        Task<List<SoftwareDto>> GetSoftwareForAccountAsync(int accountId);
     }
 }

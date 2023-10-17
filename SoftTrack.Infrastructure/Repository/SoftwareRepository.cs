@@ -36,5 +36,14 @@ namespace SoftTrack.Infrastructure
             _context.Softwares.Remove(software);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Software>> GetSoftwareForAccountAsync(int accountId)
+        {
+            // Thực hiện truy vấn để lấy danh sách phần mềm cho tài khoản có accountId cụ thể
+            var softwaresForAccount = await _context.Softwares
+                .Where(software => software.Device.AccId == accountId) // Lọc theo ID tài khoản
+                .ToListAsync();
+
+            return softwaresForAccount;
+        }
     }
 }

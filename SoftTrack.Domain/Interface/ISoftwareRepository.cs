@@ -8,5 +8,6 @@ namespace SoftTrack.Domain
         Task CreateSoftwareAsync(Software software);
         Task UpdateSoftwareAsync(Software software);
         Task DeleteSoftwareAsync(Software software);
+        Task<List<Software>> GetSoftwareForAccountAsync(int accountId);
     }
 }

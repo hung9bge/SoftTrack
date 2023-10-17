@@ -39,6 +39,16 @@ namespace SoftTrack.Application.Service
             var software = _mapper.Map<Software>(softwareDto);
             await _softwareRepository.DeleteSoftwareAsync(software);
         }
-   
+        public async Task<List<SoftwareDto>> GetSoftwareForAccountAsync(int accountId)
+        {
+            // Sử dụng phương thức GetDevicesForAccountAsync để lấy danh sách Device
+            var softwaresForAccount = await _softwareRepository.GetSoftwareForAccountAsync(accountId);
+
+            // Ánh xạ danh sách Device thành danh sách DeviceDto bằng AutoMapper
+            var softwareDtos = _mapper.Map<List<SoftwareDto>>(softwaresForAccount);
+
+            return softwareDtos;
+        }
+
     }
 }
