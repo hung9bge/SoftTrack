@@ -13,8 +13,12 @@ namespace SoftTrack.Infrastructure
         public async Task<List<Account>> GetAllAccountAsync()
         {
             using var context = _context;
-            var listAccounts = await _context.Accounts.ToListAsync();
-            return listAccounts;
+            var accountsWithRoleAccounts = await _context.Accounts
+       .Include(account => account.RoleAccounts)
+       .ThenInclude(roleAccount => roleAccount.Role)
+       .ToListAsync();
+
+            return accountsWithRoleAccounts;
         }
         public async Task CreateAccountAsync(Account Account)
         {
@@ -37,12 +41,13 @@ namespace SoftTrack.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Account?> Login(string email, string password)
+        public async Task<Account> Login(string email)
         {
             try
             {
                 using var context = _context;
-                var user = await _context.Accounts.AsNoTracking().Where(user => user.Email.ToLower() == email.ToLower() && user.Password == password)
+               
+                var user = await _context.Accounts.Where(user => user.Email.ToLower() == email.ToLower())
                 .Include(user => user.RoleAccounts).FirstOrDefaultAsync();
                 if (user == null) { return null; }
 
@@ -78,5 +83,6 @@ namespace SoftTrack.Infrastructure
             }
         }
 
+    
     }
 }

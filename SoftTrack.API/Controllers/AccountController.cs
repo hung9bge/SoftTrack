@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
+using SoftTrack.Application.Service;
 using SoftTrack.Domain;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -22,7 +23,6 @@ namespace SoftTrack.API.Controllers
         private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-    
 
         public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_trackContext context)
         {
@@ -31,16 +31,38 @@ namespace SoftTrack.API.Controllers
             _mapper = mapper;
             _context = context;
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AccountCreateDto>>> GetAccounts()
+        {
+            var accounts = await _context.Accounts
+                .Include(account => account.RoleAccounts)
+                .ThenInclude(roleAccount => roleAccount.Role)
+                .Select(account => new AccountCreateDto
+                {
+                    Account1 = account.Account1,
+                    Email = account.Email,
+                    Role_Name = account.RoleAccounts.FirstOrDefault().Role.Name
+                })
+                .ToListAsync();
+
+            return accounts;
+        }
 
         [HttpPost("login")]
-        [AllowAnonymous]
-        public async Task<ActionResult<AccountCreateDto>> UserLogin(AccountDto model)
+        public async Task<IActionResult> Login([FromBody] string email)
         {
-            var user = await _repo.Login(model.Email, model.Password);
-            if (user == null) return NotFound();
+            if (!email.EndsWith("@fpt.edu.vn", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest("Email không có đuôi @fpt.edu.vn.");
+            }
+            var user = await _repo.Login(email);
+
+            if (user == null)
+            {
+                return BadRequest("Email không tồn tại hoặc sai mật khẩu.");
+            }
             var role = user.RoleAccounts.Select(ra => ra.RoleId).FirstOrDefault().ToString();
 
-           
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -49,7 +71,6 @@ namespace SoftTrack.API.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                         new Claim(ClaimTypes.NameIdentifier, user.AccId.ToString()),
-                        new Claim(ClaimTypes.Name, user.Name),
                         new Claim(ClaimTypes.Email, user.Email),
                         new Claim(ClaimTypes.Role, role)
                 }),
@@ -58,17 +79,75 @@ namespace SoftTrack.API.Controllers
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var response = _mapper.Map<AccountCreateDto>(user);
+            var response = _mapper.Map<AccountDto>(user);
 
             response.token = tokenHandler.WriteToken(token);
             return Ok(response);
         }
 
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterAccount([FromBody] AccountCreateDto request)
+        public async Task<IActionResult> AddAccount([FromBody] AccountUpdateDto accountDto)
         {
-            await _repo.Register(request);
-           return Ok();
+            if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
+            {
+                // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
+                accountDto.Email += "@fpt.edu.vn";
+            }
+            // Tạo đối tượng Account từ DTO
+            var newAccount = new Account
+            {             
+                Account1 = accountDto.Account1,
+                Email = accountDto.Email,
+            };
+
+            // Tạo RoleAccount từ Role_Name (nếu cần)
+            if (!string.IsNullOrEmpty(accountDto.Role_Name))
+            {
+                var role = _context.Roles.FirstOrDefault(r => r.Name == accountDto.Role_Name);
+                if (role == null)
+                {
+                    return BadRequest("Role không tồn tại.");
+                }
+
+                var roleAccount = new RoleAccount
+                {
+                    RoleId = role.Id,
+                    Acc = newAccount
+                };
+
+                newAccount.RoleAccounts.Add(roleAccount);
+            }
+
+            // Thêm tài khoản mới vào cơ sở dữ liệu
+            _context.Accounts.Add(newAccount);
+            await _context.SaveChangesAsync();
+
+            return Ok("Tài khoản đã được thêm thành công.");
+        }
+        [HttpPut("Update_Accpunt{id}")]
+        public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)
+        {
+            var existingAccount = await _context.Accounts.FindAsync(id);
+
+            if (existingAccount == null)
+            {
+                return NotFound("Tài khoản không tồn tại.");
+            }
+
+            // Cập nhật thông tin tài khoản với dữ liệu từ yêu cầu
+            existingAccount.Account1 = accountDto.Account1;
+            if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
+            {
+                // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
+                accountDto.Email += "@fpt.edu.vn";
+            }
+            existingAccount.Email = accountDto.Email;
+            // Các trường cần cập nhật khác nếu có
+
+            _context.Accounts.Update(existingAccount);
+            await _context.SaveChangesAsync();
+
+            return Ok("Tài khoản đã được cập nhật thành công.");
         }
     }
 }

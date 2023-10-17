@@ -16,10 +16,11 @@ namespace SoftTrack.Application.Service
             _mapper = mapper;
         }
 
-        public async Task<List<AccountDto>> GetAllAccountAsync()
+        public async Task<List<AccountUpdateDto>> GetAllAccountAsync()
         {
-            var listAccount = await _AccountRepository.GetAllAccountAsync();
-            var listAccountDto = _mapper.Map<List<AccountDto>>(listAccount);
+            var listAccount = await _AccountRepository.GetAllAccountAsync();         
+            var listAccountDto = _mapper.Map<List<AccountUpdateDto>>(listAccount);
+
             return listAccountDto;
         }
         public async Task CreateAccountAsync(AccountCreateDto AccountCreateDto)
@@ -28,7 +29,7 @@ namespace SoftTrack.Application.Service
             await _AccountRepository.CreateAccountAsync(Account);
         }
 
-
+            
         public async Task UpdateAccountAsync(AccountUpdateDto AccountUpdateDto)
         {
             var Account = _mapper.Map<Account>(AccountUpdateDto);
@@ -41,17 +42,17 @@ namespace SoftTrack.Application.Service
             await _AccountRepository.DeleteAccountAsync(Account);
         }
 
-        public async Task<AccountCreateDto> Login(string email, string password)
+        public async Task<AccountDto> Login(string email)
         {
-            var user = await _AccountRepository.Login(email, password);
-
+            var user = await _AccountRepository.Login(email);
+           
             if (user == null)
             {
                 return null;
             }
 
             // Chuyển đổi từ Account thành AccountDto bằng AutoMapper
-            var userDto = _mapper.Map<AccountCreateDto>(user);
+            var userDto = _mapper.Map<AccountDto>(user);
 
             return userDto;
         }

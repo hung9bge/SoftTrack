@@ -6,12 +6,12 @@ namespace SoftTrack.Application.Interface
 {
     public interface IAccountService
     {
-        Task<List<AccountDto>> GetAllAccountAsync();
+        Task<List<AccountUpdateDto>> GetAllAccountAsync();
         Task CreateAccountAsync(AccountCreateDto Account);
         Task UpdateAccountAsync(AccountUpdateDto Account);
         Task DeleteAccountAsync(AccountDto Account);
 
-        Task<AccountCreateDto> Login(string email, string password);
+        Task<AccountDto> Login(string email);
         Task Register(AccountCreateDto member);
 
     }
