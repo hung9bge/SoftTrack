@@ -34,10 +34,9 @@ namespace SoftTrack.Application.Service
             await _softwareRepository.UpdateSoftwareAsync(software);
         }
 
-        public async Task DeleteSoftwareAsync(SoftwareDto softwareDto)
+        public async Task DeleteSoftwareAsync(int softwareId)
         {
-            var software = _mapper.Map<Software>(softwareDto);
-            await _softwareRepository.DeleteSoftwareAsync(software);
+            await _softwareRepository.DeleteSoftwareAsync(softwareId);
         }
         public async Task<List<SoftwareDto>> GetSoftwareForAccountAsync(int accountId)
         {

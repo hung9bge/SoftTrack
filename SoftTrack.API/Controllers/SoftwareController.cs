@@ -38,9 +38,9 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteSoftwareAsync(SoftwareDto softwareDto)
+        public async Task<IActionResult> DeleteSoftwareAsync(int softwareid)
         {
-            await _softwareService.DeleteSoftwareAsync(softwareDto);
+            await _softwareService.DeleteSoftwareAsync(softwareid);
             return StatusCode(StatusCodes.Status200OK);
         }
         [HttpGet("list_software_by_user{key}")]

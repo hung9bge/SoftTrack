@@ -30,11 +30,15 @@ namespace SoftTrack.Infrastructure
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteSoftwareAsync(Software software)
+        public async Task DeleteSoftwareAsync(int softwareId)
         {
-            using var context = _context;
-            _context.Softwares.Remove(software);
-            await _context.SaveChangesAsync();
+            var software = await _context.Softwares.FindAsync(softwareId);
+
+            if (software != null)
+            {
+                _context.Softwares.Remove(software);
+                await _context.SaveChangesAsync();
+            }
         }
         public async Task<List<Software>> GetSoftwareForAccountAsync(int accountId)
         {
