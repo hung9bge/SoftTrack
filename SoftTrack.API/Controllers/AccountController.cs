@@ -31,7 +31,7 @@ namespace SoftTrack.API.Controllers
             _mapper = mapper;
             _context = context;
         }
-        [HttpGet]
+        [HttpGet("ListAccount")]
         public async Task<ActionResult<IEnumerable<AccountCreateDto>>> GetAccounts()
         {
             var accounts = await _context.Accounts
@@ -39,6 +39,7 @@ namespace SoftTrack.API.Controllers
                 .ThenInclude(roleAccount => roleAccount.Role)
                 .Select(account => new AccountCreateDto
                 {
+                    AccId = account.AccId,
                     Account1 = account.Account1,
                     Email = account.Email,
                     Role_Name = account.RoleAccounts.FirstOrDefault().Role.Name
@@ -57,6 +58,7 @@ namespace SoftTrack.API.Controllers
                 .Where(account => account.Email == email)
                 .Select(account => new AccountCreateDto
                 {
+                    AccId = account.AccId,
                     Account1 = account.Account1,
                     Email = account.Email,
                     Role_Name = account.RoleAccounts.FirstOrDefault().Role.Name
