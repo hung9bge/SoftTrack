@@ -51,7 +51,7 @@ namespace SoftTrack.Infrastructure
         }
         public async Task<List<Software>> GetSoftwareForDeviceAsync(int deviceId)
         {
-            // Thực hiện truy vấn để lấy danh sách phần mềm cho tài khoản có accountId cụ thể
+            // Thực hiện truy vấn để lấy danh sách phần mềm cho tài khoản cụ thể
             var softwaresForDevice = await _context.Softwares
                 .Where(software => software.DeviceId == deviceId) // Lọc theo ID tài khoản
                 .ToListAsync();

@@ -33,16 +33,18 @@ namespace SoftTrack.Infrastructure
         public async Task DeleteSoftwareByDeviceIdAsync(int deviceId)
         {
             var softwares = await _context.Softwares.Where(s => s.DeviceId == deviceId).ToListAsync();
-
+            var device = await _context.Devices.FindAsync(deviceId);
             if (softwares != null && softwares.Any())
             {
                 foreach (var software in softwares)
                 {
                     _context.Softwares.Remove(software);
                 }
-
-                await _context.SaveChangesAsync();
+               
             }
+            _context.Devices.Remove(device);
+
+            await _context.SaveChangesAsync();
         }
         public async Task<List<Device>> GetAllDeviceWithSoftwaresAsync()
         {
