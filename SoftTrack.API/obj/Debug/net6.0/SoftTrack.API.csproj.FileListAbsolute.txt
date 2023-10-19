@@ -205,3 +205,10 @@ E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Core.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Edm.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.ModelBuilder.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.Spatial.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.AspNetCore.OData.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Core.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Edm.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.ModelBuilder.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.Spatial.dll
