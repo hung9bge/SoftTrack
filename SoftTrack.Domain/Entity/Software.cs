@@ -19,7 +19,7 @@ namespace SoftTrack.Domain
         public DateTime InstallDate { get; set; }
         public bool? Status { get; set; }
 
-        public virtual Device? Device { get; set; }
+        public virtual Device Device { get; set; }
         public virtual ICollection<Issue> Issues { get; set; }
     }
 }

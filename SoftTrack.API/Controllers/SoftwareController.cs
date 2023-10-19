@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
+using SoftTrack.Application.Service;
 using SoftTrack.Domain;
 
 namespace SoftTrack.API.Controllers
@@ -37,10 +38,22 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpDelete]
-        public async Task<IActionResult> DeleteSoftwareAsync(SoftwareDto softwareDto)
+        public async Task<IActionResult> DeleteSoftwareAsync(int softwareid)
         {
-            await _softwareService.DeleteSoftwareAsync(softwareDto);
+            await _softwareService.DeleteSoftwareAsync(softwareid);
             return StatusCode(StatusCodes.Status200OK);
+        }
+        [HttpGet("list_software_by_user{key}")]
+        public async Task<IActionResult> GetSoftwareForAccountAsync(int key)
+        {
+            var ressult = await _softwareService.GetSoftwareForAccountAsync(key);
+            return StatusCode(StatusCodes.Status200OK, ressult);
+        }
+        [HttpGet("list_software_by_device{key}")]
+        public async Task<IActionResult> GetSoftwareForDeviceAsync(int key)
+        {
+            var ressult = await _softwareService.GetSoftwareForDeviceAsync(key);
+            return StatusCode(StatusCodes.Status200OK, ressult);
         }
     }
 }
