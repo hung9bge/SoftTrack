@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Middleware\**" />
+    <Compile Remove="wwwroot\**" />
     <Content Remove="Middleware\**" />
+    <Content Remove="wwwroot\**" />
     <EmbeddedResource Remove="Middleware\**" />
+    <EmbeddedResource Remove="wwwroot\**" />
     <None Remove="Middleware\**" />
+    <None Remove="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,10 +26,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SoftTrack.Application\SoftTrack.Application.csproj" />
     <ProjectReference Include="..\SoftTrack.Infrastructure\SoftTrack.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

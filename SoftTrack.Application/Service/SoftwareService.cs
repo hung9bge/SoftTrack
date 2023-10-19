@@ -27,11 +27,7 @@ namespace SoftTrack.Application.Service
             var software = _mapper.Map<Software>(softwareCreateDto);
             await _softwareRepository.CreateSoftwareAsync(software);
         }
-        public async Task CreateSoftwareFromDtoAsync(SoftwareCreateDto softwareCreateDto)
-        {
-            var software = _mapper.Map<Software>(softwareCreateDto);
-            await _softwareRepository.CreateSoftwareAsync(software);
-        }
+  
         public async Task UpdateSoftwareAsync(SoftwareUpdateDto softwareUpdateDto)
         {
             var software = _mapper.Map<Software>(softwareUpdateDto);
