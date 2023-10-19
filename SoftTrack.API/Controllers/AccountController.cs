@@ -24,8 +24,12 @@ namespace SoftTrack.API.Controllers
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
+=======
+       
+>>>>>>> parent of 2e4737f (demo API login with google)
 
         [HttpGet]
         public async Task<IActionResult> GetAllAccountAsync()
@@ -75,9 +79,13 @@ namespace SoftTrack.API.Controllers
             var role = user.RoleAccounts.Select(ra => ra.RoleId).FirstOrDefault().ToString();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
+=======
+           
+>>>>>>> parent of 2e4737f (demo API login with google)
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -158,8 +166,12 @@ namespace SoftTrack.API.Controllers
             return Ok("Tài khoản đã được cập nhật thành công.");
 =======
             await _repo.Register(request);
+<<<<<<< HEAD
             return Ok();
 >>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
+=======
+           return Ok();
+>>>>>>> parent of 2e4737f (demo API login with google)
         }
     }
 }

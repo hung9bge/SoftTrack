@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -66,17 +65,6 @@ namespace SoftTrack.API
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = GoogleDefaults.AuthenticationScheme;
-            })
-            .AddGoogle(options =>
-            {
-                options.ClientId = "34578492784-codbj5udl9ffvhu49g0psgi53uvvqfgs.apps.googleusercontent.com";
-                options.ClientSecret = "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";
-            });
-
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession(op =>
             {
