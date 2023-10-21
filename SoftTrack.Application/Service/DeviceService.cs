@@ -34,10 +34,10 @@ namespace SoftTrack.Application.Service
             await _DeviceRepository.UpdateDeviceAsync(Device);
         }
 
-        public async Task DeleteDeviceAsync(DeviceDto DeviceDto)
+        public async Task DeleteDeviceAsync(int DeviceId)
         {
-            var Device = _mapper.Map<Device>(DeviceDto);
-            await _DeviceRepository.DeleteDeviceAsync(Device);
+           
+            await _DeviceRepository.DeleteSoftwareByDeviceIdAsync(DeviceId);
         }
         public async Task<List<DeviceDto>> GetAllDeviceWithSoftwaresAsync()
         {

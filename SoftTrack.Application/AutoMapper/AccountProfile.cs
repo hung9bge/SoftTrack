@@ -16,7 +16,7 @@ namespace SoftTrack.Application.AutoMapper
 
             CreateMap<AccountUpdateDto, Account>();
             CreateMap<RoleAccount, RoleAccountDto>();
-            CreateMap<Account, AccountCreateDto>()
+            CreateMap<AccountDto, Account>()
               ;
         }
     }

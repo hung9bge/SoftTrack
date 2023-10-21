@@ -39,10 +39,10 @@ namespace SoftTrack.API.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteDeviceAsync(DeviceDto DeviceDto)
+        [HttpDelete("with_key")]
+        public async Task<IActionResult> DeleteDeviceAsync(int DeviceId)
         {
-            await _DeviceService.DeleteDeviceAsync(DeviceDto);
+            await _DeviceService.DeleteDeviceAsync(DeviceId);
             return StatusCode(StatusCodes.Status200OK);
         }
         [HttpGet("list_device")]

@@ -23,17 +23,6 @@ namespace SoftTrack.API.Controllers
         private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-<<<<<<< HEAD
-=======
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetAllAccountAsync()
-        {
-            var ressult = await _repo.GetAllAccountAsync();
-            return StatusCode(StatusCodes.Status200OK, ressult);
-        }
->>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
 
         public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_trackContext context)
         {
@@ -42,7 +31,7 @@ namespace SoftTrack.API.Controllers
             _mapper = mapper;
             _context = context;
         }
-        [HttpGet]
+        [HttpGet("ListAccount")]
         public async Task<ActionResult<IEnumerable<AccountCreateDto>>> GetAccounts()
         {
             var accounts = await _context.Accounts
@@ -50,6 +39,7 @@ namespace SoftTrack.API.Controllers
                 .ThenInclude(roleAccount => roleAccount.Role)
                 .Select(account => new AccountCreateDto
                 {
+                    AccId = account.AccId,
                     Account1 = account.Account1,
                     Email = account.Email,
                     Role_Name = account.RoleAccounts.FirstOrDefault().Role.Name
@@ -58,8 +48,34 @@ namespace SoftTrack.API.Controllers
 
             return accounts;
         }
+        [HttpGet("SearchByEmail")]
+        public async Task<ActionResult<List<AccountCreateDto>>> GetAccountsByEmail(string email)
+        {
+             //Truy vấn danh sách các tài khoản có email trùng với email đã cho
+            var duplicateAccounts = await _context.Accounts
+                .Include(account => account.RoleAccounts)
+                .ThenInclude(roleAccount => roleAccount.Role)
+                .Where(account => account.Email == email)
+                .Select(account => new AccountCreateDto
+                {
+                    AccId = account.AccId,
+                    Account1 = account.Account1,
+                    Email = account.Email,
+                    Role_Name = account.RoleAccounts.FirstOrDefault().Role.Name
+                })
+                .ToListAsync();
 
-        [HttpPost("login")]
+            if (duplicateAccounts == null || duplicateAccounts.Count == 0)
+            {
+                 //Không tìm thấy tài khoản trùng khớp
+                return NotFound("Không tìm thấy tài khoản trùng khớp.");
+        }
+
+            return duplicateAccounts;
+        }
+
+
+[HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] string email)
         {
             if (!email.EndsWith("@fpt.edu.vn", StringComparison.OrdinalIgnoreCase))
@@ -74,10 +90,6 @@ namespace SoftTrack.API.Controllers
             }
             var role = user.RoleAccounts.Select(ra => ra.RoleId).FirstOrDefault().ToString();
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -86,7 +98,6 @@ namespace SoftTrack.API.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                         new Claim(ClaimTypes.NameIdentifier, user.AccId.ToString()),
-                        new Claim(ClaimTypes.Name, user.Name),
                         new Claim(ClaimTypes.Email, user.Email),
                         new Claim(ClaimTypes.Role, role)
                 }),
@@ -104,7 +115,18 @@ namespace SoftTrack.API.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> AddAccount([FromBody] AccountUpdateDto accountDto)
         {
-<<<<<<< HEAD
+            if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
+            {
+                // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
+                accountDto.Email += "@fpt.edu.vn";
+            }
+            var existingAccount = _context.Accounts
+        .FirstOrDefault(a => a.Email == accountDto.Email && a.RoleAccounts.Any(ra => ra.Role.Name == accountDto.Role_Name));
+
+            if (existingAccount != null)
+            {
+                return BadRequest("Email và vai trò đã tồn tại trong cơ sở dữ liệu.");
+            }
 
             // Tạo đối tượng Account từ DTO
             var newAccount = new Account
@@ -149,6 +171,11 @@ namespace SoftTrack.API.Controllers
 
             // Cập nhật thông tin tài khoản với dữ liệu từ yêu cầu
             existingAccount.Account1 = accountDto.Account1;
+            if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
+            {
+                // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
+                accountDto.Email += "@fpt.edu.vn";
+            }
             existingAccount.Email = accountDto.Email;
             // Các trường cần cập nhật khác nếu có
 
@@ -156,10 +183,6 @@ namespace SoftTrack.API.Controllers
             await _context.SaveChangesAsync();
 
             return Ok("Tài khoản đã được cập nhật thành công.");
-=======
-            await _repo.Register(request);
-            return Ok();
->>>>>>> 2e4737f53d7ea807931aa8c24da062455f4264ad
         }
     }
 }
