@@ -7,19 +7,22 @@ namespace SoftTrack.Domain
     {
         public Software()
         {
-            Issues = new HashSet<Issue>();
+            DeviceSoftwares = new HashSet<DeviceSoftware>();
+            Reports = new HashSet<Report>();
         }
 
         public int SoftwareId { get; set; }
-        public int? DeviceId { get; set; }
+        public int AccId { get; set; }
         public string Name { get; set; }
-        public string Version { get; set; }
         public string Publisher { get; set; }
+        public string Version { get; set; }
+        public string Release { get; set; }
         public string Type { get; set; }
-        public DateTime InstallDate { get; set; }
-        public bool? Status { get; set; }
+        public string Os { get; set; }
+        public int Status { get; set; }
 
-        public virtual Device Device { get; set; }
-        public virtual ICollection<Issue> Issues { get; set; }
+        public virtual Account Acc { get; set; }
+        public virtual ICollection<DeviceSoftware> DeviceSoftwares { get; set; }
+        public virtual ICollection<Report> Reports { get; set; }
     }
 }

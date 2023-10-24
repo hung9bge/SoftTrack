@@ -6,7 +6,7 @@ namespace SoftTrack.Application.Interface
 {
     public interface IAccountService
     {
-        Task<List<AccountUpdateDto>> GetAllAccountAsync();
+        Task<List<AccountDto>> GetAllAccountAsync();
         Task CreateAccountAsync(AccountCreateDto Account);
         Task UpdateAccountAsync(AccountUpdateDto Account);
         Task DeleteAccountAsync(AccountDto Account);

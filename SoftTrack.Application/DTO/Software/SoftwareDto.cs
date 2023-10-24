@@ -15,6 +15,6 @@ namespace SoftTrack.Application.DTO
         public bool? Status { get; set; }
 
         //public virtual Device Device { get; set; }
-        public virtual ICollection<Issue> Issues { get; set; }
+        //public virtual ICollection<Issue> Issues { get; set; }
     }
 }

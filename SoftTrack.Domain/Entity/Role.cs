@@ -3,16 +3,16 @@ using System.Collections.Generic;
 
 namespace SoftTrack.Domain
 {
-        public partial class Role
+    public partial class Role
+    {
+        public Role()
         {
-            public Role()
-            {
-                RoleAccounts = new HashSet<RoleAccount>();
-            }
-
-            public int Id { get; set; }
-            public string Name { get; set; }
-
-            public virtual ICollection<RoleAccount> RoleAccounts { get; set; }
+            Accounts = new HashSet<Account>();
         }
+
+        public int RoleId { get; set; }
+        public string Name { get; set; }
+
+        public virtual ICollection<Account> Accounts { get; set; }
+    }
 }

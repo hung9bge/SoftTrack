@@ -5,20 +5,19 @@ namespace SoftTrack.Infrastructure
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly soft_trackContext _context;
-        public AccountRepository(soft_trackContext context)
+        private readonly soft_track2Context _context;
+        public AccountRepository(soft_track2Context context)
         {
             _context = context;
         }
-        public async Task<List<Account>> GetAllAccountAsync()
+        public async Task<List<Account>> accountsWithRoleNames()
         {
             using var context = _context;
-            var accountsWithRoleAccounts = await _context.Accounts
-       .Include(account => account.RoleAccounts)
-       .ThenInclude(roleAccount => roleAccount.Role)
-       .ToListAsync();
+            var accountsWithRoleNames = await _context.Accounts
+                .Include(account => account.Role) // Sử dụng Include để lấy thông tin về Role
+                .ToListAsync();
 
-            return accountsWithRoleAccounts;
+            return accountsWithRoleNames;
         }
         public async Task CreateAccountAsync(Account Account)
         {
@@ -48,7 +47,7 @@ namespace SoftTrack.Infrastructure
                 using var context = _context;
                
                 var user = await _context.Accounts.Where(user => user.Email.ToLower() == email.ToLower())
-                .Include(user => user.RoleAccounts).FirstOrDefaultAsync();
+                .Include(user => user.RoleId).FirstOrDefaultAsync();
                 if (user == null) { return null; }
 
                 return user;
@@ -67,10 +66,10 @@ namespace SoftTrack.Infrastructure
                 var mem = new Account()
                 {
                     Email = User.Email,
-                    Password = User.Password,
-                    PhoneNumber = User.PhoneNumber,
+                    Status= User.Status,
+                    RoleId= User.RoleId,
                     Name = User.Name,
-                    Account1 = User.Account1,
+                
 
                 };
                 await _context.AddAsync(mem);

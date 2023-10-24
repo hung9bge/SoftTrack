@@ -16,7 +16,7 @@ namespace SoftTrack.Application.AutoMapper
             CreateMap<Device, DeviceDto>();
             CreateMap<Software, SoftwaresDeviceDto>();
             CreateMap<Device, DeviceDto>()
-                .ForMember(dest => dest.Softwares, opt => opt.MapFrom(src => src.Softwares));
+                /*.ForMember(dest => dest.Softwares, opt => opt.MapFrom(src => src.Softwares))*/;
 
         }
     }
