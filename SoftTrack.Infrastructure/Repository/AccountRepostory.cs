@@ -45,10 +45,12 @@ namespace SoftTrack.Infrastructure
             try
             {
                 using var context = _context;
-               
-                var user = await _context.Accounts.Where(user => user.Email.ToLower() == email.ToLower())
-                .Include(user => user.RoleId).FirstOrDefaultAsync();
-                if (user == null) { return null; }
+
+                var user = await _context.Accounts
+             .Where(u => u.Email.ToLower() == email.ToLower())
+             .Include(u => u.Role) // Kết hợp thông tin về Role
+             .FirstOrDefaultAsync(); // Sử dụng FirstOrDefaultAsync để lấy một bản ghi hoặc null nếu không tìm thấy
+
 
                 return user;
             }

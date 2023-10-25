@@ -16,13 +16,14 @@ namespace SoftTrack.Application.DTO
         public bool Status { get; set; }
         public int RoleId { get; set; }
         public string RoleName { get; set; }
+        public string token { get; set; }
         //public virtual RoleDTO Role { get; set; }
         //public virtual ICollection<Software> Softwares { get; set; }
     }
-    //public class RoleDTO
-    //{
-    //    public int RoleId { get; set; }
-    //    public string Name { get; set; }
-    //}
+    public class RoleDTO
+    {
+        public int RoleId { get; set; }
+        public string Name { get; set; }
+    }
 
 }

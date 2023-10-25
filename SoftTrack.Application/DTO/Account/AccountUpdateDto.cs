@@ -4,11 +4,11 @@ namespace SoftTrack.Application.DTO
 {
     public class AccountUpdateDto
     {
-
-        public string ?Account1 { get; set; }
-  
+        public string Name { get; set; }
         public string Email { get; set; }
-        public string Role_Name { get; set; }
+        public bool Status { get; set; }
+        public int RoleId { get; set; }
+   
 
     }
 }

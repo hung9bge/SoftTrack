@@ -36,12 +36,12 @@ namespace SoftTrack.API
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Repository
-            //builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
+            builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             //builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 
             // Service
-            //builder.Services.AddScoped<ISoftwareService, SoftwareService>();
+            builder.Services.AddScoped<ISoftwareService, SoftwareService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             //builder.Services.AddScoped<IDeviceService, DeviceService>();
 
