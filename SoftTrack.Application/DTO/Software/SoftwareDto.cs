@@ -5,7 +5,6 @@ namespace SoftTrack.Application.DTO
     public class SoftwareDto
     {
         public int SoftwareId { get; set; }
-        public int? DeviceId { get; set; }
         public int AccId { get; set; }
         public string Name { get; set; }
         public string Publisher { get; set; }
@@ -14,6 +13,7 @@ namespace SoftTrack.Application.DTO
         public string Type { get; set; }
         public string Os { get; set; }
         public int Status { get; set; }
+        public String? InstallDate { get; set; }
         //public virtual Device Device { get; set; }
         //public virtual ICollection<Issue> Issues { get; set; }
     }

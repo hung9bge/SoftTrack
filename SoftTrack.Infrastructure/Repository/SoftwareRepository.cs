@@ -40,11 +40,57 @@ namespace SoftTrack.Infrastructure
             return existingSoftware != null;
         }
 
-        public async Task UpdateSoftwareAsync(Software software)
+        public async Task UpdateSoftwareAsync(int softwareId, Software updatedSoftware)
         {
-            using var context = _context;
-            _context.Entry(software).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            // Tìm phần mềm dựa trên ID
+            var software = await _context.Softwares.FindAsync(softwareId);
+
+            if (software == null)
+            {
+                // Không tìm thấy phần mềm
+                // Ở đây, bạn có thể xử lý việc không tìm thấy phần mềm (ví dụ: trả về lỗi hoặc thông báo)
+            }
+            else
+            {
+                // Cập nhật các trường cần thiết của phần mềm
+                if (updatedSoftware.AccId != 0 )
+                {
+                    software.AccId = updatedSoftware.AccId;
+                }
+
+                if (updatedSoftware.Name != null)
+                {
+                    software.Name = updatedSoftware.Name;
+                }
+
+                if (updatedSoftware.Publisher != null)
+                {
+                    software.Publisher = updatedSoftware.Publisher;
+                }
+
+                if (updatedSoftware.Version != null)
+                {
+                    software.Version = updatedSoftware.Version;
+                }
+
+                if (updatedSoftware.Type != null)
+                {
+                    software.Type = updatedSoftware.Type;
+                }
+
+                if (updatedSoftware.Os != null)
+                {
+                    software.Os = updatedSoftware.Os;
+                }
+
+                if (updatedSoftware.Status != 0)
+                {
+                    software.Status = updatedSoftware.Status;
+                }
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task DeleteSoftwareAsync(int softwareId)
@@ -53,7 +99,8 @@ namespace SoftTrack.Infrastructure
 
             if (software != null)
             {
-                _context.Softwares.Remove(software);
+                software.Status = 3;
+               
                 await _context.SaveChangesAsync();
             }
         }

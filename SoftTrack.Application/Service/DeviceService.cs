@@ -19,48 +19,66 @@ namespace SoftTrack.Application.Service
         public async Task<List<DeviceDto>> GetAllDeviceAsync()
         {
             var listDevice = await _DeviceRepository.GetAllDeviceAsync();
-            var listDeviceDto = _mapper.Map<List<DeviceDto>>(listDevice);
-            return listDeviceDto;
+            var listdeviceDtos = listDevice.Select(device => new DeviceDto
+            {
+                DeviceId = device.DeviceId,
+                Name = device.Name,
+                Cpu = device.Cpu,
+                Gpu = device.Gpu,
+                Ram = device.Ram,
+                Memory = device.Memory,
+                IpAddress = device.IpAddress,
+                Manufacturer = device.Manufacturer,
+                Model = device.Model,
+                SerialNumber = device.SerialNumber,
+                // Định dạng LastSuccesfullScan sang chuỗi ngày/tháng/năm
+                LastSuccesfullScan = device.LastSuccesfullScan?.Date.ToString("dd/MM/yyyy"),
+                Status = device.Status
+            }).ToList();
+            return listdeviceDtos;
         }
         public async Task CreateDeviceAsync(DeviceCreateDto DeviceCreateDto)
         {
+            DeviceCreateDto.Status = 1;
             var Device = _mapper.Map<Device>(DeviceCreateDto);
+
             await _DeviceRepository.CreateDeviceAsync(Device);
         }
 
-        public async Task UpdateDeviceAsync(DeviceUpdateDto DeviceUpdateDto)
+        public async Task UpdateDeviceAsync(int deviceId, DeviceUpdateDto updatedDevice)
         {
-            var Device = _mapper.Map<Device>(DeviceUpdateDto);
-            await _DeviceRepository.UpdateDeviceAsync(Device);
+            var Device = _mapper.Map<Device>(updatedDevice);
+            await _DeviceRepository.UpdateDeviceAsync( deviceId, Device);
         }
 
         public async Task DeleteDeviceAsync(int DeviceId)
         {
            
-            await _DeviceRepository.DeleteSoftwareByDeviceIdAsync(DeviceId);
+           await _DeviceRepository.DeleteSoftwareByDeviceIdAsync(DeviceId);
         }
-        public async Task<List<DeviceDto>> GetAllDeviceWithSoftwaresAsync()
-        {
-            var devicesWithSoftwares = await _DeviceRepository.GetAllDeviceWithSoftwaresAsync();
-            var devicesDtoList = new List<DeviceDto>();
-
-            foreach (var device in devicesWithSoftwares)
-            {
-                var deviceDto = _mapper.Map<DeviceDto>(device);
-                devicesDtoList.Add(deviceDto);
-            }
-
-            return devicesDtoList;
-        }
-        public async Task<List<DeviceDto>> GetDevicesForAccountAsync(int accountId)
+    
+        public async Task<List<DeviceDto>> GetDevicesForSoftWareAsync(int softwareId)
         {
             // Sử dụng phương thức GetDevicesForAccountAsync để lấy danh sách Device
-            var devicesForAccount = await _DeviceRepository.GetDevicesForAccountAsync(accountId);
+            var devicesForAccount = await _DeviceRepository.GetDevicesForSoftWareAsync(softwareId);        
 
-            // Ánh xạ danh sách Device thành danh sách DeviceDto bằng AutoMapper
-            var deviceDtos = _mapper.Map<List<DeviceDto>>(devicesForAccount);
-
-            return deviceDtos;
+            var listdeviceDtos = devicesForAccount.Select(device => new DeviceDto
+            {
+                DeviceId = device.DeviceId,
+                Name = device.Name,
+                Cpu = device.Cpu,
+                Gpu = device.Gpu,
+                Ram = device.Ram,
+                Memory = device.Memory,
+                IpAddress = device.IpAddress,
+                Manufacturer = device.Manufacturer,
+                Model = device.Model,
+                SerialNumber = device.SerialNumber,
+                // Định dạng LastSuccesfullScan sang chuỗi ngày/tháng/năm
+                LastSuccesfullScan = device.LastSuccesfullScan?.Date.ToString("dd/MM/yyyy"),
+                Status = device.Status
+            }).ToList();
+            return listdeviceDtos;
         }
     }
 }

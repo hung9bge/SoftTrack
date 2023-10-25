@@ -14,7 +14,7 @@ namespace SoftTrack.Application.AutoMapper
     
             CreateMap<SoftwareUpdateDto, Software>();
             CreateMap<Software, SoftwareDto>()
-    //.ForMember(dest => dest.Device, opt => opt.Ignore()) // Loại bỏ ánh xạ cho Device
+    .ForMember(dest => dest.InstallDate, opt => opt.Ignore()) // Loại bỏ ánh xạ cho Device
     /*.ForMember(dest => dest.Issues, opt => opt.Ignore())*/; 
 
 

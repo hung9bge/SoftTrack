@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
 using SoftTrack.Application.Service;
@@ -11,9 +12,11 @@ namespace SoftTrack.API.Controllers
     public class SoftwareController : Controller
     {
         private readonly ISoftwareService _softwareService;
-        public SoftwareController(ISoftwareService softwareService)
+        private readonly soft_track2Context _context;
+        public SoftwareController(ISoftwareService softwareService, soft_track2Context context)
         {
             _softwareService = softwareService;
+            _context = context;
         }
 
         [HttpGet("ListSoftware")]
@@ -28,18 +31,18 @@ namespace SoftTrack.API.Controllers
         {
             await _softwareService.CreateSoftwareAsync(softwareCreateDto);
             return Ok("SoftWare đã được Add thành công.");
-            return StatusCode(StatusCodes.Status201Created);
+           
         }
 
-        [HttpPut("UpdateSW")]
-        public async Task<IActionResult> UpdateSoftwareAsync(SoftwareUpdateDto softwareUpdateDto)
+        [HttpPut("UpdateSW{key}")]
+        public async Task<IActionResult> UpdateSoftwareAsync(int key, SoftwareUpdateDto updatedSoftware)
         {
-            await _softwareService.UpdateSoftwareAsync(softwareUpdateDto);
+            await _softwareService.UpdateSoftwareAsync(key, updatedSoftware);
             return Ok("SoftWare đã được cập nhật thành công.");
-            return StatusCode(StatusCodes.Status201Created);
+           
         }
 
-        [HttpDelete]
+        [HttpDelete("DeleteSoftWareWith_key")]
         public async Task<IActionResult> DeleteSoftwareAsync(int softwareid)
         {
             await _softwareService.DeleteSoftwareAsync(softwareid);
@@ -51,11 +54,30 @@ namespace SoftTrack.API.Controllers
             var ressult = await _softwareService.GetSoftwareForAccountAsync(key);
             return StatusCode(StatusCodes.Status200OK, ressult);
         }
-        //[HttpGet("list_software_by_device{key}")]
-        //public async Task<IActionResult> GetSoftwareForDeviceAsync(int key)
-        //{
-        //    var ressult = await _softwareService.GetSoftwareForDeviceAsync(key);
-        //    return StatusCode(StatusCodes.Status200OK, ressult);
-        //}
+    
+        [HttpGet("GetSoftwareForAccountAndDevice")]
+        public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwareForAccountAndDevice(int accountId, int deviceId)
+        {
+            var softwareForAccountAndDevice = await _context.Softwares
+                .Where(software => software.AccId == accountId)
+                .Where(software => software.DeviceSoftwares.Any(ds => ds.DeviceId == deviceId))
+                .Select(software => new SoftwareDto
+                {
+                    SoftwareId = software.SoftwareId,
+                    AccId= software.AccId,
+                    Name = software.Name,
+                    Publisher = software.Publisher,
+                    Version = software.Version,
+                    Release = software.Release,
+                    Type = software.Type,
+                    Os = software.Os,
+                    Status = software.Status,
+                    // Lấy InstallDate từ bảng liên quan
+                    InstallDate = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).InstallDate.ToString("dd/MM/yyyy")
+                })
+                .ToListAsync();
+
+            return softwareForAccountAndDevice;
+        }
     }
 }

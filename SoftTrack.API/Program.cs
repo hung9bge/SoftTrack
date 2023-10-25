@@ -38,12 +38,12 @@ namespace SoftTrack.API
             // Repository
             builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-            //builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+            builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 
             // Service
             builder.Services.AddScoped<ISoftwareService, SoftwareService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
-            //builder.Services.AddScoped<IDeviceService, DeviceService>();
+            builder.Services.AddScoped<IDeviceService, DeviceService>();
 
             builder.Services.AddDbContext<soft_track2Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 

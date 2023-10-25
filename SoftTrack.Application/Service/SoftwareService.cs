@@ -28,10 +28,10 @@ namespace SoftTrack.Application.Service
             await _softwareRepository.CreateSoftwareAsync(software);
         }
   
-        public async Task UpdateSoftwareAsync(SoftwareUpdateDto softwareUpdateDto)
+        public async Task UpdateSoftwareAsync(int softwareId, SoftwareUpdateDto updatedSoftware)
         {
-            var software = _mapper.Map<Software>(softwareUpdateDto);
-            await _softwareRepository.UpdateSoftwareAsync(software);
+            var software = _mapper.Map<Software>(updatedSoftware);
+            await _softwareRepository.UpdateSoftwareAsync(softwareId,software);
         }
 
         public async Task DeleteSoftwareAsync(int softwareId)
