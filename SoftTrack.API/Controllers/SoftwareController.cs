@@ -71,7 +71,7 @@ namespace SoftTrack.API.Controllers
                     Release = software.Release,
                     Type = software.Type,
                     Os = software.Os,
-                    Status = software.Status,
+                    Status = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).Status,
                     // Lấy InstallDate từ bảng liên quan
                     InstallDate = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).InstallDate.ToString("dd/MM/yyyy")
                 })

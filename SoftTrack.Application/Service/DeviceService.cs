@@ -39,7 +39,7 @@ namespace SoftTrack.Application.Service
         }
         public async Task CreateDeviceAsync(DeviceCreateDto DeviceCreateDto)
         {
-            DeviceCreateDto.Status = 1;
+         
             var Device = _mapper.Map<Device>(DeviceCreateDto);
 
             await _DeviceRepository.CreateDeviceAsync(Device);

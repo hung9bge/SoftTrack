@@ -13,7 +13,7 @@ namespace SoftTrack.Application.DTO
         public string Type { get; set; }
         public string Os { get; set; }
         public int Status { get; set; }
-      
+       
         //public virtual Device? Device { get; set; }
         //public virtual ICollection<Issue> Issues { get; set; }
     }

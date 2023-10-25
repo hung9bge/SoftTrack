@@ -20,6 +20,7 @@ namespace SoftTrack.Infrastructure
         public async Task CreateDeviceAsync(Device Device)
         {
             using var context = _context;
+            Device.Status = 1;
             _context.Devices.Add(Device);
             await _context.SaveChangesAsync();
         }
