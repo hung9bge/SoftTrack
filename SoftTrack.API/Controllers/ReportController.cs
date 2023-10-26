@@ -30,7 +30,7 @@ namespace SoftTrack.API.Controllers
                 Description = report.Description,
                 Type = report.Type,
                 StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                EndDate = report.EndDate.ToString("yyyy-MM-dd"), 
+                EndDate = report.EndDate?.ToString("yyyy-MM-dd"), 
                 Status = report.Status
             });
 
@@ -56,7 +56,7 @@ namespace SoftTrack.API.Controllers
                 Description = report.Description,
                 Type = report.Type,
                 StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                EndDate = report.EndDate.ToString("yyyy-MM-dd"),
+                EndDate = report.EndDate?.ToString("yyyy-MM-dd"),
                 Status = report.Status
             };
 
@@ -74,8 +74,9 @@ namespace SoftTrack.API.Controllers
                     Description = report.Description,
                     Type = report.Type,
                     StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                    EndDate = report.EndDate.ToString("yyyy-MM-dd"),
+                    EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("yyyy-MM-dd") : null,
                     Status = report.Status
+
                 })
                 .ToListAsync();
 
@@ -85,10 +86,6 @@ namespace SoftTrack.API.Controllers
         [HttpPost("CreateReport")]
         public async Task<IActionResult> CreateReport([FromBody] ReportCreateDto reportCreateDto)
         {
-            if (reportCreateDto == null)
-            {
-                return BadRequest("Dữ liệu không hợp lệ.");
-            }
 
             var newReport = new Report
             {
@@ -96,11 +93,15 @@ namespace SoftTrack.API.Controllers
                 SoftwareId = reportCreateDto.SoftwareId,
                 Description = reportCreateDto.Description,
                 Type = reportCreateDto.Type,
-                StartDate = DateTime.Parse(reportCreateDto.StartDate),
-                EndDate = DateTime.Parse(reportCreateDto.EndDate),
+                StartDate = DateTime.Parse(reportCreateDto.StartDate),           
+               
                 Status = reportCreateDto.Status
-            };
 
+            };
+            //if (!string.IsNullOrEmpty(reportCreateDto.EndDate))
+            //{
+            //    newReport.EndDate = DateTime.Parse(reportCreateDto.EndDate);
+            //}
             _context.Reports.Add(newReport);
             await _context.SaveChangesAsync();
 
@@ -140,12 +141,16 @@ namespace SoftTrack.API.Controllers
                     existingReport.StartDate = DateTime.Parse(reportUpdateDto.StartDate);
                 }
 
-                if (reportUpdateDto.EndDate != "string")
+                if (string.IsNullOrEmpty(reportUpdateDto.EndDate))
                 {
-                    existingReport.EndDate = DateTime.Parse(reportUpdateDto.EndDate);
+                    existingReport.EndDate = null;
+                }
+                if (reportUpdateDto.StartDate != "string")
+                {
+                    existingReport.StartDate = DateTime.Parse(reportUpdateDto.StartDate);
                 }
 
-                if (reportUpdateDto.Status != 0)
+            if (reportUpdateDto.Status != 0)
                 {
                     existingReport.Status = reportUpdateDto.Status;
                 }
@@ -182,7 +187,7 @@ namespace SoftTrack.API.Controllers
                 Description = report.Description,
                 Type = report.Type,
                 StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                EndDate = report.EndDate.ToString("yyyy-MM-dd"),
+                EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("yyyy-MM-dd") : null,
                 Status = report.Status
             }).ToList();
 

@@ -34,15 +34,15 @@ namespace SoftTrack.API.Controllers
         [HttpGet("ListAccount")]
         public async Task<ActionResult<IEnumerable<AccountDto>>> GetAccounts()
         {
-   
+
             var accounts = await _context.Accounts
-                .Include(account => account.Role)               
+                .Include(account => account.Role)
                 .Select(account => new AccountDto
                 {
                     AccId = account.AccId,
                     Email = account.Email,
                     Name = account.Name,
-                    Status= account.Status,
+                    Status = account.Status,
                     RoleId = account.RoleId,
                     RoleName = account.Role.Name
                 })
@@ -140,7 +140,7 @@ namespace SoftTrack.API.Controllers
                 Name = accountDto.Name,
                 Email = accountDto.Email,
                 RoleId = accountDto.RoleId,
-                Status = accountDto.Status 
+                Status = accountDto.Status
             };
 
             // Thêm tài khoản mới vào cơ sở dữ liệu
@@ -150,8 +150,22 @@ namespace SoftTrack.API.Controllers
             return Ok("Tài khoản đã được thêm thành công.");
         }
 
+        [HttpDelete("DeleteAccountWith_key")]
+        public async Task<IActionResult> DeleteAccountAsync(int accountId) {
+            var account = await _context.Accounts.FindAsync(accountId);
 
-        [HttpPut("Update_Accpunt{id}")]
+            if (account != null)
+            {
+                account.Status = false;
+
+                await _context.SaveChangesAsync();
+            }
+            return Ok("Tài khoản đã được update role thành công.");
+        } 
+    
+
+
+    [HttpPut("Update_Accpunt{id}")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)
         {
             var existingAccount = await _context.Accounts.FindAsync(id);

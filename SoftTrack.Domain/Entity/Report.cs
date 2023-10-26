@@ -10,7 +10,7 @@ namespace SoftTrack.Domain
         public string Description { get; set; }
         public string Type { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime?EndDate { get; set; }
         public int Status { get; set; }
 
         public virtual Software Software { get; set; }
