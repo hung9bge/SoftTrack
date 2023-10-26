@@ -140,7 +140,7 @@ namespace SoftTrack.API.Controllers
                 Name = accountDto.Name,
                 Email = accountDto.Email,
                 RoleId = accountDto.RoleId,
-                Status = true // Giả sử mặc định là tài khoản mới được kích hoạt
+                Status = accountDto.Status 
             };
 
             // Thêm tài khoản mới vào cơ sở dữ liệu

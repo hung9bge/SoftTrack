@@ -4,7 +4,7 @@ namespace SoftTrack.Application.DTO
 {
     public class AccountCreateDto
     {
-        public int AccId { get; set; }
+        
         public string Name { get; set; }
         public string Email { get; set; }
         public bool Status { get; set; }

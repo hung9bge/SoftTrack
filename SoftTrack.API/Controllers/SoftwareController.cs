@@ -48,13 +48,13 @@ namespace SoftTrack.API.Controllers
             await _softwareService.DeleteSoftwareAsync(softwareid);
             return StatusCode(StatusCodes.Status200OK);
         }
-        [HttpGet("list_software_by_user{key}")]
+        [HttpGet("list_software_by_user/{key}")]
         public async Task<IActionResult> GetSoftwareForAccountAsync(int key)
         {
             var ressult = await _softwareService.GetSoftwareForAccountAsync(key);
             return StatusCode(StatusCodes.Status200OK, ressult);
         }
-        [HttpGet("list_software{key}")]
+        [HttpGet("list_software/{key}")]
         public async Task<IActionResult> GetSoftwareAsync(int key)
         {
             var ressult = await _softwareService.GetSoftwareAsync(key);
