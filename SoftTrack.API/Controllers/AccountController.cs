@@ -76,7 +76,7 @@ namespace SoftTrack.API.Controllers
 
             return accounts;
         }
-        [HttpGet("login")]
+        [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] string email)
         {
             if (!email.EndsWith("@fpt.edu.vn", StringComparison.OrdinalIgnoreCase))
