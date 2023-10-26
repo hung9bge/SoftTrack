@@ -104,6 +104,12 @@ namespace SoftTrack.Infrastructure
                 await _context.SaveChangesAsync();
             }
         }
+        public async Task<Software> GetSoftwareAsync(int softwareId)
+        {
+            var software = await _context.Softwares.FindAsync(softwareId);
+          
+            return software; // Trả về phần mềm nếu tìm thấy.
+        }
         public async Task<List<Software>> GetSoftwareForAccountAsync(int accountId)
         {
             // Thực hiện truy vấn để lấy danh sách phần mềm cho tài khoản có accountId cụ thể

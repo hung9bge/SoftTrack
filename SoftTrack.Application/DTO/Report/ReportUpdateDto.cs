@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SoftTrack.Application.DTO.Report
 {
-    public class ReportDto
+    public class ReportUpdateDto
     {
-        public int ReportId { get; set; }
+        
         public int SoftwareId { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }

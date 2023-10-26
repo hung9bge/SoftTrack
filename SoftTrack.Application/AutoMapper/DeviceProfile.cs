@@ -13,7 +13,7 @@ namespace SoftTrack.Application.AutoMapper
             CreateMap<DeviceCreateDto, Device>();
     
             CreateMap<DeviceUpdateDto, Device>();
-            CreateMap<Device, DeviceDto>();
+            CreateMap<Device, DeviceUpdateDto>();
 
             CreateMap<Device, DeviceDto>()
                 /*.ForMember(dest => dest.Softwares, opt => opt.MapFrom(src => src.Softwares))*/;

@@ -54,7 +54,13 @@ namespace SoftTrack.API.Controllers
             var ressult = await _softwareService.GetSoftwareForAccountAsync(key);
             return StatusCode(StatusCodes.Status200OK, ressult);
         }
-    
+        [HttpGet("list_software{key}")]
+        public async Task<IActionResult> GetSoftwareAsync(int key)
+        {
+            var ressult = await _softwareService.GetSoftwareAsync(key);
+            return StatusCode(StatusCodes.Status200OK, ressult);
+        }
+
         [HttpGet("GetSoftwareForAccountAndDevice")]
         public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwareForAccountAndDevice(int accountId, int deviceId)
         {

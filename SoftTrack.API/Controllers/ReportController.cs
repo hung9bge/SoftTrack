@@ -82,44 +82,79 @@ namespace SoftTrack.API.Controllers
             return reportsForSoftware;
         }
 
-        // POST: api/Reports
-        [HttpPost]
-        public async Task<ActionResult<Report>> PostReport(Report report)
+        [HttpPost("CreateReport")]
+        public async Task<IActionResult> CreateReport([FromBody] ReportCreateDto reportCreateDto)
         {
-            _context.Reports.Add(report);
+            if (reportCreateDto == null)
+            {
+                return BadRequest("Dữ liệu không hợp lệ.");
+            }
+
+            var newReport = new Report
+            {
+                ReportId= reportCreateDto.ReportId,
+                SoftwareId = reportCreateDto.SoftwareId,
+                Description = reportCreateDto.Description,
+                Type = reportCreateDto.Type,
+                StartDate = DateTime.Parse(reportCreateDto.StartDate),
+                EndDate = DateTime.Parse(reportCreateDto.EndDate),
+                Status = reportCreateDto.Status
+            };
+
+            _context.Reports.Add(newReport);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetReport", new { id = report.ReportId }, report);
+            return CreatedAtAction("GetReport", new { id = newReport.ReportId }, newReport);
+
         }
 
         // PUT: api/Reports/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutReport(int id, Report report)
+        [HttpPut("UpdateReport/{id}")]
+        public async Task<IActionResult> UpdateReport(int id, [FromBody] ReportUpdateDto reportUpdateDto)
         {
-            if (id != report.ReportId)
-            {
-                return BadRequest();
-            }
 
-            _context.Entry(report).State = EntityState.Modified;
+                var existingReport = await _context.Reports.FindAsync(id);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!ReportExists(id))
+                if (existingReport == null)
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
-            }
 
-            return NoContent();
+                if (reportUpdateDto.SoftwareId != 0)
+                {
+                    existingReport.SoftwareId = reportUpdateDto.SoftwareId;
+                }
+
+                if (reportUpdateDto.Description != "string")
+                {
+                    existingReport.Description = reportUpdateDto.Description;
+                }
+
+                if (reportUpdateDto.Type != "string" )
+                {
+                    existingReport.Type = reportUpdateDto.Type;
+                }
+
+                if (reportUpdateDto.StartDate != "string")
+                {
+                    existingReport.StartDate = DateTime.Parse(reportUpdateDto.StartDate);
+                }
+
+                if (reportUpdateDto.EndDate != "string")
+                {
+                    existingReport.EndDate = DateTime.Parse(reportUpdateDto.EndDate);
+                }
+
+                if (reportUpdateDto.Status != 0)
+                {
+                    existingReport.Status = reportUpdateDto.Status;
+                }
+
+                _context.Reports.Update(existingReport);
+                await _context.SaveChangesAsync();
+
+                return Ok("Report đã được cập nhật thành công.");
+            
         }
 
         // DELETE: api/Reports/5
@@ -135,13 +170,9 @@ namespace SoftTrack.API.Controllers
             _context.Reports.Remove(report);
             await _context.SaveChangesAsync();
 
-            return report;
+            return Ok("Report đã được xóa thành công.");
         }
 
-        private bool ReportExists(int id)
-        {
-            return _context.Reports.Any(e => e.ReportId == id);
-        }
     }
 
 }

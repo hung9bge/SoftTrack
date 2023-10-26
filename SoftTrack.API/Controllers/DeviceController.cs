@@ -36,6 +36,7 @@ namespace SoftTrack.API.Controllers
         [HttpPut("UpdateDeviceWith{key}")]
         public async Task<IActionResult> UpdateDeviceAsync(int key,DeviceUpdateDto DeviceUpdateDto)
         {
+
             await _DeviceService.UpdateDeviceAsync(key,DeviceUpdateDto);
             return StatusCode(StatusCodes.Status201Created);
         }
@@ -55,6 +56,12 @@ namespace SoftTrack.API.Controllers
             var ressult = await _DeviceService.GetDevicesForSoftWareAsync(key);
             return StatusCode(StatusCodes.Status200OK, ressult);
         }
+        [HttpGet("list_device_with_Account{key}")]
 
+        public async Task<IActionResult> GetDevicesForAccountAsync(int key)
+        {
+            var ressult = await _DeviceService.GetDevicesForAccountAsync(key);
+            return StatusCode(StatusCodes.Status200OK, ressult);
+        }
     }
 }

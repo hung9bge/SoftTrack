@@ -9,6 +9,7 @@ namespace SoftTrack.Domain
         Task CreateDeviceAsync(Device device);
         Task UpdateDeviceAsync(int deviceId, Device updatedDevice);
         Task DeleteSoftwareByDeviceIdAsync(int deviceId);
+        Task<List<Device>> GetDevicesForAccountAsync(int accountId);
         Task<List<Device>> GetDevicesForSoftWareAsync(int softwareId);
     }
 }

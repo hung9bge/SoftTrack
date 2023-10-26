@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SoftTrack.Application.DTO.Report
 {
-    public class ReportDto
+    public class ReportCreateDto
     {
         public int ReportId { get; set; }
         public int SoftwareId { get; set; }

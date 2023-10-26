@@ -38,17 +38,17 @@ namespace SoftTrack.Infrastructure
             else
             {
                 // Cập nhật các trường cần thiết của thiết bị
-                if (updatedDevice.Name != null)
+                if (updatedDevice.Name != null || updatedDevice.Name != "string")
                 {
                     device.Name = updatedDevice.Name;
                 }
 
-                if (updatedDevice.Cpu != null)
+                if (updatedDevice.Cpu != null || updatedDevice.Cpu != "string")
                 {
                     device.Cpu = updatedDevice.Cpu;
                 }
 
-                if (updatedDevice.Gpu != null)
+                if (updatedDevice.Gpu != null || updatedDevice.Gpu != "string")
                 {
                     device.Gpu = updatedDevice.Gpu;
                 }
@@ -63,31 +63,29 @@ namespace SoftTrack.Infrastructure
                     device.Memory = updatedDevice.Memory;
                 }
 
-                if (updatedDevice.IpAddress != null)
+                if (updatedDevice.IpAddress != null || updatedDevice.IpAddress != "string")
                 {
                     device.IpAddress = updatedDevice.IpAddress;
                 }
 
-                if (updatedDevice.Manufacturer != null)
+                if (updatedDevice.Manufacturer != null || updatedDevice.Manufacturer != "string")
                 {
                     device.Manufacturer = updatedDevice.Manufacturer;
                 }
 
-                if (updatedDevice.Model != null)
+                if (updatedDevice.Model != null || updatedDevice.Model != "string")
                 {
                     device.Model = updatedDevice.Model;
                 }
 
-                if (updatedDevice.SerialNumber != null)
+                if (updatedDevice.SerialNumber != null || updatedDevice.SerialNumber != "string")
                 {
                     device.SerialNumber = updatedDevice.SerialNumber;
                 }
-
                 if (updatedDevice.LastSuccesfullScan != null)
-                {                     
+                {
                     device.LastSuccesfullScan = updatedDevice.LastSuccesfullScan;
                 }
-
                 if (updatedDevice.Status != 0)
                 {
                     device.Status = updatedDevice.Status;
@@ -122,5 +120,18 @@ namespace SoftTrack.Infrastructure
 
             return devicesForSoftware;
         }
+        public async Task<List<Device>> GetDevicesForAccountAsync(int accountId)
+        {
+            using var context = _context;
+    var devices = _context.DeviceSoftwares
+        .Where(ds => ds.Software.AccId == accountId)
+        .Select(ds => ds.Device)
+        .Distinct()
+        .ToList();
+
+    return devices;
+        }
+
+       
     }
 }

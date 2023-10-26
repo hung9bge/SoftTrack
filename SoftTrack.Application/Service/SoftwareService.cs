@@ -48,6 +48,15 @@ namespace SoftTrack.Application.Service
 
             return softwareDtos;
         }
+        public async Task<SoftwareDto> GetSoftwareAsync(int softwareId)
+        {
+            var softwaresForAccount = await _softwareRepository.GetSoftwareAsync(softwareId);
+
+            // Ánh xạ danh sách Device thành danh sách DeviceDto bằng AutoMapper
+            var softwareDtos = _mapper.Map<SoftwareDto>(softwaresForAccount);
+
+            return softwareDtos;
+        }
         //public async Task<List<SoftwareDto>> GetSoftwareForDeviceAsync(int deviceId)
         //{
         //    // Sử dụng phương thức GetDevicesForDeviceAsync để lấy danh sách Device
