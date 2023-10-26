@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SoftTrack.Application.DTO;
+using SoftTrack.Application.DTO.Report;
 using SoftTrack.Application.Interface;
 using SoftTrack.Application.Service;
 using SoftTrack.Domain;
@@ -175,17 +176,27 @@ namespace SoftTrack.API.Controllers
                 return NotFound("Tài khoản không tồn tại.");
             }
 
-            
+            if (accountDto.Email != "string")
+            {
+                existingAccount.Email = accountDto.Email;
+            }
             // Cập nhật thông tin tài khoản với dữ liệu từ yêu cầu
             if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
             {
                 // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
                 accountDto.Email += "@fpt.edu.vn";
             }
-            existingAccount.Email = accountDto.Email;
-            existingAccount.Name = accountDto.Name;
-            existingAccount.Status = accountDto.Status;
-            existingAccount.RoleId = accountDto.RoleId;
+            if (accountDto.Name != "string")
+            {
+                existingAccount.Name = accountDto.Name;
+            }
+           
+                existingAccount.Status = accountDto.Status;
+            if (accountDto.RoleId != 0)
+            {
+                existingAccount.RoleId = accountDto.RoleId;
+            }
+  
             // Các trường cần cập nhật khác nếu có
 
             _context.Accounts.Update(existingAccount);
