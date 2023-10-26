@@ -4,7 +4,7 @@ namespace SoftTrack.Application.DTO
 {
     public class SoftwareCreateDto
     {
-        public int SoftwareId { get; set; }
+       
         public int AccId { get; set; }
         public string Name { get; set; }
         public string Publisher { get; set; }

@@ -172,6 +172,22 @@ namespace SoftTrack.API.Controllers
 
             return Ok("Report đã được xóa thành công.");
         }
+        [HttpGet("list_reports_by_account/{accountId}")]
+        public async Task<IActionResult> GetReportsForAccountAsync(int accountId)
+        {
+            var reports = _context.Reports.Where(r => r.Software.AccId == accountId).Select(report => new ReportDto
+            {
+                ReportId = report.ReportId,
+                SoftwareId = report.SoftwareId,
+                Description = report.Description,
+                Type = report.Type,
+                StartDate = report.StartDate.ToString("yyyy-MM-dd"),
+                EndDate = report.EndDate.ToString("yyyy-MM-dd"),
+                Status = report.Status
+            }).ToList();
+
+            return Ok(reports);
+        }
 
     }
 
