@@ -32,45 +32,45 @@ namespace SoftTrack.API.Controllers
                     {
                         fileUpload.files.CopyTo(fs);
                         fs.Flush();
-                        string[] systemInformation = new string[10];
-                        try
-                        {
-                            using (StreamReader sr = new StreamReader(filePath))
-                            {
-                                string line;
-                                int it = 0;
-                                while ((line = sr.ReadLine()) != null)
-                                {
-                                    string[] parts = line.Split(':');
-                                    if (parts.Length == 2)
-                                    {
-                                        systemInformation[it] = parts[1].Trim();
-                                    }
-                                    it++;
-                                }
-                            }
-                            var sysInfo = new DeviceCreateDto
-                            {
-                                Name = systemInformation[0],
-                                Cpu = systemInformation[1],
-                                Ram = Convert.ToDouble(systemInformation[2]),
-                                Memory = Convert.ToDouble(systemInformation[3]),
-                                IpAddress = systemInformation[4],
-                                Manufacturer = systemInformation[5],
-                                Model = systemInformation[6],
-                                SerialNumber = systemInformation[7],
-                                LastSuccesfullScan = systemInformation[8]
-                            };
-
-                            await _DeviceService.CreateDeviceAsync(sysInfo);
-            
-                        }
-                        catch (Exception e)
-                        {
-                            return e.Message;
-                        }
-                        return "Upload Done.";
+                        //return "Upload Done.";
                     }
+                    string[] systemInformation = new string[10];
+                    try
+                    {
+                        using (StreamReader sr = new StreamReader(filePath))
+                        {
+                            string line;
+                            int it = 0;
+                            while ((line = sr.ReadLine()) != null)
+                            {
+                                string[] parts = line.Split(':');
+                                if (parts.Length == 2)
+                                {
+                                    systemInformation[it] = parts[1].Trim();
+                                }
+                                it++;
+                            }
+                        }
+                        var sysInfo = new DeviceCreateDto
+                        {
+                            Name = systemInformation[0],
+                            Cpu = systemInformation[1],
+                            Ram = Convert.ToDouble(systemInformation[2]),
+                            Memory = Convert.ToDouble(systemInformation[3]),
+                            IpAddress = systemInformation[4],
+                            Manufacturer = systemInformation[5],
+                            Model = systemInformation[6],
+                            SerialNumber = systemInformation[7],
+                            LastSuccesfullScan = systemInformation[8]
+                        };
+
+                        await _DeviceService.CreateDeviceAsync(sysInfo);
+                    }
+                    catch (Exception e)
+                    {
+                        return e.Message;
+                    }
+                    return "Upload Done.";
                 }
                 else
                 {
