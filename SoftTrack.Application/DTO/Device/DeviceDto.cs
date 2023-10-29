@@ -8,8 +8,8 @@ namespace SoftTrack.Application.DTO
         public string Name { get; set; }
         public string Cpu { get; set; }
         public string Gpu { get; set; }
-        public int? Ram { get; set; }
-        public int? Memory { get; set; }
+        public double? Ram { get; set; }
+        public double? Memory { get; set; }
         public string IpAddress { get; set; }
         public string Manufacturer { get; set; }
         public string Model { get; set; }
