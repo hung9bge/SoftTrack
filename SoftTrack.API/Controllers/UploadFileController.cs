@@ -12,11 +12,10 @@ namespace SoftTrack.API.Controllers
     {
         public static IWebHostEnvironment _webHostEnvironment;
         private readonly IDeviceService _DeviceService;
-        private readonly soft_track2Context _context;
-        public UploadFileController(IWebHostEnvironment webHostEnvironment, soft_track2Context context)
+        public UploadFileController(IWebHostEnvironment webHostEnvironment, IDeviceService DeviceService)
         {
             _webHostEnvironment = webHostEnvironment;
-            _context = context;
+            _DeviceService = DeviceService;
         }
         [HttpPost]
         public async Task<string> Post([FromForm] FileUpload fileUpload)
@@ -35,7 +34,6 @@ namespace SoftTrack.API.Controllers
                     {
                         fileUpload.files.CopyTo(fs);
                         fs.Flush();
-                        //return "Upload Done.";
                     }
                     string[] systemInformation = new string[10];
                     try
@@ -54,26 +52,27 @@ namespace SoftTrack.API.Controllers
                                 it++;
                             }
                         }
-                        var sysInfo = new Device
+                        var sysInfo = new DeviceCreateDto
                         {
                             Name = systemInformation[0],
                             Cpu = systemInformation[1],
-                            Ram = Convert.ToDouble(systemInformation[2]),
-                            Memory = Convert.ToDouble(systemInformation[3]),
+                            Ram = (int)Math.Round(Convert.ToDouble(systemInformation[2])),
+                            Memory = (int)Math.Round(Convert.ToDouble(systemInformation[3])),
                             IpAddress = systemInformation[4],
                             Manufacturer = systemInformation[5],
                             Model = systemInformation[6],
                             SerialNumber = systemInformation[7],
-                            LastSuccesfullScan = DateTime.Parse(systemInformation[8])
+                            LastSuccesfullScan = systemInformation[8]
                         };
 
-                        //if (sysInfo != null)
-                        //{
-                        //    await _DeviceService.CreateDeviceAsync(sysInfo);
-                        //}
-                        //await _DeviceService.CreateDeviceAsync(sysInfo);
-                        _context.Devices.Add(sysInfo);
-                        await _context.SaveChangesAsync();
+                        if (sysInfo != null)
+                        {
+                            await _DeviceService.CreateDeviceAsync(sysInfo);
+                        }
+                        else
+                        {
+                            return "Data is null.";
+                        }    
                     }
                     catch (Exception e)
                     {
