@@ -2,6 +2,7 @@
 using SoftTrack.API.Models;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.Interface;
+using SoftTrack.Domain;
 
 namespace SoftTrack.API.Controllers
 {
@@ -11,9 +12,11 @@ namespace SoftTrack.API.Controllers
     {
         public static IWebHostEnvironment _webHostEnvironment;
         private readonly IDeviceService _DeviceService;
-        public UploadFileController(IWebHostEnvironment webHostEnvironment)
+        private readonly soft_track2Context _context;
+        public UploadFileController(IWebHostEnvironment webHostEnvironment, soft_track2Context context)
         {
             _webHostEnvironment = webHostEnvironment;
+            _context = context;
         }
         [HttpPost]
         public async Task<string> Post([FromForm] FileUpload fileUpload)
@@ -51,7 +54,7 @@ namespace SoftTrack.API.Controllers
                                 it++;
                             }
                         }
-                        var sysInfo = new DeviceCreateDto
+                        var sysInfo = new Device
                         {
                             Name = systemInformation[0],
                             Cpu = systemInformation[1],
@@ -61,10 +64,16 @@ namespace SoftTrack.API.Controllers
                             Manufacturer = systemInformation[5],
                             Model = systemInformation[6],
                             SerialNumber = systemInformation[7],
-                            LastSuccesfullScan = systemInformation[8]
+                            LastSuccesfullScan = DateTime.Parse(systemInformation[8])
                         };
 
-                        await _DeviceService.CreateDeviceAsync(sysInfo);
+                        //if (sysInfo != null)
+                        //{
+                        //    await _DeviceService.CreateDeviceAsync(sysInfo);
+                        //}
+                        //await _DeviceService.CreateDeviceAsync(sysInfo);
+                        _context.Devices.Add(sysInfo);
+                        await _context.SaveChangesAsync();
                     }
                     catch (Exception e)
                     {
