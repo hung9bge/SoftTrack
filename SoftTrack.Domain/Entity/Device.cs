@@ -16,6 +16,8 @@ namespace SoftTrack.Domain
         public string Gpu { get; set; }
         public int? Ram { get; set; }
         public int? Memory { get; set; }
+        public string Os { get; set; }
+        public string Version { get; set; }
         public string IpAddress { get; set; }
         public string Manufacturer { get; set; }
         public string Model { get; set; }

@@ -10,9 +10,9 @@ namespace SoftTrack.API.Controllers
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
-        private readonly soft_track2Context _context;
+        private readonly soft_track3Context _context;
 
-        public ReportController(soft_track2Context context)
+        public ReportController(soft_track3Context context)
         {
             _context = context;
         }

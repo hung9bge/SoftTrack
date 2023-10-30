@@ -7,6 +7,7 @@ namespace SoftTrack.Domain
     {
         public Software()
         {
+            Authorizations = new HashSet<Authorization>();
             DeviceSoftwares = new HashSet<DeviceSoftware>();
             Reports = new HashSet<Report>();
         }
@@ -19,9 +20,13 @@ namespace SoftTrack.Domain
         public string Release { get; set; }
         public string Type { get; set; }
         public string Os { get; set; }
+        public string Description { get; set; }
+        public string Download { get; set; }
+        public string Docs { get; set; }
         public int Status { get; set; }
 
         public virtual Account Acc { get; set; }
+        public virtual ICollection<Authorization> Authorizations { get; set; }
         public virtual ICollection<DeviceSoftware> DeviceSoftwares { get; set; }
         public virtual ICollection<Report> Reports { get; set; }
     }

@@ -29,6 +29,8 @@ namespace SoftTrack.Application.Service
                 Gpu = device.Gpu,
                 Ram = device.Ram,
                 Memory = device.Memory,
+                Os = device.Os,
+                Version = device.Version,
                 IpAddress = device.IpAddress,
                 Manufacturer = device.Manufacturer,
                 Model = device.Model,
@@ -55,6 +57,8 @@ namespace SoftTrack.Application.Service
             device.Gpu = updatedDevice.Gpu;
             device.Ram = updatedDevice.Ram;
             device.Memory = updatedDevice.Memory;
+            device.Os = updatedDevice.Os;
+            device.Version = updatedDevice.Version;
             device.IpAddress = updatedDevice.IpAddress;
             device.Manufacturer = updatedDevice.Manufacturer;
             device.Model = updatedDevice.Model;
@@ -84,6 +88,8 @@ namespace SoftTrack.Application.Service
                 Gpu = device.Gpu,
                 Ram = device.Ram,
                 Memory = device.Memory,
+                Os = device.Os,
+                Version = device.Version,
                 IpAddress = device.IpAddress,
                 Manufacturer = device.Manufacturer,
                 Model = device.Model,
@@ -107,6 +113,8 @@ namespace SoftTrack.Application.Service
                 Gpu = device.Gpu,
                 Ram = device.Ram,
                 Memory = device.Memory,
+                Os = device.Os,
+                Version = device.Version,
                 IpAddress = device.IpAddress,
                 Manufacturer = device.Manufacturer,
                 Model = device.Model,

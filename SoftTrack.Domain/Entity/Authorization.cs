@@ -3,14 +3,15 @@ using System.Collections.Generic;
 
 namespace SoftTrack.Domain
 {
-    public partial class Report
+    public partial class Authorization
     {
-        public int ReportId { get; set; }
+        public int AuthorizationId { get; set; }
         public int SoftwareId { get; set; }
-        public string Description { get; set; }
-        public string Type { get; set; }
+        public string Name { get; set; }
+        public string Publisher { get; set; }
+        public string AuthorizationKey { get; set; }
         public DateTime StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public int Time { get; set; }
         public int Status { get; set; }
 
         public virtual Software Software { get; set; }

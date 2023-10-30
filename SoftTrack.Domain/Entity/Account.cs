@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace SoftTrack.Domain
-{ 
+{
     public partial class Account
     {
         public Account()

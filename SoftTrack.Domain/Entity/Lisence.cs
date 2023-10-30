@@ -11,10 +11,10 @@ namespace SoftTrack.Domain
         }
 
         public int LisenceId { get; set; }
-        public int SoftwareId { get; set; }
         public string LisenceKey { get; set; }
         public DateTime StartDate { get; set; }
         public int Time { get; set; }
+        public int? Status { get; set; }
 
         public virtual ICollection<DeviceSoftware> DeviceSoftwares { get; set; }
     }

@@ -5,8 +5,8 @@ namespace SoftTrack.Infrastructure
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly soft_track2Context _context;
-        public AccountRepository(soft_track2Context context)
+        private readonly soft_track3Context _context;
+        public AccountRepository(soft_track3Context context)
         {
             _context = context;
         }
@@ -68,10 +68,10 @@ namespace SoftTrack.Infrastructure
                 var mem = new Account()
                 {
                     Email = User.Email,
-                    Status= User.Status,
-                    RoleId= User.RoleId,
+                    Status = User.Status,
+                    RoleId = User.RoleId,
                     Name = User.Name,
-                
+
 
                 };
                 await _context.AddAsync(mem);
@@ -84,6 +84,6 @@ namespace SoftTrack.Infrastructure
             }
         }
 
-    
+
     }
 }

@@ -12,6 +12,9 @@ namespace SoftTrack.Application.DTO
         public string Release { get; set; }
         public string Type { get; set; }
         public string Os { get; set; }
+        public string Description { get; set; }
+        public string Download { get; set; }
+        public string Docs { get; set; }
         public int Status { get; set; }
        
         //public virtual Device? Device { get; set; }

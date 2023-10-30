@@ -5,8 +5,8 @@ namespace SoftTrack.Infrastructure
 {
     public class SoftwareRepository : ISoftwareRepository
     {
-        private readonly soft_track2Context _context;
-        public SoftwareRepository(soft_track2Context context)
+        private readonly soft_track3Context _context;
+        public SoftwareRepository(soft_track3Context context)
         {
             _context = context;
         }
@@ -53,36 +53,47 @@ namespace SoftTrack.Infrastructure
             else
             {
                 // Cập nhật các trường cần thiết của phần mềm
-                if (updatedSoftware.AccId != 0 )
+                if (updatedSoftware.AccId != 0)
                 {
                     software.AccId = updatedSoftware.AccId;
                 }
 
-                if (updatedSoftware.Name != null)
+                if (updatedSoftware.Name != null && updatedSoftware.Name != "string")
                 {
                     software.Name = updatedSoftware.Name;
                 }
 
-                if (updatedSoftware.Publisher != null)
+                if (updatedSoftware.Publisher != null && updatedSoftware.Publisher != "string")
                 {
                     software.Publisher = updatedSoftware.Publisher;
                 }
 
-                if (updatedSoftware.Version != null)
+                if (updatedSoftware.Version != null && updatedSoftware.Version != "string")
                 {
                     software.Version = updatedSoftware.Version;
                 }
 
-                if (updatedSoftware.Type != null)
+                if (updatedSoftware.Type != null && updatedSoftware.Type != "string")
                 {
                     software.Type = updatedSoftware.Type;
                 }
 
-                if (updatedSoftware.Os != null)
+                if (updatedSoftware.Os != null && updatedSoftware.Os != "string")
                 {
                     software.Os = updatedSoftware.Os;
                 }
-
+                if (updatedSoftware.Description != null && updatedSoftware.Description != "string")
+                {
+                    software.Description = updatedSoftware.Description;
+                }
+                if (updatedSoftware.Download != null && updatedSoftware.Download != "string")
+                {
+                    software.Download = updatedSoftware.Download;
+                }
+                if (updatedSoftware.Docs != null && updatedSoftware.Docs != "string")
+                {
+                    software.Docs = updatedSoftware.Docs;
+                }
                 if (updatedSoftware.Status != 0)
                 {
                     software.Status = updatedSoftware.Status;
@@ -100,14 +111,14 @@ namespace SoftTrack.Infrastructure
             if (software != null)
             {
                 software.Status = 3;
-               
+
                 await _context.SaveChangesAsync();
             }
         }
         public async Task<Software> GetSoftwareAsync(int softwareId)
         {
             var software = await _context.Softwares.FindAsync(softwareId);
-          
+
             return software; // Trả về phần mềm nếu tìm thấy.
         }
         public async Task<List<Software>> GetSoftwareForAccountAsync(int accountId)

@@ -6,18 +6,19 @@ using Microsoft.Extensions.Configuration;
 
 namespace SoftTrack.Domain
 {
-    public partial class soft_track2Context : DbContext
+    public partial class soft_track3Context : DbContext
     {
-        public soft_track2Context()
+        public soft_track3Context()
         {
         }
 
-        public soft_track2Context(DbContextOptions<soft_track2Context> options)
+        public soft_track3Context(DbContextOptions<soft_track3Context> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Account> Accounts { get; set; }
+        public virtual DbSet<Authorization> Authorizations { get; set; }
         public virtual DbSet<Device> Devices { get; set; }
         public virtual DbSet<DeviceSoftware> DeviceSoftwares { get; set; }
         public virtual DbSet<Lisence> Lisences { get; set; }
@@ -61,6 +62,37 @@ namespace SoftTrack.Domain
                     .HasConstraintName("FK_Account_Role");
             });
 
+            modelBuilder.Entity<Authorization>(entity =>
+            {
+                entity.ToTable("Authorization");
+
+                entity.Property(e => e.AuthorizationId).HasColumnName("AuthorizationID");
+
+                entity.Property(e => e.AuthorizationKey)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Publisher)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.SoftwareId).HasColumnName("SoftwareID");
+
+                entity.Property(e => e.StartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("Start_Date");
+
+                entity.HasOne(d => d.Software)
+                    .WithMany(p => p.Authorizations)
+                    .HasForeignKey(d => d.SoftwareId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Authorization_Software");
+            });
+
             modelBuilder.Entity<Device>(entity =>
             {
                 entity.ToTable("Device");
@@ -93,11 +125,17 @@ namespace SoftTrack.Domain
                     .IsRequired()
                     .HasMaxLength(255);
 
+                entity.Property(e => e.Os)
+                    .HasMaxLength(255)
+                    .HasColumnName("OS");
+
                 entity.Property(e => e.Ram).HasColumnName("RAM");
 
                 entity.Property(e => e.SerialNumber)
                     .HasMaxLength(255)
                     .HasColumnName("Serial_Number");
+
+                entity.Property(e => e.Version).HasMaxLength(255);
             });
 
             modelBuilder.Entity<DeviceSoftware>(entity =>
@@ -142,8 +180,6 @@ namespace SoftTrack.Domain
                     .IsRequired()
                     .HasMaxLength(255);
 
-                entity.Property(e => e.SoftwareId).HasColumnName("SoftwareID");
-
                 entity.Property(e => e.StartDate)
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
@@ -153,9 +189,7 @@ namespace SoftTrack.Domain
             {
                 entity.ToTable("Report");
 
-                entity.Property(e => e.ReportId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("ReportID");
+                entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
                 entity.Property(e => e.Description).HasMaxLength(255);
 
@@ -182,9 +216,7 @@ namespace SoftTrack.Domain
             {
                 entity.ToTable("Role");
 
-                entity.Property(e => e.RoleId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("RoleID");
+                entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -198,6 +230,12 @@ namespace SoftTrack.Domain
                 entity.Property(e => e.SoftwareId).HasColumnName("SoftwareID");
 
                 entity.Property(e => e.AccId).HasColumnName("AccID");
+
+                entity.Property(e => e.Description).HasMaxLength(255);
+
+                entity.Property(e => e.Docs).HasMaxLength(255);
+
+                entity.Property(e => e.Download).HasMaxLength(255);
 
                 entity.Property(e => e.Name)
                     .IsRequired()

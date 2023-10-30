@@ -19,13 +19,13 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class AccountController : Controller
     {
-        private readonly soft_track2Context _context;
+        private readonly soft_track3Context _context;
 
         private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_track2Context context)
+        public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_track3Context context)
         {
             _repo = userRepository;
             _configuration = configuration;
@@ -69,7 +69,7 @@ namespace SoftTrack.API.Controllers
                 })
                 .ToListAsync();
 
-            if (accounts == null || accounts.Count == 0)
+            if (accounts == null && accounts.Count == 0)
             {
                 //Không tìm thấy tài khoản trùng khớp
                 return NotFound("Không tìm thấy tài khoản trùng khớp.");

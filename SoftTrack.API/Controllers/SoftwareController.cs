@@ -12,8 +12,8 @@ namespace SoftTrack.API.Controllers
     public class SoftwareController : Controller
     {
         private readonly ISoftwareService _softwareService;
-        private readonly soft_track2Context _context;
-        public SoftwareController(ISoftwareService softwareService, soft_track2Context context)
+        private readonly soft_track3Context _context;
+        public SoftwareController(ISoftwareService softwareService, soft_track3Context context)
         {
             _softwareService = softwareService;
             _context = context;

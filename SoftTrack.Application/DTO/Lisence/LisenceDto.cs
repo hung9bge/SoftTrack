@@ -9,10 +9,10 @@ namespace SoftTrack.Application.DTO
     public class LisenceDto
     {
         public int LisenceId { get; set; }
-        public int SoftwareId { get; set; }
         public string LisenceKey { get; set; }
-        public String StartDate { get; set; }
+        public string StartDate { get; set; }
         public int Time { get; set; }
+        public int? Status { get; set; }
 
     }
 }

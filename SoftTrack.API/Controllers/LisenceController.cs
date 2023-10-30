@@ -4,6 +4,7 @@ using SoftTrack.Application.DTO;
 using SoftTrack.Application.DTO.Report;
 using SoftTrack.Domain;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,9 +14,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class LisenceController : ControllerBase
     {
-        private readonly soft_track2Context _context;
+        private readonly soft_track3Context _context;
 
-        public LisenceController(soft_track2Context context)
+        public LisenceController(soft_track3Context context)
         {
             _context = context;
         }
@@ -37,10 +38,10 @@ namespace SoftTrack.API.Controllers
                 .Select(license => new LisenceDto
                 {
                     LisenceId = license.LisenceId,
-                    SoftwareId = license.SoftwareId,
-                    LisenceKey = license.LisenceKey,
+                    LisenceKey = license.LisenceKey,                    
                     StartDate = license.StartDate.ToString("yyyy-MM-dd"),
-                    Time = license.Time
+                    Time = license.Time,
+                    Status = license.Status
                 })
                 .ToListAsync();
 
@@ -67,9 +68,9 @@ namespace SoftTrack.API.Controllers
             var newLisence = new Lisence
             {
                 LisenceKey= lisenceDto.LisenceKey,             
-                SoftwareId = lisenceDto.SoftwareId,
                 StartDate = DateTime.Parse(lisenceDto.StartDate),
-                Time = lisenceDto.Time             
+                Time = lisenceDto.Time,
+                Status = lisenceDto.Status
             };
 
             _context.Lisences.Add(newLisence);
@@ -86,10 +87,6 @@ namespace SoftTrack.API.Controllers
             {
                 return NotFound();
             }
-            if (lisence.SoftwareId != 0)
-            {
-                existingLisence.SoftwareId = lisence.SoftwareId;
-            }
             if (lisence.LisenceKey != "string")
             {
                 existingLisence.LisenceKey = lisence.LisenceKey;
@@ -98,6 +95,11 @@ namespace SoftTrack.API.Controllers
             {
                 existingLisence.Time = lisence.Time;
             }
+            if (lisence.Status != 0)
+            {
+                existingLisence.Status = lisence.Status;
+            }
+     
             if (lisence.StartDate != "string")
             {
                 existingLisence.StartDate = DateTime.Parse(lisence.StartDate);
@@ -105,7 +107,7 @@ namespace SoftTrack.API.Controllers
             _context.Lisences.Update(existingLisence);
             await _context.SaveChangesAsync();
 
-            return Ok("Report đã được cập nhật thành công.");
+            return Ok("Lisences đã được cập nhật thành công.");
         }
 
         // DELETE: api/Lisence/5
@@ -121,7 +123,7 @@ namespace SoftTrack.API.Controllers
             _context.Lisences.Remove(lisence);
             await _context.SaveChangesAsync();
 
-            return Ok("Report đã được xóa thành công.");
+            return Ok("Lisences đã được xóa thành công.");
         }
         
     }
