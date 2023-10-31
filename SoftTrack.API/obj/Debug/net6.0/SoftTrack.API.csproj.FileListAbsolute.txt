@@ -212,3 +212,10 @@ D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Core.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.Edm.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OData.ModelBuilder.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.Spatial.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\BouncyCastle.Cryptography.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\MimeKit.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\System.Formats.Asn1.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\System.Text.Encoding.CodePages.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Security.Cryptography.Pkcs.dll
+D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll

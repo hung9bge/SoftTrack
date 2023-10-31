@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MimeKit;
 using SoftTrack.Application.DTO.Report;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
+using System.Net;
+using System.Net.Mail;
+
 
 namespace SoftTrack.API.Controllers
 {
@@ -193,6 +197,79 @@ namespace SoftTrack.API.Controllers
 
             return Ok(reports);
         }
+        [HttpPost("SendReportByEmail/{idReport}")]
+        public async Task<IActionResult> SendReportByEmail(int idReport)
+        {
+            try
+            {
+                // Kiểm tra xem báo cáo (report) có tồn tại
+                var report = await _context.Reports.FindAsync(idReport);
+
+                if (report == null)
+                {
+                    return NotFound("Không tìm thấy báo cáo với idReport đã cung cấp.");
+                }
+
+                // Truy vấn danh sách email đã tồn tại trong bảng Account
+                var existingEmails = await _context.Accounts
+                    .Where(a => a.Status == true) // Lọc tài khoản có trạng thái true (hoạt động)
+                    .Select(a => a.Email)
+                    .ToListAsync();
+
+                if (existingEmails.Count == 0)
+                {
+                    return BadRequest("Không tìm thấy email trong bảng Account.");
+                }
+
+                // Gửi báo cáo đến danh sách email đã chọn
+                foreach (var email in existingEmails)
+                {
+                    // Tạo và gửi báo cáo thông qua email
+                    // Sử dụng thông tin từ report
+
+                    // Ví dụ sử dụng thư viện gửi email (như MimeKit hoặc SendGrid)
+                    // Thực hiện logic gửi email ở đây
+
+                    // Ví dụ sử dụng thư viện MimeKit
+                    //var message = new MimeMessage();
+                    //message.From.Add(new MailboxAddress("Your Name", "hunglmhe151034@fpt.edu.vn"));
+                    //message.To.Add(new MailboxAddress(email, email));
+                    //message.Subject = "Báo cáo lỗi report Sofware!";
+                    //message.Body = new TextPart("plain")
+                    //{
+                    //    Text = "Content of the Email:\n" + report.Description
+                    //};
+
+                    // Sử dụng thư viện gửi email để gửi thông báo
+                    var smtpClient = new SmtpClient
+                    {
+                        Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
+                        Port = 587, // Điền cổng của máy chủ SMTP
+                        Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
+                        EnableSsl = true // Sử dụng SSL
+                    };
+
+                    var mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("hunglmhe151034@fpt.edu.vn"),
+                        Subject = "Báo cáo lỗi report Software!",
+                        Body = "<html><body><h1>Báo cáo lỗi</h1><p>" + report.Description + "</p></body></html>",
+                        IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+                    };
+
+                    mailMessage.To.Add(email);
+
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+
+                return Ok("Báo cáo đã được gửi thành công đến danh sách email đã chọn.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+            }
+        }
+
 
     }
 
