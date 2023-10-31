@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using SoftTrack.Application.DTO.Report;
 using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
+using System.Globalization;
 using System.Net;
 using System.Net.Mail;
 
@@ -33,8 +35,8 @@ namespace SoftTrack.API.Controllers
                 SoftwareId = report.SoftwareId,
                 Description = report.Description,
                 Type = report.Type,
-                StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                EndDate = report.EndDate?.ToString("yyyy-MM-dd"), 
+                StartDate = report.StartDate.ToString("dd/MM/yyyy"),
+                EndDate = report.EndDate?.ToString("dd/MM/yyyy"), 
                 Status = report.Status
             });
 
@@ -59,8 +61,8 @@ namespace SoftTrack.API.Controllers
                 SoftwareId = report.SoftwareId,
                 Description = report.Description,
                 Type = report.Type,
-                StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                EndDate = report.EndDate?.ToString("yyyy-MM-dd"),
+                StartDate = report.StartDate.ToString("dd/MM/yyyy"),
+                EndDate = report.EndDate?.ToString("dd/MM/yyyy"),
                 Status = report.Status
             };
 
@@ -77,8 +79,8 @@ namespace SoftTrack.API.Controllers
                     SoftwareId = report.SoftwareId,
                     Description = report.Description,
                     Type = report.Type,
-                    StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                    EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("yyyy-MM-dd") : null,
+                    StartDate = report.StartDate.ToString("dd/MM/yyyy"),
+                    EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
                     Status = report.Status
 
                 })
@@ -93,19 +95,23 @@ namespace SoftTrack.API.Controllers
 
             var newReport = new Report
             {
-                ReportId= reportCreateDto.ReportId,
+             
                 SoftwareId = reportCreateDto.SoftwareId,
                 Description = reportCreateDto.Description,
                 Type = reportCreateDto.Type,
-                StartDate = DateTime.Parse(reportCreateDto.StartDate),           
-               
+        
                 Status = reportCreateDto.Status
 
             };
-            //if (!string.IsNullOrEmpty(reportCreateDto.EndDate))
-            //{
-            //    newReport.EndDate = DateTime.Parse(reportCreateDto.EndDate);
-            //}
+            if (DateTime.TryParseExact(reportCreateDto.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+            {
+                newReport.StartDate = parsedDate;
+            }
+            if (DateTime.TryParseExact(reportCreateDto.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out  parsedDate))
+            {
+                newReport.EndDate = parsedDate;
+            }
+
             _context.Reports.Add(newReport);
             await _context.SaveChangesAsync();
 
@@ -147,14 +153,10 @@ namespace SoftTrack.API.Controllers
 
                 if (string.IsNullOrEmpty(reportUpdateDto.EndDate))
                 {
-                    existingReport.EndDate = null;
+                    existingReport.EndDate = DateTime.Parse(reportUpdateDto.EndDate);
                 }
-                if (reportUpdateDto.StartDate != "string")
-                {
-                    existingReport.StartDate = DateTime.Parse(reportUpdateDto.StartDate);
-                }
-
-            if (reportUpdateDto.Status != 0)
+               
+                if (reportUpdateDto.Status != 0)
                 {
                     existingReport.Status = reportUpdateDto.Status;
                 }
@@ -190,8 +192,8 @@ namespace SoftTrack.API.Controllers
                 SoftwareId = report.SoftwareId,
                 Description = report.Description,
                 Type = report.Type,
-                StartDate = report.StartDate.ToString("yyyy-MM-dd"),
-                EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("yyyy-MM-dd") : null,
+                StartDate = report.StartDate.ToString("dd/MM/yyyy"),
+                EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
                 Status = report.Status
             }).ToList();
 

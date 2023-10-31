@@ -43,10 +43,25 @@ namespace SoftTrack.Application.Service
         }
         public async Task CreateDeviceAsync(DeviceCreateDto DeviceCreateDto)
         {
-         
-            var Device = _mapper.Map<Device>(DeviceCreateDto);
-
-            await _DeviceRepository.CreateDeviceAsync(Device);
+            var device = new Device();
+            device.Name = DeviceCreateDto.Name;
+            device.Cpu = DeviceCreateDto.Cpu;
+            device.Gpu = DeviceCreateDto.Gpu;
+            device.Ram = DeviceCreateDto.Ram;
+            device.Memory = DeviceCreateDto.Memory;
+            device.Os = DeviceCreateDto.Os;
+            device.Version = DeviceCreateDto.Version;
+            device.IpAddress = DeviceCreateDto.IpAddress;
+            device.Manufacturer = DeviceCreateDto.Manufacturer;
+            device.Model = DeviceCreateDto.Model;
+            device.SerialNumber = DeviceCreateDto.SerialNumber;
+            device.Status = DeviceCreateDto.Status;
+            if (DateTime.TryParseExact(DeviceCreateDto.LastSuccesfullScan, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+            {
+                device.LastSuccesfullScan = parsedDate;
+            }
+        
+            await _DeviceRepository.CreateDeviceAsync(device);
         }
 
         public async Task UpdateDeviceAsync(int deviceId, DeviceUpdateDto updatedDevice)

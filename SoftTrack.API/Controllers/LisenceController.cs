@@ -39,7 +39,7 @@ namespace SoftTrack.API.Controllers
                 {
                     LisenceId = license.LisenceId,
                     LisenceKey = license.LisenceKey,                    
-                    StartDate = license.StartDate.ToString("yyyy-MM-dd"),
+                    StartDate = license.StartDate.ToString("dd/MM/yyyy"),
                     Time = license.Time,
                     Status = license.Status
                 })

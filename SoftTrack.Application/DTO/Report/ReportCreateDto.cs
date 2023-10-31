@@ -8,7 +8,7 @@ namespace SoftTrack.Application.DTO.Report
 {
     public class ReportCreateDto
     {
-        public int ReportId { get; set; }
+    
         public int SoftwareId { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
