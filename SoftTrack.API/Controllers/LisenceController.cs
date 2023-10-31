@@ -114,16 +114,28 @@ namespace SoftTrack.API.Controllers
         [HttpDelete("DeleteLisence{id}")]
         public async Task<IActionResult> DeleteLisence(int id)
         {
-            var lisence = await _context.Lisences.FindAsync(id);
-            if (lisence == null)
+            // Kiểm tra xem có bản ghi DeviceSoftware liên quan đến giấy phép không
+            var deviceSoftware = await _context.DeviceSoftwares.FirstOrDefaultAsync(ds => ds.LisenceId == id);
+
+            if (deviceSoftware != null)
             {
-                return NotFound();
+                // Nếu tìm thấy, xóa bản ghi DeviceSoftware
+                _context.DeviceSoftwares.Remove(deviceSoftware);
             }
 
+            var lisence = await _context.Lisences.FindAsync(id);
+
+            if (lisence == null)
+            {
+                return NotFound("Giấy phép không tồn tại.");
+            }
+
+            // Xóa giấy phép
             _context.Lisences.Remove(lisence);
+           
             await _context.SaveChangesAsync();
 
-            return Ok("Lisences đã được xóa thành công.");
+            return Ok("Giấy phép đã được xóa thành công.");
         }
         
     }
