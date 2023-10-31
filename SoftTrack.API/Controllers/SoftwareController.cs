@@ -85,5 +85,38 @@ namespace SoftTrack.API.Controllers
 
             return softwareForAccountAndDevice;
         }
+            [HttpGet("GetSoftwareByReport/Type")]
+            public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwareByReport(string reportType)
+            {
+                try
+                {
+                    // Truy vấn danh sách Software dựa trên ReportId
+                    var softwareList = await _context.Softwares
+                        .Where(s => s.Reports.Any(r => r.Type.ToLower() == reportType.ToLower()))
+                        .Select(s => new SoftwareDto
+                        {
+                            SoftwareId = s.SoftwareId,
+                            AccId = s.AccId,
+                            Name = s.Name,
+                            Publisher = s.Publisher,
+                            Version = s.Version,
+                            Release = s.Release,
+                            Type = s.Type,
+                            Os = s.Os,
+                            Description = s.Description,
+                            Download = s.Download,
+                            Docs = s.Docs,
+                            Status = s.Status
+                        })
+                        .ToListAsync();
+
+                    return Ok(softwareList);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+                }
+            }
+
     }
 }
