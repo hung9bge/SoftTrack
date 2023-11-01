@@ -15,14 +15,14 @@ namespace SoftTrack.API.Controllers
             _context = context;
         }
 
-        [HttpPost("CreateLisence")]
-        public async Task<IActionResult> CreateLisence([FromBody] LisenceCreateDto lisenceCreateDto)
+        [HttpPost("CreateLicense")]
+        public async Task<IActionResult> CreateLicense([FromBody] LicenseCreateDto licenseCreateDto)
         {
             try
             {
                 // Kiểm tra xem Device và Software tồn tại
-                var device = await _context.Devices.FindAsync(lisenceCreateDto.DeviceId);
-                var software = await _context.Softwares.FindAsync(lisenceCreateDto.SoftwareId);
+                var device = await _context.Devices.FindAsync(licenseCreateDto.DeviceId);
+                var software = await _context.Softwares.FindAsync(licenseCreateDto.SoftwareId);
 
                 if (device == null || software == null)
                 {
@@ -30,24 +30,24 @@ namespace SoftTrack.API.Controllers
                 }
 
                 // Tạo giấy phép
-                var newLisence = new Lisence
+                var newLicense = new License
                 {
                     
-                    LisenceKey = lisenceCreateDto.LisenceKey,                   
-                    StartDate = DateTime.Parse(lisenceCreateDto.StartDate),
-                    Time = lisenceCreateDto.Time,
-                    Status = lisenceCreateDto.Status
+                    LicenseKey = licenseCreateDto.LicenseKey,                   
+                    StartDate = DateTime.Parse(licenseCreateDto.StartDate),
+                    Time = licenseCreateDto.Time,
+                    Status = licenseCreateDto.Status
                 };
 
-                // Thêm giấy phép vào DbSet Lisences
-                _context.Lisences.Add(newLisence);
+                // Thêm giấy phép vào DbSet Licenses
+                _context.Licenses.Add(newLicense);
 
                 // Tạo DeviceSoftware và thêm vào DbSet DeviceSoftwares
                 var deviceSoftware = new DeviceSoftware
                 {
                     DeviceId = device.DeviceId,
                     SoftwareId = software.SoftwareId,
-                    LisenceId = newLisence.LisenceId, // ID của giấy phép mới tạo
+                    LicenseId = newLicense.LicenseId, // ID của giấy phép mới tạo
                     InstallDate = DateTime.Now, // Hoặc giá trị khác nếu cần
                     Status = 1 // Hoặc giá trị khác nếu cần
                 };
@@ -55,7 +55,7 @@ namespace SoftTrack.API.Controllers
 
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetLisence", new { id = newLisence.LisenceId }, newLisence);
+                return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
             }
             catch (Exception ex)
             {

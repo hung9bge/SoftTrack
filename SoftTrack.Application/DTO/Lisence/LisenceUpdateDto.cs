@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace SoftTrack.Application.DTO
 {
-    public class LisenceUpdateDto
+    public class LicenseUpdateDto
     {
-        public string LisenceKey { get; set; }
+        public string LicenseKey { get; set; }
         public string StartDate { get; set; }
         public int Time { get; set; }
         public int? Status { get; set; }

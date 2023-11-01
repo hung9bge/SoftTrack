@@ -21,7 +21,7 @@ namespace SoftTrack.Domain
         public virtual DbSet<Authorization> Authorizations { get; set; }
         public virtual DbSet<Device> Devices { get; set; }
         public virtual DbSet<DeviceSoftware> DeviceSoftwares { get; set; }
-        public virtual DbSet<Lisence> Lisences { get; set; }
+        public virtual DbSet<License> Licenses { get; set; }
         public virtual DbSet<Report> Reports { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Software> Softwares { get; set; }
@@ -150,7 +150,7 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.InstallDate).HasColumnType("date");
 
-                entity.Property(e => e.LisenceId).HasColumnName("LisenceID");
+                entity.Property(e => e.LicenseId).HasColumnName("LicenseID");
 
                 entity.HasOne(d => d.Device)
                     .WithMany(p => p.DeviceSoftwares)
@@ -158,10 +158,10 @@ namespace SoftTrack.Domain
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Device_Software_Device");
 
-                entity.HasOne(d => d.Lisence)
+                entity.HasOne(d => d.License)
                     .WithMany(p => p.DeviceSoftwares)
-                    .HasForeignKey(d => d.LisenceId)
-                    .HasConstraintName("FK_Device_Software_Lisence");
+                    .HasForeignKey(d => d.LicenseId)
+                    .HasConstraintName("FK_Device_Software_License");
 
                 entity.HasOne(d => d.Software)
                     .WithMany(p => p.DeviceSoftwares)
@@ -170,13 +170,13 @@ namespace SoftTrack.Domain
                     .HasConstraintName("FK_Device_Software_Software");
             });
 
-            modelBuilder.Entity<Lisence>(entity =>
+            modelBuilder.Entity<License>(entity =>
             {
-                entity.ToTable("Lisence");
+                entity.ToTable("License");
 
-                entity.Property(e => e.LisenceId).HasColumnName("LisenceID");
+                entity.Property(e => e.LicenseId).HasColumnName("LicenseID");
 
-                entity.Property(e => e.LisenceKey)
+                entity.Property(e => e.LicenseKey)
                     .IsRequired()
                     .HasMaxLength(255);
 

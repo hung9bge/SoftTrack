@@ -4,7 +4,6 @@ using SoftTrack.Application.DTO;
 using SoftTrack.Application.DTO.Report;
 using SoftTrack.Domain;
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,21 +11,21 @@ namespace SoftTrack.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class LisenceController : ControllerBase
+    public class LicenseController : ControllerBase
     {
         private readonly soft_track3Context _context;
 
-        public LisenceController(soft_track3Context context)
+        public LicenseController(soft_track3Context context)
         {
             _context = context;
         }
 
-        // GET: api/Lisence
+        // GET: api/License
         [HttpGet]
-        public async Task<IActionResult> GetLisences()
+        public async Task<IActionResult> GetLicenses()
         {
-            var lisences = await _context.Lisences.ToListAsync();
-            return Ok(lisences);
+            var licenses = await _context.Licenses.ToListAsync();
+            return Ok(licenses);
         }
         [HttpGet("list_licenses_by_device/{deviceId}")]
         public async Task<IActionResult> GetLicensesByDevice(int deviceId)
@@ -34,11 +33,11 @@ namespace SoftTrack.API.Controllers
             // Sử dụng LINQ để lấy danh sách các bản quyền cho thiết bị có deviceId tương ứng
             var licenses = await _context.DeviceSoftwares
                 .Where(ds => ds.DeviceId == deviceId)
-                .Select(ds => ds.Lisence)
-                .Select(license => new LisenceDto
+                .Select(ds => ds.License)
+                .Select(license => new LicenseDto
                 {
-                    LisenceId = license.LisenceId,
-                    LisenceKey = license.LisenceKey,                    
+                    LicenseId = license.LicenseId,
+                    LicenseKey = license.LicenseKey,                    
                     StartDate = license.StartDate.ToString("dd/MM/yyyy"),
                     Time = license.Time,
                     Status = license.Status
@@ -47,75 +46,75 @@ namespace SoftTrack.API.Controllers
 
             return Ok(licenses);
         }
-        // GET: api/Lisence/5
+        // GET: api/License/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetLisence(int id)
+        public async Task<IActionResult> GetLicense(int id)
         {
-            var lisence = await _context.Lisences.FindAsync(id);
+            var license = await _context.Licenses.FindAsync(id);
 
-            if (lisence == null)
+            if (license == null)
             {
                 return NotFound();
             }
 
-            return Ok(lisence);
+            return Ok(license);
         }
 
-        // POST: api/Lisence
-        [HttpPost("CreateLisence")]
-        public async Task<IActionResult> CreateLisence([FromBody] LisenceCreateDto lisenceDto)
+        // POST: api/License
+        [HttpPost("CreateLicense")]
+        public async Task<IActionResult> CreateLicense([FromBody] LicenseCreateDto licenseDto)
         {
-            var newLisence = new Lisence
+            var newLicense = new License
             {
-                LisenceKey= lisenceDto.LisenceKey,             
-                StartDate = DateTime.Parse(lisenceDto.StartDate),
-                Time = lisenceDto.Time,
-                Status = lisenceDto.Status
+                LicenseKey= licenseDto.LicenseKey,             
+                StartDate = DateTime.Parse(licenseDto.StartDate),
+                Time = licenseDto.Time,
+                Status = licenseDto.Status
             };
 
-            _context.Lisences.Add(newLisence);
+            _context.Licenses.Add(newLicense);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetLisence", new { id = newLisence.LisenceId }, newLisence);
+            return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
         }
 
-        // PUT: api/Lisence/5
-        [HttpPut("UpdateLisence{id}")]
-        public async Task<IActionResult> UpdateLisence(int id, [FromBody] LisenceUpdateDto lisence)
+        // PUT: api/License/5
+        [HttpPut("UpdateLicense{id}")]
+        public async Task<IActionResult> UpdateLicense(int id, [FromBody] LicenseUpdateDto license)
         {
-            var existingLisence = await _context.Lisences.FindAsync(id);
-            if (existingLisence == null)
+            var existingLicense = await _context.Licenses.FindAsync(id);
+            if (existingLicense == null)
             {
                 return NotFound();
             }
-            if (lisence.LisenceKey != "string")
+            if (license.LicenseKey != "string")
             {
-                existingLisence.LisenceKey = lisence.LisenceKey;
+                existingLicense.LicenseKey = license.LicenseKey;
             }
-            if (lisence.Time != 0)
+            if (license.Time != 0)
             {
-                existingLisence.Time = lisence.Time;
+                existingLicense.Time = license.Time;
             }
-            if (lisence.Status != 0)
+            if (license.Status != 0)
             {
-                existingLisence.Status = lisence.Status;
+                existingLicense.Status = license.Status;
             }
      
-            if (lisence.StartDate != "string")
+            if (license.StartDate != "string")
             {
-                existingLisence.StartDate = DateTime.Parse(lisence.StartDate);
+                existingLicense.StartDate = DateTime.Parse(license.StartDate);
             }
-            _context.Lisences.Update(existingLisence);
+            _context.Licenses.Update(existingLicense);
             await _context.SaveChangesAsync();
 
-            return Ok("Lisences đã được cập nhật thành công.");
+            return Ok("Licenses đã được cập nhật thành công.");
         }
 
-        // DELETE: api/Lisence/5
-        [HttpDelete("DeleteLisence{id}")]
-        public async Task<IActionResult> DeleteLisence(int id)
+        // DELETE: api/License/5
+        [HttpDelete("DeleteLicense{id}")]
+        public async Task<IActionResult> DeleteLicense(int id)
         {
             // Kiểm tra xem có bản ghi DeviceSoftware liên quan đến giấy phép không
-            var deviceSoftware = await _context.DeviceSoftwares.FirstOrDefaultAsync(ds => ds.LisenceId == id);
+            var deviceSoftware = await _context.DeviceSoftwares.FirstOrDefaultAsync(ds => ds.LicenseId == id);
 
             if (deviceSoftware != null)
             {
@@ -123,15 +122,15 @@ namespace SoftTrack.API.Controllers
                 _context.DeviceSoftwares.Remove(deviceSoftware);
             }
 
-            var lisence = await _context.Lisences.FindAsync(id);
+            var license = await _context.Licenses.FindAsync(id);
 
-            if (lisence == null)
+            if (license == null)
             {
                 return NotFound("Giấy phép không tồn tại.");
             }
 
             // Xóa giấy phép
-            _context.Lisences.Remove(lisence);
+            _context.Licenses.Remove(license);
            
             await _context.SaveChangesAsync();
 

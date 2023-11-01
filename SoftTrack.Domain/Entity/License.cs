@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace SoftTrack.Domain
 {
-    public partial class Lisence
+    public partial class License
     {
-        public Lisence()
+        public License()
         {
             DeviceSoftwares = new HashSet<DeviceSoftware>();
         }
 
-        public int LisenceId { get; set; }
-        public string LisenceKey { get; set; }
+        public int LicenseId { get; set; }
+        public string LicenseKey { get; set; }
         public DateTime StartDate { get; set; }
         public int Time { get; set; }
         public int? Status { get; set; }

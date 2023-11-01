@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SoftTrack.Application.DTO
 {
-    public class LisenceDto
+    public class LicenseDto
     {
-        public int LisenceId { get; set; }
-        public string LisenceKey { get; set; }
+        public int LicenseId { get; set; }
+        public string LicenseKey { get; set; }
         public string StartDate { get; set; }
         public int Time { get; set; }
         public int? Status { get; set; }
