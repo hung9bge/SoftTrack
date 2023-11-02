@@ -13,6 +13,7 @@ namespace SoftTrack.Application.DTO
         public string StartDate { get; set; }
         public int Time { get; set; }
         public int? Status { get; set; }
+        public int SoftwareId { get; set; }
 
     }
 }

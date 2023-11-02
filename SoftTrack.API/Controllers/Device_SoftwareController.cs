@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SoftTrack.Application.DTO;
 using SoftTrack.Domain;
+using System.Globalization;
 
 namespace SoftTrack.API.Controllers
 {
@@ -18,6 +20,7 @@ namespace SoftTrack.API.Controllers
         [HttpPost("CreateLicense")]
         public async Task<IActionResult> CreateLicense([FromBody] LicenseCreateDto licenseCreateDto)
         {
+            License newLicense = new License();
             try
             {
                 // Kiểm tra xem Device và Software tồn tại
@@ -30,17 +33,18 @@ namespace SoftTrack.API.Controllers
                 }
 
                 // Tạo giấy phép
-                var newLicense = new License
+
+                newLicense.LicenseKey = licenseCreateDto.LicenseKey;
+                newLicense.Time = licenseCreateDto.Time;
+                newLicense.Status = licenseCreateDto.Status;
+                if (DateTime.TryParseExact(licenseCreateDto.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
-                    
-                    LicenseKey = licenseCreateDto.LicenseKey,                   
-                    StartDate = DateTime.Parse(licenseCreateDto.StartDate),
-                    Time = licenseCreateDto.Time,
-                    Status = licenseCreateDto.Status
-                };
+                    newLicense.StartDate = parsedDate;
+                }
 
                 // Thêm giấy phép vào DbSet Licenses
                 _context.Licenses.Add(newLicense);
+                await _context.SaveChangesAsync();
 
                 // Tạo DeviceSoftware và thêm vào DbSet DeviceSoftwares
                 var deviceSoftware = new DeviceSoftware
@@ -54,8 +58,71 @@ namespace SoftTrack.API.Controllers
                 _context.DeviceSoftwares.Add(deviceSoftware);
 
                 await _context.SaveChangesAsync();
+                return Ok("Licenses đã được thêm thành công.");
 
-                return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
+                //return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
+            }
+            catch (Exception ex)
+            {
+                var removeLicense = await _context.Licenses.FirstOrDefaultAsync(l => l.LicenseId == newLicense.LicenseId);
+
+                if (removeLicense != null)
+                {
+                    // Nếu tìm thấy, xóa bản ghi License
+                    _context.Licenses.Remove(removeLicense);
+
+                    await _context.SaveChangesAsync();
+                }
+               
+                    return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+             }           
+        }
+        [HttpGet("list-device-software")]
+        public async Task<IActionResult> GetDeviceSoftwareList()
+        {
+            try
+            {
+                var deviceSoftwareList = await _context.DeviceSoftwares
+                    .Select(ds => new DeviceSoftware
+                    {
+                        DeviceId = ds.DeviceId,
+                        SoftwareId = ds.SoftwareId,
+                        LicenseId = ds.LicenseId,
+                        InstallDate = ds.InstallDate,
+                        Status = ds.Status
+                    })
+                    .ToListAsync();
+
+                return Ok(deviceSoftwareList);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+            }
+        }
+        [HttpPut("update-device-software")]
+        public async Task<IActionResult> UpdateDeviceSoftware([FromBody] UpdateDeviceSoftwareDto updateDto)
+        {
+            try
+            {
+                // Kiểm tra xem có tồn tại dữ liệu DeviceSoftware với DeviceId, SoftwareId, và LicenseId được cung cấp
+                var deviceSoftware = await _context.DeviceSoftwares
+                    .Where(ds => ds.DeviceId == updateDto.DeviceId && ds.SoftwareId == updateDto.SoftwareId && ds.LicenseId == updateDto.LicenseId)
+                    .FirstOrDefaultAsync();
+
+                if (deviceSoftware == null)
+                {
+                    return NotFound("DeviceSoftware không tồn tại.");
+                }
+
+                // Cập nhật thông tin DeviceSoftware từ DTO
+                deviceSoftware.InstallDate = updateDto.InstallDate;
+                deviceSoftware.Status = updateDto.Status;
+
+                // Lưu thay đổi vào cơ sở dữ liệu
+                await _context.SaveChangesAsync();
+
+                return Ok("Cập nhật DeviceSoftware thành công.");
             }
             catch (Exception ex)
             {

@@ -4,6 +4,7 @@ using SoftTrack.Application.DTO;
 using SoftTrack.Application.DTO.Report;
 using SoftTrack.Domain;
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -32,17 +33,17 @@ namespace SoftTrack.API.Controllers
         {
             // Sử dụng LINQ để lấy danh sách các bản quyền cho thiết bị có deviceId tương ứng
             var licenses = await _context.DeviceSoftwares
-                .Where(ds => ds.DeviceId == deviceId)
-                .Select(ds => ds.License)
-                .Select(license => new LicenseDto
-                {
-                    LicenseId = license.LicenseId,
-                    LicenseKey = license.LicenseKey,                    
-                    StartDate = license.StartDate.ToString("dd/MM/yyyy"),
-                    Time = license.Time,
-                    Status = license.Status
-                })
-                .ToListAsync();
+               .Where(ds => ds.DeviceId == deviceId)
+               .Select(ds => new LicenseDto
+               {
+                   LicenseId = ds.License.LicenseId,
+                   LicenseKey = ds.License.LicenseKey,
+                   StartDate = ds.License.StartDate.ToString("dd/MM/yyyy"),
+                   Time = ds.License.Time,
+                   Status = ds.License.Status,
+                   SoftwareId = ds.SoftwareId // Bao gồm SoftwareId
+               })
+               .ToListAsync();
 
             return Ok(licenses);
         }
@@ -61,21 +62,24 @@ namespace SoftTrack.API.Controllers
         }
 
         // POST: api/License
-        [HttpPost("CreateLicense")]
-        public async Task<IActionResult> CreateLicense([FromBody] LicenseCreateDto licenseDto)
-        {
-            var newLicense = new License
-            {
-                LicenseKey= licenseDto.LicenseKey,             
-                StartDate = DateTime.Parse(licenseDto.StartDate),
-                Time = licenseDto.Time,
-                Status = licenseDto.Status
-            };
-
-            _context.Licenses.Add(newLicense);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
-        }
+        //[HttpPost("CreateLicense")]
+        //public async Task<IActionResult> CreateLicense([FromBody] LicenseCreateDto licenseDto)
+        //{
+        //    var newLicense = new License
+        //    {
+        //        LicenseKey= licenseDto.LicenseKey,             
+        //        //StartDate = DateTime.Parse(licenseDto.StartDate),
+        //        Time = licenseDto.Time,
+        //        Status = licenseDto.Status
+        //    };
+        //    if (DateTime.TryParseExact(licenseDto.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+        //    {
+        //        newLicense.StartDate = parsedDate;
+        //    }
+        //    _context.Licenses.Add(newLicense);
+        //    await _context.SaveChangesAsync();
+        //    return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
+        //}
 
         // PUT: api/License/5
         [HttpPut("UpdateLicense{id}")]
