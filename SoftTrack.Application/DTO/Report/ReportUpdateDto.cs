@@ -9,7 +9,7 @@ namespace SoftTrack.Application.DTO.Report
     public class ReportUpdateDto
     {
         
-        public int SoftwareId { get; set; }
+        //public int SoftwareId { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
         public string StartDate { get; set; }

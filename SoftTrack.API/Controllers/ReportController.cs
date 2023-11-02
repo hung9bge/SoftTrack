@@ -131,10 +131,6 @@ namespace SoftTrack.API.Controllers
                     return NotFound();
                 }
 
-                if (reportUpdateDto.SoftwareId != 0)
-                {
-                    existingReport.SoftwareId = reportUpdateDto.SoftwareId;
-                }
 
                 if (reportUpdateDto.Description != "string")
                 {
@@ -151,7 +147,7 @@ namespace SoftTrack.API.Controllers
                     existingReport.StartDate = DateTime.Parse(reportUpdateDto.StartDate);
                 }
 
-                if (string.IsNullOrEmpty(reportUpdateDto.EndDate))
+                if (!string.IsNullOrEmpty(reportUpdateDto.EndDate))
                 {
                     existingReport.EndDate = DateTime.Parse(reportUpdateDto.EndDate);
                 }
