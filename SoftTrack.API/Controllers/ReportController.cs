@@ -17,7 +17,7 @@ namespace SoftTrack.API.Controllers
     public class ReportController : ControllerBase
     {
         private readonly soft_track3Context _context;
-
+        
         public ReportController(soft_track3Context context)
         {
             _context = context;
@@ -92,7 +92,8 @@ namespace SoftTrack.API.Controllers
         [HttpPost("CreateReport")]
         public async Task<IActionResult> CreateReport([FromBody] ReportCreateDto reportCreateDto)
         {
-
+            string dateString = DateTime.Now.ToString("dd/MM/yyyy");
+         
             var newReport = new Report
             {
              
@@ -103,13 +104,14 @@ namespace SoftTrack.API.Controllers
                 Status = reportCreateDto.Status
 
             };
-            if (DateTime.TryParseExact(reportCreateDto.StartDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+
+            if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
             {
                 newReport.StartDate = parsedDate;
             }
-            if (DateTime.TryParseExact(reportCreateDto.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out  parsedDate))
+            if (DateTime.TryParseExact(reportCreateDto.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
             {
-                newReport.EndDate = parsedDate;
+                newReport.EndDate = parsedDate1;
             }
 
             _context.Reports.Add(newReport);
@@ -123,15 +125,14 @@ namespace SoftTrack.API.Controllers
         [HttpPut("UpdateReport/{id}")]
         public async Task<IActionResult> UpdateReport(int id, [FromBody] ReportUpdateDto reportUpdateDto)
         {
+            string dateString = DateTime.Now.ToString("dd/MM/yyyy");
 
-                var existingReport = await _context.Reports.FindAsync(id);
+            var existingReport = await _context.Reports.FindAsync(id);
 
                 if (existingReport == null)
                 {
                     return NotFound();
                 }
-
-
                 if (reportUpdateDto.Description != "string")
                 {
                     existingReport.Description = reportUpdateDto.Description;
@@ -141,12 +142,10 @@ namespace SoftTrack.API.Controllers
                 {
                     existingReport.Type = reportUpdateDto.Type;
                 }
-
-                if (reportUpdateDto.StartDate != "string")
+                if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
-                    existingReport.StartDate = DateTime.Parse(reportUpdateDto.StartDate);
-                }
-
+                    existingReport.StartDate = parsedDate;
+                }          
                 if (!string.IsNullOrEmpty(reportUpdateDto.EndDate))
                 {
                     existingReport.EndDate = DateTime.Parse(reportUpdateDto.EndDate);
