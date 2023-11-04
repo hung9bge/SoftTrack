@@ -18,15 +18,15 @@ namespace SoftTrack.Infrastructure
         }
         public async Task CreateSoftwareAsync(Software software)
         {
-            if (await IsDuplicateSoftwareAsync(software))
-            {
-                // Phần mềm đã tồn tại, xử lý lỗi ở đây (ném ra ngoại lệ hoặc trả về thông báo lỗi)
-            }
-            else
-            {
+            //if (await IsDuplicateSoftwareAsync(software))
+            //{
+            //    // Phần mềm đã tồn tại, xử lý lỗi ở đây (ném ra ngoại lệ hoặc trả về thông báo lỗi)
+            //}
+            //else
+            //{
                 _context.Softwares.Add(software);
                 await _context.SaveChangesAsync();
-            }
+            //}
         }
         public async Task<bool> IsDuplicateSoftwareAsync(Software software)
         {
