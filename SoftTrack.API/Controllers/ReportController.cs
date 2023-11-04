@@ -138,14 +138,14 @@ namespace SoftTrack.API.Controllers
                     existingReport.Description = reportUpdateDto.Description;
                 }
 
-                if (reportUpdateDto.Type != "string" )
-                {
-                    existingReport.Type = reportUpdateDto.Type;
-                }
-                if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-                {
-                    existingReport.StartDate = parsedDate;
-                }          
+                //if (reportUpdateDto.Type != "string" )
+                //{
+                //    existingReport.Type = reportUpdateDto.Type;
+                //}
+                //if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                //{
+                //    existingReport.StartDate = parsedDate;
+                //}          
                 if (!string.IsNullOrEmpty(reportUpdateDto.EndDate))
                 {
                     existingReport.EndDate = DateTime.Parse(reportUpdateDto.EndDate);
