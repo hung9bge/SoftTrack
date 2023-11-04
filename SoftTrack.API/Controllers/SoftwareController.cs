@@ -120,6 +120,32 @@ namespace SoftTrack.API.Controllers
                     return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
                 }
             }
+        [HttpGet("GetSoftware/{deviceId}")]
+        public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwareForDevice(int deviceId)
+        {
+            var softwareForAccountAndDevice = await _context.Softwares        
+                .Where(software => software.DeviceSoftwares.Any(ds => ds.DeviceId == deviceId))
+                .Select(software => new SoftwareDto
+                {
+                    SoftwareId = software.SoftwareId,
+                    AccId = software.AccId,
+                    Name = software.Name,
+                    Publisher = software.Publisher,
+                    Version = software.Version,
+                    Release = software.Release,
+                    Type = software.Type,
+                    Os = software.Os,
+                    Description = software.Description,
+                    Docs = software.Docs,
+                    Download = software.Download,
+                    Status = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).Status,
+                    // Lấy InstallDate từ bảng liên quan
+                    InstallDate = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).InstallDate.ToString("dd/MM/yyyy")
+                })
+                .ToListAsync();
+
+            return softwareForAccountAndDevice;
+        }
 
     }
 }

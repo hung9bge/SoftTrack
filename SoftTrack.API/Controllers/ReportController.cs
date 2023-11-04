@@ -68,11 +68,11 @@ namespace SoftTrack.API.Controllers
 
             return reportDto;
         }
-        [HttpGet("GetReportsForSoftware/{softwareId}")]
-        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForSoftware(int softwareId)
+        [HttpGet("GetReportsForSoftware/{softwareId}/{type}")]
+        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForSoftware(int softwareId, string type)
         {
             var reportsForSoftware = await _context.Reports
-                .Where(report => report.SoftwareId == softwareId)
+                .Where(report => report.SoftwareId == softwareId && report.Type == type)
                 .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
@@ -168,16 +168,14 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<Report>> DeleteReport(int id)
         {
             var report = await _context.Reports.FindAsync(id);
-            if (report == null)
+            if (report != null)
             {
-                return NotFound();
+                report.Status = 3;
+                await _context.SaveChangesAsync();
             }
-
-            _context.Reports.Remove(report);
-            await _context.SaveChangesAsync();
-
             return Ok("Report đã được xóa thành công.");
         }
+
         [HttpGet("list_reports_by_account/{accountId}")]
         public async Task<IActionResult> GetReportsForAccountAsync(int accountId)
         {
