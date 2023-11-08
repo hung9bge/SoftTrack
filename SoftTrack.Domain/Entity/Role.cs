@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SoftTrack.Domain
+namespace SoftTrack.Domain.Entity
 {
     public partial class Role
     {
