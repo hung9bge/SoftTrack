@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SoftTrack.Domain.Entity
+namespace SoftTrack.Domain
 {
     public partial class License
     {

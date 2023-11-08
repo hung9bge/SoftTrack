@@ -10,9 +10,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class Device_SoftwareController : ControllerBase
     {
-        private readonly soft_track3Context _context;
+        private readonly soft_track4Context _context;
 
-        public Device_SoftwareController(soft_track3Context context)
+        public Device_SoftwareController(soft_track4Context context)
         {
             _context = context;
         }

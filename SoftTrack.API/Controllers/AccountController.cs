@@ -19,13 +19,13 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class AccountController : Controller
     {
-        private readonly soft_track3Context _context;
+        private readonly soft_track4Context _context;
 
         private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
 
-        public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_track3Context context)
+        public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_track4Context context)
         {
             _repo = userRepository;
             _configuration = configuration;

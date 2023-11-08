@@ -14,9 +14,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class LicenseController : ControllerBase
     {
-        private readonly soft_track3Context _context;
+        private readonly soft_track4Context _context;
 
-        public LicenseController(soft_track3Context context)
+        public LicenseController(soft_track4Context context)
         {
             _context = context;
         }
