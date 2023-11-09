@@ -31,6 +31,7 @@ namespace SoftTrack.API.Controllers
             {
                 ReportId = report.ReportId,
                 AppId = report.AppId,
+                Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
                 Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
@@ -57,6 +58,7 @@ namespace SoftTrack.API.Controllers
             {
                 ReportId = report.ReportId,
                 AppId = report.AppId,
+                Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
                 Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
@@ -75,6 +77,7 @@ namespace SoftTrack.API.Controllers
                 {
                     ReportId = report.ReportId,
                     AppId = report.AppId,
+                    Title = report.Title,   
                     Description = report.Description,
                     Type = report.Type,
                     Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
@@ -96,9 +99,9 @@ namespace SoftTrack.API.Controllers
             {
              
                 AppId = reportCreateDto.AppId,
+                Title= reportCreateDto.Title,
                 Description = reportCreateDto.Description,
-                Type = reportCreateDto.Type,
-        
+                Type = reportCreateDto.Type,       
                 Status = reportCreateDto.Status
 
             };
@@ -130,6 +133,10 @@ namespace SoftTrack.API.Controllers
                 if (existingReport == null)
                 {
                     return NotFound();
+                }
+                if (reportUpdateDto.Title != "string")
+                {
+                    existingReport.Title = reportUpdateDto.Title;
                 }
                 if (reportUpdateDto.Description != "string")
                 {
@@ -181,6 +188,7 @@ namespace SoftTrack.API.Controllers
             {
                 ReportId = report.ReportId,
                 AppId = report.AppId,
+                Title= report.Title,
                 Description = report.Description,
                 Type = report.Type,
                 Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
