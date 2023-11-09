@@ -9,15 +9,17 @@ namespace SoftTrack.Application.AutoMapper
         public AccountProfile()
         {
             CreateMap<Account, AccountDto>()
-                  .ForMember(dest => dest.RoleAccounts, opt => opt.MapFrom(src => src.RoleAccounts));
+                /*.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))*/; 
+                  
             CreateMap<Account, AccountUpdateDto>();
              
             CreateMap<Account, AccountCreateDto>();
 
             CreateMap<AccountUpdateDto, Account>();
-            CreateMap<RoleAccount, RoleAccountDto>();
+            
             CreateMap<AccountDto, Account>()
-              ;
+                /*.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))*/;
         }
     }
+   
 }

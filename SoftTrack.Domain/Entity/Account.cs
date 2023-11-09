@@ -7,18 +7,16 @@ namespace SoftTrack.Domain
     {
         public Account()
         {
-            Devices = new HashSet<Device>();
-            RoleAccounts = new HashSet<RoleAccount>();
+            Applications = new HashSet<Application>();
         }
 
         public int AccId { get; set; }
-        public string Account1 { get; set; }
-        public string? Password { get; set; }
-        public string? Name { get; set; }
+        public int RoleId { get; set; }
+        public string Name { get; set; }
         public string Email { get; set; }
-        public string ?PhoneNumber { get; set; }
+        public int Staus { get; set; }
 
-        public virtual ICollection<Device>? Devices { get; set; }
-        public virtual ICollection<RoleAccount> RoleAccounts { get; set; }
+        public virtual Role Role { get; set; }
+        public virtual ICollection<Application> Applications { get; set; }
     }
 }

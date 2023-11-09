@@ -1,88 +1,89 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SoftTrack.Domain;
+﻿//using Microsoft.EntityFrameworkCore;
+//using SoftTrack.Domain;
 
-namespace SoftTrack.Infrastructure
-{
-    public class AccountRepository : IAccountRepository
-    {
-        private readonly soft_trackContext _context;
-        public AccountRepository(soft_trackContext context)
-        {
-            _context = context;
-        }
-        public async Task<List<Account>> GetAllAccountAsync()
-        {
-            using var context = _context;
-            var accountsWithRoleAccounts = await _context.Accounts
-       .Include(account => account.RoleAccounts)
-       .ThenInclude(roleAccount => roleAccount.Role)
-       .ToListAsync();
+//namespace SoftTrack.Infrastructure
+//{
+//    public class AccountRepository : IAccountRepository
+//    {
+//        private readonly soft_track4Context _context;
+//        public AccountRepository(soft_track4Context context)
+//        {
+//            _context = context;
+//        }
+//        public async Task<List<Account>> accountsWithRoleNames()
+//        {
+//            using var context = _context;
+//            var accountsWithRoleNames = await _context.Accounts
+//                .Include(account => account.Role) // Sử dụng Include để lấy thông tin về Role
+//                .ToListAsync();
 
-            return accountsWithRoleAccounts;
-        }
-        public async Task CreateAccountAsync(Account Account)
-        {
-            using var context = _context;
-            _context.Accounts.Add(Account);
-            await _context.SaveChangesAsync();
-        }
+//            return accountsWithRoleNames;
+//        }
+//        public async Task CreateAccountAsync(Account Account)
+//        {
+//            using var context = _context;
+//            _context.Accounts.Add(Account);
+//            await _context.SaveChangesAsync();
+//        }
 
-        public async Task UpdateAccountAsync(Account Account)
-        {
-            using var context = _context;
-            _context.Entry(Account).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-        }
+//        public async Task UpdateAccountAsync(Account Account)
+//        {
+//            using var context = _context;
+//            _context.Entry(Account).State = EntityState.Modified;
+//            await _context.SaveChangesAsync();
+//        }
 
-        public async Task DeleteAccountAsync(Account Account)
-        {
-            using var context = _context;
-            _context.Accounts.Remove(Account);
-            await _context.SaveChangesAsync();
-        }
+//        public async Task DeleteAccountAsync(Account Account)
+//        {
+//            using var context = _context;
+//            _context.Accounts.Remove(Account);
+//            await _context.SaveChangesAsync();
+//        }
 
-        public async Task<Account> Login(string email)
-        {
-            try
-            {
-                using var context = _context;
-               
-                var user = await _context.Accounts.Where(user => user.Email.ToLower() == email.ToLower())
-                .Include(user => user.RoleAccounts).FirstOrDefaultAsync();
-                if (user == null) { return null; }
+//        public async Task<Account> Login(string email)
+//        {
+//            try
+//            {
+//                using var context = _context;
 
-                return user;
-            }
+//                var user = await _context.Accounts
+//             .Where(u => u.Email.ToLower() == email.ToLower())
+//             .Include(u => u.Role) // Kết hợp thông tin về Role
+//             .FirstOrDefaultAsync(); // Sử dụng FirstOrDefaultAsync để lấy một bản ghi hoặc null nếu không tìm thấy
 
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
-        public async Task Register(Account User)
-        {
-            try
-            {
-                using var context = _context;
-                var mem = new Account()
-                {
-                    Email = User.Email,
-                    Password = User.Password,
-                    PhoneNumber = User.PhoneNumber,
-                    Name = User.Name,
-                    Account1 = User.Account1,
 
-                };
-                await _context.AddAsync(mem);
-                await _context.SaveChangesAsync();
+//                return user;
+//            }
 
-            }
-            catch (Exception e)
-            {
-                throw new Exception(e.Message);
-            }
-        }
+//            catch (Exception e)
+//            {
+//                throw new Exception(e.Message);
+//            }
+//        }
+//        public async Task Register(Account User)
+//        {
+//            try
+//            {
+//                using var context = _context;
+//                var mem = new Account()
+//                {
+//                    Email = User.Email,
+//                    Status = User.Status,
+//                    RoleId = User.RoleId,
+//                    Name = User.Name,
 
-    
-    }
-}
+
+//                };
+//                await _context.AddAsync(mem);
+//                await _context.SaveChangesAsync();
+
+//            }
+//            catch (Exception e)
+//            {
+//                throw new Exception(e.Message);
+//            }
+//        }
+
+
+//    }
+//}

@@ -32,33 +32,36 @@ namespace SoftTrack.API.Controllers
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateDeviceAsync(DeviceUpdateDto DeviceUpdateDto)
+
+        [HttpPut("UpdateDeviceWith{key}")]
+        public async Task<IActionResult> UpdateDeviceAsync(int key,DeviceUpdateDto DeviceUpdateDto)
         {
-            await _DeviceService.UpdateDeviceAsync(DeviceUpdateDto);
+
+            await _DeviceService.UpdateDeviceAsync(key,DeviceUpdateDto);
             return StatusCode(StatusCodes.Status201Created);
         }
 
-        [HttpDelete("with_key")]
+        [HttpDelete("DeleteDeviceWith_key")]
         public async Task<IActionResult> DeleteDeviceAsync(int DeviceId)
         {
             await _DeviceService.DeleteDeviceAsync(DeviceId);
             return StatusCode(StatusCodes.Status200OK);
         }
-        [HttpGet("list_device")]
-        public async Task<IActionResult> GetAllDeviceWithSoftwaresAsync()
+
+
+        [HttpGet("list_device_with_sw{key}")]
+
+        public async Task<IActionResult> GetDevicesForSoftWareAsync(int key)
         {
-            var ressult = await _DeviceService.GetAllDeviceWithSoftwaresAsync();
+            var ressult = await _DeviceService.GetDevicesForSoftWareAsync(key);
             return StatusCode(StatusCodes.Status200OK, ressult);
         }
+        [HttpGet("list_device_with_Account{key}")]
 
-        [HttpGet("list_device_with_user{key}")]
-       
-        public async Task<IActionResult> GetDevicesForAccountAsync( int key)
+        public async Task<IActionResult> GetDevicesForAccountAsync(int key)
         {
             var ressult = await _DeviceService.GetDevicesForAccountAsync(key);
             return StatusCode(StatusCodes.Status200OK, ressult);
         }
-      
     }
 }

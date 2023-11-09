@@ -28,10 +28,10 @@ namespace SoftTrack.Application.Service
             await _softwareRepository.CreateSoftwareAsync(software);
         }
   
-        public async Task UpdateSoftwareAsync(SoftwareUpdateDto softwareUpdateDto)
+        public async Task UpdateSoftwareAsync(int softwareId, SoftwareUpdateDto updatedSoftware)
         {
-            var software = _mapper.Map<Software>(softwareUpdateDto);
-            await _softwareRepository.UpdateSoftwareAsync(software);
+            var software = _mapper.Map<Software>(updatedSoftware);
+            await _softwareRepository.UpdateSoftwareAsync(softwareId,software);
         }
 
         public async Task DeleteSoftwareAsync(int softwareId)
@@ -48,16 +48,25 @@ namespace SoftTrack.Application.Service
 
             return softwareDtos;
         }
-        public async Task<List<SoftwareDto>> GetSoftwareForDeviceAsync(int deviceId)
+        public async Task<SoftwareDto> GetSoftwareAsync(int softwareId)
         {
-            // Sử dụng phương thức GetDevicesForDeviceAsync để lấy danh sách Device
-            var softwaresForDevice = await _softwareRepository.GetSoftwareForDeviceAsync(deviceId);
+            var softwaresForAccount = await _softwareRepository.GetSoftwareAsync(softwareId);
 
             // Ánh xạ danh sách Device thành danh sách DeviceDto bằng AutoMapper
-            var softwareDtos = _mapper.Map<List<SoftwareDto>>(softwaresForDevice);
+            var softwareDtos = _mapper.Map<SoftwareDto>(softwaresForAccount);
 
             return softwareDtos;
         }
+        //public async Task<List<SoftwareDto>> GetSoftwareForDeviceAsync(int deviceId)
+        //{
+        //    // Sử dụng phương thức GetDevicesForDeviceAsync để lấy danh sách Device
+        //    var softwaresForDevice = await _softwareRepository.GetSoftwareForDeviceAsync(deviceId);
+
+        //    // Ánh xạ danh sách Device thành danh sách DeviceDto bằng AutoMapper
+        //    var softwareDtos = _mapper.Map<List<SoftwareDto>>(softwaresForDevice);
+
+        //    return softwareDtos;
+        //}
 
     }
 }

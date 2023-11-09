@@ -18,19 +18,20 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly soft_trackContext _context;
+        private readonly soft_track4Context _context;   
 
-        public RoleController(soft_trackContext context)
+        public RoleController(soft_track4Context context)
         {
-            _context = context;
+            _context = context;  
         }
 
         // GET: api/roles
-        [HttpGet]
+        [HttpGet("listRole")]
         public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
         {
             var roles = await _context.Roles.ToListAsync();
-            return roles;
+       
+            return Ok(roles);
         }
     }
 }

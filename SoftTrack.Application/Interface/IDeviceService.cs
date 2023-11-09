@@ -7,10 +7,10 @@ namespace SoftTrack.Application.Interface
     {
         Task<List<DeviceDto>> GetAllDeviceAsync();
         Task CreateDeviceAsync(DeviceCreateDto Device);
-        Task UpdateDeviceAsync(DeviceUpdateDto Device);
+        Task UpdateDeviceAsync(int deviceId, DeviceUpdateDto updatedDevice);
         Task DeleteDeviceAsync(int DeviceId);
-        Task<List<DeviceDto>> GetAllDeviceWithSoftwaresAsync();
         Task<List<DeviceDto>> GetDevicesForAccountAsync(int accountId);
+        Task<List<DeviceDto>> GetDevicesForSoftWareAsync(int softwareId);
 
     }
 }

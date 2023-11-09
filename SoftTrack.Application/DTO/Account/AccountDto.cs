@@ -11,20 +11,19 @@ namespace SoftTrack.Application.DTO
     {
 
         public int AccId { get; set; }
-        public string ?Account1 { get; set; }
-        //public string ?Name { get; set; }
+        public string Name { get; set; }
         public string Email { get; set; }
-
-        //public virtual ICollection<Device> Devices { get; set; }
-        public string ?token { get; set; }
-        public virtual ICollection<RoleAccountDto> RoleAccounts { get; set; }
+        public bool Status { get; set; }
+        public int RoleId { get; set; }
+        public string RoleName { get; set; }
+        public string token { get; set; }
+        //public virtual RoleDTO Role { get; set; }
+        //public virtual ICollection<Software> Softwares { get; set; }
     }
-    public class RoleAccountDto
+    public class RoleDTO
     {
-
-        public int Id { get; set; }
-        public int? RoleId { get; set; }
-        public virtual Role Role { get; set; }
+        public int RoleId { get; set; }
+        public string Name { get; set; }
     }
 
 }
