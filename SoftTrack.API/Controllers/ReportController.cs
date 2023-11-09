@@ -72,8 +72,9 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsByType(string type)
         {
             var reports = await _context.Reports
-                .Where(report => report.Type == type)
-                .Select(report => new ReportDto
+               .Where(report => report.Type == type)
+               .OrderByDescending(report => report.Start_Date)  // Sắp xếp giảm dần theo Start_Date mới nhất
+               .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
                     AppId = report.AppId,

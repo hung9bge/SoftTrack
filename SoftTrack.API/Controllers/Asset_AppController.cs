@@ -1,136 +1,92 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using SoftTrack.Software.DTO;
-//using SoftTrack.Domain;
-//using System.Globalization;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SoftTrack.Software.DTO;
+using SoftTrack.Domain;
+using System.Globalization;
 
-//namespace SoftTrack.API.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class Asset_AppController : ControllerBase
-//    {
-//        private readonly soft_track4Context _context;
+namespace SoftTrack.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class Asset_AppController : ControllerBase
+    {
+        private readonly soft_track4Context _context;
 
-//        public Asset_AppController(soft_track4Context context)
-//        {
-//            _context = context;
-//        }
+        public Asset_AppController(soft_track4Context context)
+        {
+            _context = context;
+        }
 
-//        [HttpPost("CreateLicense")]
-//        public async Task<IActionResult> CreateLicense([FromBody] LicenseCreateDto licenseCreateDto)
-//        {
-//            License newLicense = new License();
-//            try
-//            {
-//                // Kiểm tra xem Device và Software tồn tại
-//                var device = await _context.Devices.FindAsync(licenseCreateDto.DeviceId);
-//                var software = await _context.Softwares.FindAsync(licenseCreateDto.SoftwareId);
+        [HttpPut("UpdateAssetApplication/{assetId}/{appId}")]
+        public async Task<IActionResult> UpdateAssetApplicationAsync(int assetId, int appId, [FromBody] AssetApplicationDTO updatedAssetAppDto)
+        {
+            var updatedAssetApp = await _context.AssetApplications
+                .FirstOrDefaultAsync(aa => aa.AssetId == assetId && aa.AppId == appId);
 
-//                if (device == null || software == null)
-//                {
-//                    return BadRequest("Device hoặc Software không tồn tại.");
-//                }
+            if (updatedAssetApp == null)
+            {
+                return NotFound("AssetApplication not found");
+            }
 
-//                // Tạo giấy phép
+            // Cập nhật các trường cần thiết của AssetApplication
+            if (updatedAssetAppDto.InstallDate != "string")
+            {
+                updatedAssetApp.InstallDate = DateTime.Parse(updatedAssetAppDto.InstallDate);
+            }
+            if (updatedAssetAppDto.Status == 0)
+            {
+                updatedAssetApp.Status = updatedAssetAppDto.Status;
+            }
+            // Cập nhật các trường khác nếu cần
 
-//                newLicense.LicenseKey = licenseCreateDto.LicenseKey;
-//                newLicense.Time = licenseCreateDto.Time;
-//                newLicense.Status = licenseCreateDto.Status;
-//                if (DateTime.TryParseExact(licenseCreateDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-//                {
-//                    newLicense.Start_Date = parsedDate;
-//                }
+            await _context.SaveChangesAsync();
 
-//                // Thêm giấy phép vào DbSet Licenses
-//                _context.Licenses.Add(newLicense);
-//                await _context.SaveChangesAsync();
+            return Ok("AssetApplication updated successfully");
+        }
+        [HttpDelete("DeleteAssetApplication/{assetId}/{appId}")]
+        public async Task<IActionResult> DeleteAssetApplicationAsync(int assetId, int appId)
+        {
+            var assetAppToDelete = await _context.AssetApplications
+                .FirstOrDefaultAsync(aa => aa.AssetId == assetId && aa.AppId == appId);
 
-//                // Tạo DeviceSoftware và thêm vào DbSet DeviceSoftwares
-//                var deviceSoftware = new DeviceSoftware
-//                {
-//                    DeviceId = device.DeviceId,
-//                    SoftwareId = software.SoftwareId,
-//                    LicenseId = newLicense.LicenseId, // ID của giấy phép mới tạo
-//                    InstallDate = DateTime.Now, // Hoặc giá trị khác nếu cần
-//                    Status = 1 // Hoặc giá trị khác nếu cần
-//                };
-//                _context.DeviceSoftwares.Add(deviceSoftware);
+            if (assetAppToDelete != null)
+            {
+                assetAppToDelete.Status = 3;
+                await _context.SaveChangesAsync();
 
-//                await _context.SaveChangesAsync();
-//                return Ok("Licenses đã được thêm thành công.");
+                return Ok("assets đã được xóa thành công.");
+            }     
+            return NotFound("AssetApplication not found");
+        }
 
-//                //return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
-//            }
-//            catch (Exception ex)
-//            {
-//                var removeLicense = await _context.Licenses.FirstOrDefaultAsync(l => l.LicenseId == newLicense.LicenseId);
+        [HttpPost("CreateAssetApplication")]
+        public async Task<IActionResult> CreateAssetApplicationAsync([FromBody] AssetApplicationDTO assetAppDto)
+        {
+            if (ModelState.IsValid)
+            {
+                var assetApp = new AssetApplication
+                {
+                    AssetId = assetAppDto.AssetId,
+                    AppId = assetAppDto.AppId,
+                    Status = assetAppDto.Status
+                };
+                if (DateTime.TryParseExact(assetAppDto.InstallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                {
+                    assetApp.InstallDate = parsedDate;
+                }
+                _context.AssetApplications.Add(assetApp);
+                await _context.SaveChangesAsync();
 
-//                if (removeLicense != null)
-//                {
-//                    // Nếu tìm thấy, xóa bản ghi License
-//                    _context.Licenses.Remove(removeLicense);
+                return CreatedAtAction("GetAssetApplication", new { assetId = assetApp.AssetId, appId = assetApp.AppId }, assetApp);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
 
-//                    await _context.SaveChangesAsync();
-//                }
-               
-//                    return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
-//             }           
-//        }
-//        [HttpGet("list-device-software")]
-//        public async Task<IActionResult> GetDeviceSoftwareList()
-//        {
-//            try
-//            {
-//                var deviceSoftwareList = await _context.DeviceSoftwares
-//                    .Select(ds => new DeviceSoftware
-//                    {
-//                        DeviceId = ds.DeviceId,
-//                        SoftwareId = ds.SoftwareId,
-//                        LicenseId = ds.LicenseId,
-//                        InstallDate = ds.InstallDate,
-//                        Status = ds.Status
-//                    })
-//                    .ToListAsync();
 
-//                return Ok(deviceSoftwareList);
-//            }
-//            catch (Exception ex)
-//            {
-//                return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
-//            }
-//        }
-//        [HttpPut("update-device-software")]
-//        public async Task<IActionResult> UpdateDeviceSoftware([FromBody] UpdateDeviceSoftwareDto updateDto)
-//        {
-//            try
-//            {
-//                // Kiểm tra xem có tồn tại dữ liệu DeviceSoftware với DeviceId, SoftwareId, và LicenseId được cung cấp
-//                var deviceSoftware = await _context.DeviceSoftwares
-//                    .Where(ds => ds.DeviceId == updateDto.DeviceId && ds.SoftwareId == updateDto.SoftwareId && ds.LicenseId == updateDto.LicenseId)
-//                    .FirstOrDefaultAsync();
-
-//                if (deviceSoftware == null)
-//                {
-//                    return NotFound("DeviceSoftware không tồn tại.");
-//                }
-
-//                // Cập nhật thông tin DeviceSoftware từ DTO
-//                deviceSoftware.InstallDate = updateDto.InstallDate;
-//                deviceSoftware.Status = updateDto.Status;
-
-//                // Lưu thay đổi vào cơ sở dữ liệu
-//                await _context.SaveChangesAsync();
-
-//                return Ok("Cập nhật DeviceSoftware thành công.");
-//            }
-//            catch (Exception ex)
-//            {
-//                return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
-//            }
-//        }
-
-//    }
-//}
+    }
+}
 
 
