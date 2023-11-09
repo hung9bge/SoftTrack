@@ -3,9 +3,8 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using SoftTrack.Application.DTO;
+using SoftTrack.Software.DTO;
 using SoftTrack.Domain;
-
 using System.Text;
 
 

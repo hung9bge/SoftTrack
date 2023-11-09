@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftTrack.Application.DTO
+namespace SoftTrack.Software.DTO
 {
     public class ApplicationDto
     {
@@ -22,5 +22,6 @@ namespace SoftTrack.Application.DTO
         public string Docs { get; set; }
         public string Language { get; set; }
         public string Db { get; set; }
+        
     }
 }

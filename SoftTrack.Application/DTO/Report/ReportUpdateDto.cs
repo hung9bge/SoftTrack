@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftTrack.Application.DTO.Report
+namespace SoftTrack.Software.DTO
 {
     public class ReportUpdateDto
     {

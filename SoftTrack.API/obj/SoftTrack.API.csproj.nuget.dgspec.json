@@ -29,8 +29,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj": {
-                "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj"
+              "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj": {
+                "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj"
               },
               "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj": {
                 "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj"
@@ -88,12 +88,12 @@
         }
       }
     },
-    "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj": {
+    "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj",
-        "projectName": "SoftTrack.Application",
-        "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj",
+        "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj",
+        "projectName": "SoftTrack.Software",
+        "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj",
         "packagesPath": "C:\\Users\\hung.lemanh1\\.nuget\\packages\\",
         "outputPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\obj\\",
         "projectStyle": "PackageReference",

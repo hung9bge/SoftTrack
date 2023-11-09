@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/5OuiGdjl6TlHhDBKr2PCVzZ+1L+Te4gt/2QuOExJR8EDJ9pDuOh6fNk73So3GEk2ZzwsnoN54nda1TCflhoUA==",
+  "dgSpecHash": "+pcvT14N+8eiFUgdNAY4dRwB0JMsffWefSbqvJmZJQlm+vIm2z71+BpA+nfgz2DeXGgnKhzxckMDf2FAHAvaKw==",
   "success": true,
-  "projectFilePath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj",
+  "projectFilePath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hung.lemanh1\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\hung.lemanh1\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

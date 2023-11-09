@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftTrack.Application.DTO.Asset
+namespace SoftTrack.Software.DTO.Asset
 {
     public class AssetUpdateDto
     {

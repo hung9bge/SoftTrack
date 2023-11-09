@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SoftTrack.Application.DTO;
 using SoftTrack.Domain;
+using SoftTrack.Software.DTO;
 
 namespace SoftTrack.API.Controllers
 {
@@ -17,41 +17,155 @@ namespace SoftTrack.API.Controllers
             _context = context;
         }
 
-        [HttpGet("ListApp")]
-        public async Task<ActionResult<IEnumerable<Domain.Application>>> GetAllAppAsync()
+        //[HttpGet("ListApp")]
+        //public async Task<ActionResult<IEnumerable<Application>>> GetAllAppAsync()
+        //{
+
+        //    var listApplications = await _context.Applications.ToListAsync();
+        //    return listApplications;
+        //}
+
+        [HttpPost("CreateApp")]
+        public async Task<IActionResult> CreateAppAsync([FromBody] ApplicationCreateDto appCreateDto)
         {
-            var listApplications = await _context.Applications.ToListAsync();
-            return listApplications;
+            if (ModelState.IsValid) // Kiểm tra tính hợp lệ của dữ liệu đầu vào
+            {
+                // Tạo một đối tượng Application từ dữ liệu được chuyển đến từ đối tượng ApplicationCreateDto
+                var application = new Application
+                {
+                    Name = appCreateDto.Name,
+                    Publisher = appCreateDto.Publisher,
+                    Version = appCreateDto.Version,
+                    Release = appCreateDto.Release,
+                    Type = appCreateDto.Type,
+                    Os = appCreateDto.Os,
+                    Osversion = appCreateDto.Osversion,
+                    Description = appCreateDto.Description,
+                    Download = appCreateDto.Download,
+                    Docs = appCreateDto.Docs,
+                    Language = appCreateDto.Language,
+                    Db = appCreateDto.Db
+                    // Gán các giá trị khác tương ứng từ appCreateDto
+                };
+
+                _context.Applications.Add(application);
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetApplication", new { id = application.AppId }, application);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
-        //[HttpPost("CreateApp")]
-        //public async Task<IActionResult> CreateAppAsync(AppCreateDto AppCreateDto)
+        //[HttpPut("UpdateApp{key}")]
+        //public async Task<IActionResult> UpdateAppAsync(int key, ApplicationUpdateDto updatedAppDTO)
         //{
-        //    await _AppService.CreateAppAsync(AppCreateDto);
-        //    return Ok("App đã được Add thành công.");
+        //    var updatedApp = await _context.Applications.FindAsync(key);
+
+        //    if (updatedApp == null)
+        //    {
+        //        // Không tìm thấy phần mềm
+        //        // Ở đây, bạn có thể xử lý việc không tìm thấy phần mềm (ví dụ: trả về lỗi hoặc thông báo)
+               
+        //    }
+
+        //    {
+        //        Cập nhật các trường cần thiết của phần mềm
+        //        if (updatedSoftware.Name != null && updatedSoftware.Name != "string")
+        //        {
+        //            software.Name = updatedSoftware.Name;
+        //        }
+
+        //        if (updatedSoftware.Publisher != null && updatedSoftware.Publisher != "string")
+        //        {
+        //            software.Publisher = updatedSoftware.Publisher;
+        //        }
+
+        //        if (updatedSoftware.Version != null && updatedSoftware.Version != "string")
+        //        {
+        //            software.Version = updatedSoftware.Version;
+        //        }
+
+        //        if (updatedSoftware.Release != null && updatedSoftware.Release != "string")
+        //        {
+        //            software.Release = updatedSoftware.Release;
+        //        }
+
+        //        if (updatedSoftware.Os != null && updatedSoftware.Os != "string")
+        //        {
+        //            software.Os = updatedSoftware.Os;
+        //        }
+
+        //        if (updatedSoftware.Status != 0)
+        //        {
+        //            software.Status = updatedSoftware.Status;
+        //        }
+
+        //        Lưu thay đổi vào cơ sở dữ liệu
+        //        await _context.SaveChangesAsync();
+        //    }
 
         //}
 
-        //[HttpPut("UpdateSW{key}")]
-        //public async Task<IActionResult> UpdateAppAsync(int key, AppUpdateDto updatedApp)
-        //{
-        //    await _AppService.UpdateAppAsync(key, updatedApp);
-        //    return Ok("App đã được cập nhật thành công.");
+        [HttpDelete("DeleteAppWith_key")]
+        public async Task<IActionResult> DeleteAppAsync(int Appid)
+        {
+            var deleteApp = await _context.Applications.FindAsync(Appid);
 
-        //}
+            if (deleteApp != null)
+            {
+                _context.Applications.Remove(deleteApp);
+                await _context.SaveChangesAsync();
+            }
+            return StatusCode(StatusCodes.Status200OK);
+        }
+        [HttpGet("list_App_by_user/{key}")]
+        public async Task<ActionResult<IEnumerable<ApplicationDto>>> GetAppForAccountAsync(int key)
+        {
+            // Assuming 'key' is AccId
+            var applications = await _context.Applications
+                .Where(app => app.AccId == key)
+                .Select(app => new ApplicationDto // Assuming you have a DTO for Application
+                {
+                    // Map Application properties to ApplicationDto properties here
+                    AppId = app.AppId,
+                    AccId = app.AccId,
+                    Name = app.Name,
+                    Publisher = app.Publisher,
+                    Version = app.Version,
+                    Release = app.Release,
+                    Type = app.Type,
+                    Os = app.Os,
+                    Osversion = app.Osversion,
+                    Description = app.Description,
+                    Download = app.Download,
+                    Docs = app.Docs,
+                    Language = app.Language,
+                    Db = app.Db,
+                  
+                })
+                .ToListAsync();
 
-        //[HttpDelete("DeleteAppWith_key")]
-        //public async Task<IActionResult> DeleteAppAsync(int Appid)
-        //{
-        //    await _AppService.DeleteAppAsync(Appid);
-        //    return StatusCode(StatusCodes.Status200OK);
-        //}
-        //[HttpGet("list_App_by_user/{key}")]
-        //public async Task<IActionResult> GetAppForAccountAsync(int key)
-        //{
-        //    var ressult = await _AppService.GetAppForAccountAsync(key);
-        //    return StatusCode(StatusCodes.Status200OK, ressult);
-        //}
+            if (applications == null || !applications.Any())
+            {
+                return NotFound(); // Or you can return any other status code as needed
+            }
+
+            return applications;
+        }
+        //        //public async Task<List<Software>> GetSoftwareForDeviceAsync(int deviceId)
+        //        //{
+        //        //    // Thực hiện truy vấn để lấy danh sách phần mềm cho tài khoản cụ thể
+        //        //    var softwaresForDevice = await _context.Softwares
+        //        //       .Where(software => software.DeviceId == deviceId) // Lọc theo ID tài khoản
+        //        //       .ToListAsync();
+
+        //        //    return softwaresForDevice;
+        //        //}
+
+
         //[HttpGet("list_App/{key}")]
         //public async Task<IActionResult> GetAppAsync(int key)
         //{

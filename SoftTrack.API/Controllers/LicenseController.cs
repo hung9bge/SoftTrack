@@ -1,7 +1,7 @@
 ﻿//using Microsoft.AspNetCore.Mvc;
 //using Microsoft.EntityFrameworkCore;
-//using SoftTrack.Application.DTO;
-//using SoftTrack.Application.DTO.Report;
+//using SoftTrack.Software.DTO;
+//using SoftTrack.Software.DTO.Report;
 //using SoftTrack.Domain;
 //using System;
 //using System.Globalization;

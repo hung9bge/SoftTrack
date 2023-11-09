@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using MimeKit;
-using SoftTrack.Application.DTO.Report;
 using SoftTrack.Domain;
+using SoftTrack.Software.DTO;
 using System.Globalization;
 using System.Net;
 using System.Net.Mail;

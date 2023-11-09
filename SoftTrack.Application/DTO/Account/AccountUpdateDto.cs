@@ -1,6 +1,6 @@
 ﻿using SoftTrack.Domain;
 
-namespace SoftTrack.Application.DTO
+namespace SoftTrack.Software.DTO
 {
     public class AccountUpdateDto
     {

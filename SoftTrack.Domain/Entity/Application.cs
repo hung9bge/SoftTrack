@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace SoftTrack.Domain
 {
-    public partial class Application
+    public class Application
     {
         public Application()
         {

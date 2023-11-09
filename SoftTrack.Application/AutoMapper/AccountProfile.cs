@@ -1,25 +1,25 @@
-﻿using AutoMapper;
-using SoftTrack.Application.DTO;
-using SoftTrack.Domain;
+﻿//using AutoMapper;
+//using SoftTrack.Software.DTO;
+//using SoftTrack.Domain;
 
-namespace SoftTrack.Application.AutoMapper
-{
-    public class AccountProfile : Profile
-    {
-        public AccountProfile()
-        {
-            CreateMap<Account, AccountDto>()
-                /*.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))*/; 
+//namespace SoftTrack.Application.AutoMapper
+//{
+//    public class AccountProfile : Profile
+//    {
+//        public AccountProfile()
+//        {
+//            CreateMap<Account, AccountDto>()
+//                /*.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))*/; 
                   
-            CreateMap<Account, AccountUpdateDto>();
+//            CreateMap<Account, AccountUpdateDto>();
              
-            CreateMap<Account, AccountCreateDto>();
+//            CreateMap<Account, AccountCreateDto>();
 
-            CreateMap<AccountUpdateDto, Account>();
+//            CreateMap<AccountUpdateDto, Account>();
             
-            CreateMap<AccountDto, Account>()
-                /*.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))*/;
-        }
-    }
+//            CreateMap<AccountDto, Account>()
+//                /*.ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))*/;
+//        }
+//    }
    
-}
+//}

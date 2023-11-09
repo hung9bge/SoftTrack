@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using SoftTrack.Application.DTO;
-using SoftTrack.Application.DTO.Report;
-
 using SoftTrack.Domain;
+using SoftTrack.Software.DTO;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -36,7 +34,7 @@ namespace SoftTrack.API.Controllers
                     AccId = account.AccId,
                     Email = account.Email,
                     Name = account.Name,
-                    //Status = account.Status,
+                    Status = account.Status,
                     RoleId = account.RoleId,
                     RoleName = account.Role.Name
                 })
@@ -104,7 +102,7 @@ namespace SoftTrack.API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            AccountDto response = new AccountDto
+            AccountDto response = new()
             {
                 Name = user.Name,
                 Email = user.Email,

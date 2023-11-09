@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTrack.API", "SoftTrack.API\SoftTrack.API.csproj", "{E3B4165A-FEE8-46B8-8267-6FEFF7F7B122}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTrack.Application", "SoftTrack.Application\SoftTrack.Application.csproj", "{56004726-92AB-4DFA-8EF8-F09C3EB65E92}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTrack.Software", "SoftTrack.Application\SoftTrack.Software.csproj", "{56004726-92AB-4DFA-8EF8-F09C3EB65E92}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTrack.Domain", "SoftTrack.Domain\SoftTrack.Domain.csproj", "{98618F24-411F-45DC-86E1-6AA5C35306EB}"
 EndProject

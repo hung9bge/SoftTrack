@@ -1,5 +1,5 @@
 ﻿//using AutoMapper;
-//using SoftTrack.Application.DTO;
+//using SoftTrack.Software.DTO;
 //using SoftTrack.Domain;
 
 //namespace SoftTrack.Application.AutoMapper

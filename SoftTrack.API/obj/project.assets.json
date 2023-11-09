@@ -1329,22 +1329,6 @@
           }
         }
       },
-      "SoftTrack.Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v6.0",
-        "dependencies": {
-          "AutoMapper": "12.0.1",
-          "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.10",
-          "SoftTrack.Domain": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/SoftTrack.Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/SoftTrack.Application.dll": {}
-        }
-      },
       "SoftTrack.Domain/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
@@ -1372,6 +1356,22 @@
         },
         "runtime": {
           "bin/placeholder/SoftTrack.Infrastructure.dll": {}
+        }
+      },
+      "SoftTrack.Software/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "AutoMapper": "12.0.1",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "12.0.1",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.10",
+          "SoftTrack.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/SoftTrack.Software.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/SoftTrack.Software.dll": {}
         }
       }
     }
@@ -3403,11 +3403,6 @@
         "version.txt"
       ]
     },
-    "SoftTrack.Application/1.0.0": {
-      "type": "project",
-      "path": "../SoftTrack.Application/SoftTrack.Application.csproj",
-      "msbuildProject": "../SoftTrack.Application/SoftTrack.Application.csproj"
-    },
     "SoftTrack.Domain/1.0.0": {
       "type": "project",
       "path": "../SoftTrack.Domain/SoftTrack.Domain.csproj",
@@ -3417,6 +3412,11 @@
       "type": "project",
       "path": "../SoftTrack.Infrastructure/SoftTrack.Infrastructure.csproj",
       "msbuildProject": "../SoftTrack.Infrastructure/SoftTrack.Infrastructure.csproj"
+    },
+    "SoftTrack.Software/1.0.0": {
+      "type": "project",
+      "path": "../SoftTrack.Application/SoftTrack.Software.csproj",
+      "msbuildProject": "../SoftTrack.Application/SoftTrack.Software.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3424,8 +3424,8 @@
       "Microsoft.AspNetCore.Cors >= 2.2.0",
       "Microsoft.AspNetCore.OData >= 8.2.0",
       "MimeKit >= 4.2.0",
-      "SoftTrack.Application >= 1.0.0",
       "SoftTrack.Infrastructure >= 1.0.0",
+      "SoftTrack.Software >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
   },
@@ -3457,8 +3457,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj": {
-              "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj"
+            "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj": {
+              "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj"
             },
             "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj": {
               "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj"
