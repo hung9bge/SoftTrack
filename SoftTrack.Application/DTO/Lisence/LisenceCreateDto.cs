@@ -14,6 +14,6 @@ namespace SoftTrack.Software.DTO
         public string LicenseKey { get; set; }
         public string? Start_Date { get; set; }
         public int Time { get; set; }
-        public int? Status { get; set; }
+        public int Status { get; set; }
     }
 }

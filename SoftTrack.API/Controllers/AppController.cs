@@ -157,109 +157,38 @@ namespace SoftTrack.API.Controllers
 
             return applications;
         }
-        //        //public async Task<List<Software>> GetSoftwareForDeviceAsync(int deviceId)
-        //        //{
-        //        //    // Thực hiện truy vấn để lấy danh sách phần mềm cho tài khoản cụ thể
-        //        //    var softwaresForDevice = await _context.Softwares
-        //        //       .Where(software => software.DeviceId == deviceId) // Lọc theo ID tài khoản
-        //        //       .ToListAsync();
 
-        //        //    return softwaresForDevice;
-        //        //}
+        [HttpGet("get_App_by_Id/{key}")]
+        public async Task<ActionResult<IEnumerable<ApplicationDto>>> GetAppByIdAsync(int key)
+        {
+            var lst = await _context.Applications
+                .Where(app => app.AppId == key)
+                .Select(app => new ApplicationDto
+                {
+                    AppId = app.AppId,
+                    AccId = app.AccId,
+                    Name = app.Name,
+                    Publisher = app.Publisher,
+                    Version = app.Version,
+                    Release = app.Release,
+                    Type = app.Type,
+                    Os = app.Os,
+                    Osversion = app.Osversion,
+                    Description = app.Description,
+                    Download = app.Download,
+                    Docs = app.Docs,
+                    Language = app.Language,
+                    Db = app.Db,
+                })
+                .ToListAsync();
 
+            if (!lst.Any())
+            {
+                return NotFound();
+            }
 
-        //[HttpGet("list_App/{key}")]
-        //public async Task<IActionResult> GetAppAsync(int key)
-        //{
-        //    var ressult = await _AppService.GetAppAsync(key);
-        //    return StatusCode(StatusCodes.Status200OK, ressult);
-        //}
-
-        //[HttpGet("GetAppForAccountAndDevice")]
-        //public async Task<ActionResult<IEnumerable<AppDto>>> GetAppForAccountAndDevice(int accountId, int deviceId)
-        //{
-        //    var AppForAccountAndDevice = await _context.Apps
-        //        .Where(App => App.AccId == accountId)
-        //        .Where(App => App.DeviceApps.Any(ds => ds.DeviceId == deviceId))
-        //        .Select(App => new AppDto
-        //        {
-        //            AppId = App.AppId,
-        //            AccId = App.AccId,
-        //            Name = App.Name,
-        //            Publisher = App.Publisher,
-        //            Version = App.Version,
-        //            Release = App.Release,
-        //            Type = App.Type,
-        //            Os = App.Os,
-        //            Description = App.Description,
-        //            Docs = App.Docs,
-        //            Download = App.Download,
-        //            Status = App.DeviceApps.FirstOrDefault(ds => ds.DeviceId == deviceId).Status,
-        //            // Lấy InstallDate từ bảng liên quan
-        //            InstallDate = App.DeviceApps.FirstOrDefault(ds => ds.DeviceId == deviceId).InstallDate.ToString("dd/MM/yyyy")
-        //        })
-        //        .ToListAsync();
-
-        //    return AppForAccountAndDevice;
-        //}
-        //[HttpGet("GetAppByReport/Type")]
-        //public async Task<ActionResult<IEnumerable<AppDto>>> GetAppByReport(string reportType)
-        //{
-        //    try
-        //    {
-        //        // Truy vấn danh sách App dựa trên ReportId
-        //        var AppList = await _context.Apps
-        //            .Where(s => s.Reports.Any(r => r.Type.ToLower() == reportType.ToLower()))
-        //            .Select(s => new AppDto
-        //            {
-        //                AppId = s.AppId,
-        //                AccId = s.AccId,
-        //                Name = s.Name,
-        //                Publisher = s.Publisher,
-        //                Version = s.Version,
-        //                Release = s.Release,
-        //                Type = s.Type,
-        //                Os = s.Os,
-        //                Description = s.Description,
-        //                Download = s.Download,
-        //                Docs = s.Docs,
-        //                Status = s.Status
-        //            })
-        //            .ToListAsync();
-
-        //        return Ok(AppList);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
-        //    }
-        //}
-        //[HttpGet("GetApp/{deviceId}")]
-        //public async Task<ActionResult<IEnumerable<AppDto>>> GetAppForDevice(int deviceId)
-        //{
-        //    var AppForAccountAndDevice = await _context.Apps
-        //        .Where(App => App.DeviceApps.Any(ds => ds.DeviceId == deviceId))
-        //        .Select(App => new AppDto
-        //        {
-        //            AppId = App.AppId,
-        //            AccId = App.AccId,
-        //            Name = App.Name,
-        //            Publisher = App.Publisher,
-        //            Version = App.Version,
-        //            Release = App.Release,
-        //            Type = App.Type,
-        //            Os = App.Os,
-        //            Description = App.Description,
-        //            Docs = App.Docs,
-        //            Download = App.Download,
-        //            Status = App.DeviceApps.FirstOrDefault(ds => ds.DeviceId == deviceId).Status,
-        //            // Lấy InstallDate từ bảng liên quan
-        //            InstallDate = App.DeviceApps.FirstOrDefault(ds => ds.DeviceId == deviceId).InstallDate.ToString("dd/MM/yyyy")
-        //        })
-        //        .ToListAsync();
-
-        //    return AppForAccountAndDevice;
-        //}
+            return lst;
+        }
 
     }
 }
