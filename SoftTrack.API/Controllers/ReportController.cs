@@ -22,7 +22,7 @@ namespace SoftTrack.API.Controllers
         }
 
         // GET: api/Reports
-        [HttpGet]
+        [HttpGet("ReportAll")]
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReports()
         {
             var reports = await _context.Reports.ToListAsync();
@@ -68,7 +68,33 @@ namespace SoftTrack.API.Controllers
 
             return reportDto;
         }
-        [HttpGet("GetReportsForSoftware/{AppId}/{type}")]
+        [HttpGet("ReportsByType/{type}")]
+        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsByType(string type)
+        {
+            var reports = await _context.Reports
+                .Where(report => report.Type == type)
+                .Select(report => new ReportDto
+                {
+                    ReportId = report.ReportId,
+                    AppId = report.AppId,
+                    Title = report.Title,
+                    Description = report.Description,
+                    Type = report.Type,
+                    Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
+                    End_Date = report.End_Date.HasValue ? report.End_Date.Value.ToString("dd/MM/yyyy") : null,
+                    Status = report.Status
+                })
+                .ToListAsync();
+
+            if (!reports.Any())
+            {
+                return NotFound();
+            }
+
+            return reports;
+        }
+
+        [HttpGet("GetReportsForAppAndType/{AppId}/{type}")]
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForSoftware(int AppId, string type)
         {
             var reportsForSoftware = await _context.Reports
