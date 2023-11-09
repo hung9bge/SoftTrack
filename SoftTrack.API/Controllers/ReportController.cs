@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MimeKit;
 using SoftTrack.Application.DTO.Report;
-using SoftTrack.Application.Interface;
 using SoftTrack.Domain;
 using System.Globalization;
 using System.Net;
@@ -32,11 +31,11 @@ namespace SoftTrack.API.Controllers
             var reportDtos = reports.Select(report => new ReportDto
             {
                 ReportId = report.ReportId,
-                SoftwareId = report.SoftwareId,
+                AppId = report.AppId,
                 Description = report.Description,
                 Type = report.Type,
-                StartDate = report.StartDate.ToString("dd/MM/yyyy"),
-                EndDate = report.EndDate?.ToString("dd/MM/yyyy"), 
+                Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
+                End_Date = report.End_Date?.ToString("dd/MM/yyyy"), 
                 Status = report.Status
             });
 
@@ -58,29 +57,29 @@ namespace SoftTrack.API.Controllers
             var reportDto = new ReportDto
             {
                 ReportId = report.ReportId,
-                SoftwareId = report.SoftwareId,
+                AppId = report.AppId,
                 Description = report.Description,
                 Type = report.Type,
-                StartDate = report.StartDate.ToString("dd/MM/yyyy"),
-                EndDate = report.EndDate?.ToString("dd/MM/yyyy"),
+                Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
+                End_Date = report.End_Date?.ToString("dd/MM/yyyy"),
                 Status = report.Status
             };
 
             return reportDto;
         }
-        [HttpGet("GetReportsForSoftware/{softwareId}/{type}")]
-        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForSoftware(int softwareId, string type)
+        [HttpGet("GetReportsForSoftware/{AppId}/{type}")]
+        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForSoftware(int AppId, string type)
         {
             var reportsForSoftware = await _context.Reports
-                .Where(report => report.SoftwareId == softwareId && report.Type == type)
+                .Where(report => report.AppId == AppId && report.Type == type)
                 .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
-                    SoftwareId = report.SoftwareId,
+                    AppId = report.AppId,
                     Description = report.Description,
                     Type = report.Type,
-                    StartDate = report.StartDate.ToString("dd/MM/yyyy"),
-                    EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
+                    Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
+                    End_Date = report.End_Date.HasValue ? report.End_Date.Value.ToString("dd/MM/yyyy") : null,
                     Status = report.Status
 
                 })
@@ -97,7 +96,7 @@ namespace SoftTrack.API.Controllers
             var newReport = new Report
             {
              
-                SoftwareId = reportCreateDto.SoftwareId,
+                AppId = reportCreateDto.AppId,
                 Description = reportCreateDto.Description,
                 Type = reportCreateDto.Type,
         
@@ -107,11 +106,11 @@ namespace SoftTrack.API.Controllers
 
             if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
             {
-                newReport.StartDate = parsedDate;
+                newReport.Start_Date = parsedDate;
             }
-            if (DateTime.TryParseExact(reportCreateDto.EndDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
+            if (DateTime.TryParseExact(reportCreateDto.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
             {
-                newReport.EndDate = parsedDate1;
+                newReport.End_Date = parsedDate1;
             }
 
             _context.Reports.Add(newReport);
@@ -144,11 +143,11 @@ namespace SoftTrack.API.Controllers
                 //}
                 //if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 //{
-                //    existingReport.StartDate = parsedDate;
+                //    existingReport.Start_Date = parsedDate;
                 //}          
-                if (!string.IsNullOrEmpty(reportUpdateDto.EndDate))
+                if (!string.IsNullOrEmpty(reportUpdateDto.End_Date))
                 {
-                    existingReport.EndDate = DateTime.Parse(reportUpdateDto.EndDate);
+                    existingReport.End_Date = DateTime.Parse(reportUpdateDto.End_Date);
                 }
                
                 if (reportUpdateDto.Status != 0)
@@ -179,14 +178,14 @@ namespace SoftTrack.API.Controllers
         [HttpGet("list_reports_by_account/{accountId}")]
         public async Task<IActionResult> GetReportsForAccountAsync(int accountId)
         {
-            var reports = _context.Reports.Where(r => r.Software.AccId == accountId).Select(report => new ReportDto
+            var reports = _context.Reports.Where(r => r.App.AccId == accountId).Select(report => new ReportDto
             {
                 ReportId = report.ReportId,
-                SoftwareId = report.SoftwareId,
+                AppId = report.AppId,
                 Description = report.Description,
                 Type = report.Type,
-                StartDate = report.StartDate.ToString("dd/MM/yyyy"),
-                EndDate = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
+                Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
+                End_Date = report.End_Date.HasValue ? report.End_Date.Value.ToString("dd/MM/yyyy") : null,
                 Status = report.Status
             }).ToList();
 
@@ -207,7 +206,7 @@ namespace SoftTrack.API.Controllers
 
                 // Truy vấn danh sách email đã tồn tại trong bảng Account
                 var existingEmails = await _context.Accounts
-                    .Where(a => a.Status == true) // Lọc tài khoản có trạng thái true (hoạt động)
+                    .Where(a => a.Status != 3) // Lọc tài khoản có trạng thái true (hoạt động)
                     .Select(a => a.Email)
                     .ToListAsync();
 

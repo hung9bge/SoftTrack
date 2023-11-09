@@ -304,7 +304,7 @@ namespace SoftTrack.Domain
                     .HasMaxLength(255)
                     .IsFixedLength();
 
-                entity.Property(e => e.StartDate)
+                entity.Property(e => e.Start_Date)
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
 
@@ -325,7 +325,7 @@ namespace SoftTrack.Domain
                     .HasMaxLength(255)
                     .IsFixedLength();
 
-                entity.Property(e => e.StartDate)
+                entity.Property(e => e.Start_Date)
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
             });
@@ -342,11 +342,11 @@ namespace SoftTrack.Domain
                     .HasMaxLength(255)
                     .IsFixedLength();
 
-                entity.Property(e => e.EndDate)
+                entity.Property(e => e.End_Date)
                     .HasColumnType("date")
                     .HasColumnName("End_Date");
 
-                entity.Property(e => e.StartDate)
+                entity.Property(e => e.Start_Date)
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
 

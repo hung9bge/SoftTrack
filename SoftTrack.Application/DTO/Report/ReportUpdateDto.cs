@@ -12,8 +12,8 @@ namespace SoftTrack.Application.DTO.Report
         //public int SoftwareId { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
-        //public string StartDate { get; set; }
-        public string? EndDate { get; set; }
+        //public string Start_Date { get; set; }
+        public string? End_Date { get; set; }
         public int Status { get; set; }
     }
 }

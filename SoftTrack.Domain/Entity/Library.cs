@@ -10,7 +10,7 @@ namespace SoftTrack.Domain
         public string Name { get; set; }
         public string Publisher { get; set; }
         public string LibraryKey { get; set; }
-        public DateTime StartDate { get; set; }
+        public DateTime Start_Date { get; set; }
         public int Time { get; set; }
         public int Status { get; set; }
 

@@ -4,10 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using SoftTrack.Application.DTO;
-using SoftTrack.Application.Interface;
-using SoftTrack.Application.Service;
 using SoftTrack.Domain;
-using SoftTrack.Infrastructure;
+
 using System.Text;
 
 
@@ -36,14 +34,14 @@ namespace SoftTrack.API
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             // Repository
-            builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
-            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-            builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
+            //builder.Services.AddScoped<ISoftwareRepository, SoftwareRepository>();
+            //builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            //builder.Services.AddScoped<IDeviceRepository, DeviceRepository>();
 
-            // Service
-            builder.Services.AddScoped<ISoftwareService, SoftwareService>();
-            builder.Services.AddScoped<IAccountService, AccountService>();
-            builder.Services.AddScoped<IDeviceService, DeviceService>();
+            //// Service
+            //builder.Services.AddScoped<ISoftwareService, SoftwareService>();
+            //builder.Services.AddScoped<IAccountService, AccountService>();
+            //builder.Services.AddScoped<IDeviceService, DeviceService>();
 
             builder.Services.AddDbContext<soft_track4Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 

@@ -5,8 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using SoftTrack.Application.DTO;
 using SoftTrack.Application.DTO.Report;
-using SoftTrack.Application.Interface;
-using SoftTrack.Application.Service;
+
 using SoftTrack.Domain;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,16 +19,10 @@ namespace SoftTrack.API.Controllers
     public class AccountController : Controller
     {
         private readonly soft_track4Context _context;
-
-        private readonly IAccountService _repo;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-
-        public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_track4Context context)
+        public AccountController( IConfiguration configuration, soft_track4Context context)
         {
-            _repo = userRepository;
             _configuration = configuration;
-            _mapper = mapper;
             _context = context;
         }
         [HttpGet("ListAccount")]
@@ -43,7 +36,7 @@ namespace SoftTrack.API.Controllers
                     AccId = account.AccId,
                     Email = account.Email,
                     Name = account.Name,
-                    Status = account.Status,
+                    //Status = account.Status,
                     RoleId = account.RoleId,
                     RoleName = account.Role.Name
                 })
@@ -84,15 +77,17 @@ namespace SoftTrack.API.Controllers
             {
                 return BadRequest("Email không có đuôi @fpt.edu.vn.");
             }
-
-            var user = await _repo.Login(email);
+            var user = await _context.Accounts
+            .Where(u => u.Email.ToLower() == email.ToLower())
+            .Include(u => u.Role) // Kết hợp thông tin về Role
+            .FirstOrDefaultAsync(); // Sử dụng FirstOrDefaultAsync để lấy một bản ghi hoặc null nếu không tìm thấy
 
             if (user == null)
             {
                 return BadRequest("Email không tồn tại hoặc sai mật khẩu.");
             }
 
-            var roles = user.RoleName;
+            var roles = user.Role.Name;
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
@@ -109,8 +104,15 @@ namespace SoftTrack.API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            var response = _mapper.Map<AccountDto>(user);
+            AccountDto response = new AccountDto
+            {
+                Name = user.Name,
+                Email = user.Email,
+                AccId = user.AccId,
+                RoleId = user.RoleId,
+                RoleName = user.Role.Name,
+                Status = user.Status,
+            };
 
             response.token = tokenHandler.WriteToken(token);
             return Ok(response);
@@ -157,7 +159,7 @@ namespace SoftTrack.API.Controllers
 
             if (account != null)
             {
-                account.Status = false;
+                account.Status = 3;
 
                 await _context.SaveChangesAsync();
             }

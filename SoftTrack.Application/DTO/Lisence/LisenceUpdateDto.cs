@@ -9,7 +9,7 @@ namespace SoftTrack.Application.DTO
     public class LicenseUpdateDto
     {
         public string LicenseKey { get; set; }
-        public string StartDate { get; set; }
+        public string Start_Date { get; set; }
         public int Time { get; set; }
         public int? Status { get; set; }
     }
