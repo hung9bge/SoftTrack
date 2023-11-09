@@ -1,13 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SoftTrack.Software.DTO;
 using SoftTrack.Domain;
-using Microsoft.AspNetCore.OData;
-using Microsoft.AspNetCore.OData.Query;
-using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.EntityFrameworkCore;
-using SoftTrack.Software.DTO.Asset;
-using System.ComponentModel;
-using Microsoft.AspNetCore.Http;
 using System.Globalization;
 
 namespace SoftTrack.API.Controllers

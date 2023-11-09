@@ -156,6 +156,39 @@ namespace SoftTrack.API.Controllers
             }
 
             return applications;
-        }   
+        }
+
+        [HttpGet("get_App_by_Id/{key}")]
+        public async Task<ActionResult<IEnumerable<ApplicationDto>>> GetAppByIdAsync(int key)
+        {
+            var lst = await _context.Applications
+                .Where(app => app.AppId == key)
+                .Select(app => new ApplicationDto
+                {
+                    AppId = app.AppId,
+                    AccId = app.AccId,
+                    Name = app.Name,
+                    Publisher = app.Publisher,
+                    Version = app.Version,
+                    Release = app.Release,
+                    Type = app.Type,
+                    Os = app.Os,
+                    Osversion = app.Osversion,
+                    Description = app.Description,
+                    Download = app.Download,
+                    Docs = app.Docs,
+                    Language = app.Language,
+                    Db = app.Db,
+                })
+                .ToListAsync();
+
+            if (!lst.Any())
+            {
+                return NotFound();
+            }
+
+            return lst;
+        }
+
     }
 }

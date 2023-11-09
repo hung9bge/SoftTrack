@@ -1,145 +1,136 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using SoftTrack.Software.DTO;
-//using SoftTrack.Software.DTO.Report;
-//using SoftTrack.Domain;
-//using System;
-//using System.Globalization;
-//using System.Linq;
-//using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SoftTrack.Domain;
+using SoftTrack.Software.DTO;
+using System.Globalization;
 
-//namespace SoftTrack.API.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class LicenseController : ControllerBase
-//    {
-//        private readonly soft_track4Context _context;
+namespace SoftTrack.API.Controllers
+{
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    public class LicenseController : Controller
+    {
+        private readonly soft_track4Context _context;
+        private readonly IConfiguration _configuration;
+        public LicenseController(IConfiguration configuration, soft_track4Context context)
+        {
+            _configuration = configuration;
+            _context = context;
+        }
+        [HttpGet("ListLicenses")]
+        public async Task<ActionResult<IEnumerable<LicenseDto>>> ListAllLicensesAsync()
+        {
+            var lst = await _context.Licenses
+                .Select(item => new LicenseDto
+                {
+                    LicenseId = item.LicenseId,
+                    LicenseKey = item.LicenseKey,
+                    Start_Date = item.Start_Date,
+                    Time = item.Time,
+                    Status = item.Status
+                })
+                .ToListAsync();
 
-//        public LicenseController(soft_track4Context context)
-//        {
-//            _context = context;
-//        }
+            return lst;
+        }
 
-//        // GET: api/License
-//        [HttpGet]
-//        public async Task<IActionResult> GetLicenses()
-//        {
-//            var licenses = await _context.Licenses.ToListAsync();
-//            return Ok(licenses);
-//        }
-//        [HttpGet("list_licenses_by_device/{deviceId}")]
-//        public async Task<IActionResult> GetLicensesByDevice(int deviceId)
-//        {
-//            // Sử dụng LINQ để lấy danh sách các bản quyền cho thiết bị có deviceId tương ứng
-//            var licenses = await _context.DeviceSoftwares
-//               .Where(ds => ds.DeviceId == deviceId)
-//               .Select(ds => new LicenseDto
-//               {
-//                   LicenseId = ds.License.LicenseId,
-//                   LicenseKey = ds.License.LicenseKey,
-//                   Start_Date = ds.License.Start_Date.ToString("dd/MM/yyyy"),
-//                   Time = ds.License.Time,
-//                   Status = ds.License.Status,
-//                   SoftwareId = ds.SoftwareId // Bao gồm SoftwareId
-//               })
-//               .ToListAsync();
+        [HttpGet("list_Licenses_by_Asset/{key}")]
+        public async Task<ActionResult<IEnumerable<LicenseDto>>> GetLicensesByAssetAsync(int key)
+        {
+            var lst = await _context.AssetSoftwares
+                .Where(item => item.AssetId == key)
+                .Select(item => new LicenseDto
+                {
+                    LicenseId = item.License.LicenseId,
+                    LicenseKey = item.License.LicenseKey,
+                    Start_Date = item.License.Start_Date,
+                    Time = item.License.Time,
+                    Status = item.License.Status
+                })
+                .ToListAsync();
 
-//            return Ok(licenses);
-//        }
-//        // GET: api/License/5
-//        [HttpGet("{id}")]
-//        public async Task<IActionResult> GetLicense(int id)
-//        {
-//            var license = await _context.Licenses.FindAsync(id);
+            if (!lst.Any())
+            {
+                return NotFound();
+            }
 
-//            if (license == null)
-//            {
-//                return NotFound();
-//            }
+            return lst;
+        }
+        [HttpPost("CreateLicense")]
+        public async Task<IActionResult> CreateLicenseAsync([FromBody] LicenseCreateDto item)
+        {
+            if (ModelState.IsValid)
+            {
+                var tmp = new License
+                {
+                    LicenseKey = item.LicenseKey,
+                    Time = (item.Time > 0) ? item.Time : 0,
+                    Status  = item.Status
+                };
+                if (DateTime.TryParseExact(item.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                {
+                    tmp.Start_Date = parsedDate;
+                }
 
-//            return Ok(license);
-//        }
+                _context.Licenses.Add(tmp);
+                await _context.SaveChangesAsync();
 
-//        // POST: api/License
-//        //[HttpPost("CreateLicense")]
-//        //public async Task<IActionResult> CreateLicense([FromBody] LicenseCreateDto licenseDto)
-//        //{
-//        //    var newLicense = new License
-//        //    {
-//        //        LicenseKey= licenseDto.LicenseKey,             
-//        //        //Start_Date = DateTime.Parse(licenseDto.Start_Date),
-//        //        Time = licenseDto.Time,
-//        //        Status = licenseDto.Status
-//        //    };
-//        //    if (DateTime.TryParseExact(licenseDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-//        //    {
-//        //        newLicense.Start_Date = parsedDate;
-//        //    }
-//        //    _context.Licenses.Add(newLicense);
-//        //    await _context.SaveChangesAsync();
-//        //    return CreatedAtAction("GetLicense", new { id = newLicense.LicenseId }, newLicense);
-//        //}
+                return CreatedAtAction("GetLicense", new { id = tmp.LicenseId }, tmp);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        [HttpPut("UpdateLicense/{key}")]
+        public async Task<IActionResult> UpdateLicenseAsync(int key, [FromBody] LicenseUpdateDto updatedLicenseDto)
+        {
+            if (updatedLicenseDto == null)
+            {
+                return BadRequest(ModelState);
+            }
+            var updatedLicense = await _context.Licenses.FindAsync(key);
 
-//        // PUT: api/License/5
-//        [HttpPut("UpdateLicense{id}")]
-//        public async Task<IActionResult> UpdateLicense(int id, [FromBody] LicenseUpdateDto license)
-//        {
-//            var existingLicense = await _context.Licenses.FindAsync(id);
-//            if (existingLicense == null)
-//            {
-//                return NotFound();
-//            }
-//            if (license.LicenseKey != "string")
-//            {
-//                existingLicense.LicenseKey = license.LicenseKey;
-//            }
-//            if (license.Time != 0)
-//            {
-//                existingLicense.Time = license.Time;
-//            }
-//            if (license.Status != 0)
-//            {
-//                existingLicense.Status = license.Status;
-//            }
-     
-//            if (license.Start_Date != "string")
-//            {
-//                existingLicense.Start_Date = DateTime.Parse(license.Start_Date);
-//            }
-//            _context.Licenses.Update(existingLicense);
-//            await _context.SaveChangesAsync();
+            if (updatedLicense == null)
+            {
+                return NotFound("License not found");
+            }
 
-//            return Ok("Licenses đã được cập nhật thành công.");
-//        }
+            if (updatedLicenseDto.LicenseKey != null && updatedLicenseDto.LicenseKey != "string")
+            {
+                updatedLicense.LicenseKey = updatedLicenseDto.LicenseKey;
+            }
 
-//        // DELETE: api/License/5
-//        [HttpDelete("DeleteLicense{id}")]
-//        public async Task<IActionResult> DeleteLicense(int id)
-//        {
-//            // Kiểm tra xem có bản ghi DeviceSoftware liên quan đến giấy phép không
-//            var deviceSoftware = await _context.DeviceSoftwares.FirstOrDefaultAsync(ds => ds.LicenseId == id);
+            if (updatedLicenseDto.Start_Date != null && updatedLicenseDto.Start_Date != "string")
+            {
+                updatedLicense.Start_Date = DateTime.Parse(updatedLicenseDto.Start_Date);
+            }
 
-//            if (deviceSoftware != null)
-//            {
-//                // Nếu tìm thấy, xóa bản ghi DeviceSoftware
-//                _context.DeviceSoftwares.Remove(deviceSoftware);
-//            }
+            if (updatedLicenseDto.Time != 0)
+            {
+                updatedLicense.Time = updatedLicenseDto.Time;
+            }
 
-//            var license = await _context.Licenses.FindAsync(id);
+            if (updatedLicenseDto.Status == 0)
+            {
+                updatedLicense.Status = 0;
+            }
 
-//            if (license == null)
-//            {
-//                return NotFound("Giấy phép không tồn tại.");
-//            }
+            await _context.SaveChangesAsync();
 
-//            // Xóa giấy phép
-//            _context.Licenses.Remove(license);
-           
-//            await _context.SaveChangesAsync();
+            return Ok("License updated successfully");
+        }
+        [HttpDelete("DeleteLicenseWith_key")]
+        public async Task<IActionResult> DeleteLicenseAsync(int id)
+        {
+            var item = await _context.Licenses.FindAsync(id);
 
-//            return Ok("Giấy phép đã được xóa thành công.");
-//        }
-        
-//    }
-//}
+            if (item != null)
+            {
+                _context.Licenses.Remove(item);
+                await _context.SaveChangesAsync();
+            }
+            return StatusCode(StatusCodes.Status200OK);
+        }
+    }
+}
