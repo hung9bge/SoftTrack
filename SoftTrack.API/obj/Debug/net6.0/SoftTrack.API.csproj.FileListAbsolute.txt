@@ -41,10 +41,8 @@ E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.OpenApi.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Swashbuckle.AspNetCore.Swagger.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
-E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Application.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Domain.dll
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Infrastructure.dll
-E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Application.pdb
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Infrastructure.pdb
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Domain.pdb
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\obj\Debug\net6.0\SoftTrack.API.csproj.AssemblyReference.cache
@@ -226,3 +224,5 @@ E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\runtimes\win\lib\net6.0\Sy
 E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\runtimes\win\lib\net6.0\System.Text.Encoding.CodePages.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Software.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Software.pdb
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Software.dll
+E:\Do_An\SAM\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.Software.pdb

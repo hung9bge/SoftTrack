@@ -20,7 +20,7 @@ namespace SoftTrack.Software.DTO.Asset
         public string Manufacturer { get; set; }
         public string Model { get; set; }
         public string SerialNumber { get; set; }
-        public DateTime? LastSuccesfullScan { get; set; }
+        public String? LastSuccesfullScan { get; set; }
         public int Status { get; set; }
     }
 }
