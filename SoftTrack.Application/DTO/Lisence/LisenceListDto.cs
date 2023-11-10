@@ -6,14 +6,13 @@ using System.Threading.Tasks;
 
 namespace SoftTrack.Manage.DTO
 {
-    public class LicenseCreateDto
+    public class LisenceListDto
     {
 
-        public int DeviceId { get; set; }
-        public int SoftwareId { get; set; }
+        public int LicenseId { get; set; }
         public string LicenseKey { get; set; }
-        public string? Start_Date { get; set; }
-        public int Time { get; set; }
+        public String? Start_Date { get; set; }
+        public int? Time { get; set; }
         public int Status { get; set; }
     }
 }
