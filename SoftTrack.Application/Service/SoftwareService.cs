@@ -1,6 +1,6 @@
 ﻿//using AutoMapper;
 //using Microsoft.EntityFrameworkCore;
-//using SoftTrack.Software.DTO;
+//using SoftTrack.Manage.DTO;
 //using SoftTrack.Application.Interface;
 //using SoftTrack.Domain;
 

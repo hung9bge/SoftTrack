@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SoftTrack.Domain;
-using SoftTrack.Software.DTO;
+using SoftTrack.Manage.DTO;
 using System.Globalization;
 
 namespace SoftTrack.API.Controllers
@@ -65,7 +65,7 @@ namespace SoftTrack.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var tmp = new SoftTrack.Domain.Software
+                var tmp = new Software
                 {
                     Name = item.Name,
                     Publisher = item.Publisher,

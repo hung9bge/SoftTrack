@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SoftTrack.Software.DTO;
+using SoftTrack.Manage.DTO;
 using SoftTrack.Domain;
 using System.Globalization;
 

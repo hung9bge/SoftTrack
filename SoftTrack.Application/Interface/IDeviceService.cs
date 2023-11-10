@@ -1,4 +1,4 @@
-﻿//using SoftTrack.Software.DTO;
+﻿//using SoftTrack.Manage.DTO;
 //using SoftTrack.Domain;
 
 //namespace SoftTrack.Application.Interface

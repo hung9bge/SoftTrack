@@ -4,7 +4,7 @@
 //using System.Text;
 //using System.Threading.Tasks;
 
-//namespace SoftTrack.Software.DTO.Asset_App
+//namespace SoftTrack.Manage.DTO.Asset_App
 //{
 //    public class Asset_AppUpdateDto
 //    {

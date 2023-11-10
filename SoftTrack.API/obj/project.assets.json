@@ -1358,7 +1358,7 @@
           "bin/placeholder/SoftTrack.Infrastructure.dll": {}
         }
       },
-      "SoftTrack.Software/1.0.0": {
+      "SoftTrack.Manage/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v6.0",
         "dependencies": {
@@ -1368,10 +1368,10 @@
           "SoftTrack.Domain": "1.0.0"
         },
         "compile": {
-          "bin/placeholder/SoftTrack.Software.dll": {}
+          "bin/placeholder/SoftTrack.Manage.dll": {}
         },
         "runtime": {
-          "bin/placeholder/SoftTrack.Software.dll": {}
+          "bin/placeholder/SoftTrack.Manage.dll": {}
         }
       }
     }
@@ -3413,10 +3413,10 @@
       "path": "../SoftTrack.Infrastructure/SoftTrack.Infrastructure.csproj",
       "msbuildProject": "../SoftTrack.Infrastructure/SoftTrack.Infrastructure.csproj"
     },
-    "SoftTrack.Software/1.0.0": {
+    "SoftTrack.Manage/1.0.0": {
       "type": "project",
-      "path": "../SoftTrack.Application/SoftTrack.Software.csproj",
-      "msbuildProject": "../SoftTrack.Application/SoftTrack.Software.csproj"
+      "path": "../SoftTrack.Application/SoftTrack.Manage.csproj",
+      "msbuildProject": "../SoftTrack.Application/SoftTrack.Manage.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -3425,29 +3425,24 @@
       "Microsoft.AspNetCore.OData >= 8.2.0",
       "MimeKit >= 4.2.0",
       "SoftTrack.Infrastructure >= 1.0.0",
-      "SoftTrack.Software >= 1.0.0",
+      "SoftTrack.Manage >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\HUNGLM\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\hung.lemanh1\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.API\\SoftTrack.API.csproj",
+      "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.API\\SoftTrack.API.csproj",
       "projectName": "SoftTrack.API",
-      "projectPath": "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.API\\SoftTrack.API.csproj",
-      "packagesPath": "C:\\Users\\HUNGLM\\.nuget\\packages\\",
-      "outputPath": "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.API\\obj\\",
+      "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.API\\SoftTrack.API.csproj",
+      "packagesPath": "C:\\Users\\hung.lemanh1\\.nuget\\packages\\",
+      "outputPath": "D:\\Do_an\\SoftTrack\\SoftTrack.API\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\HUNGLM\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\hung.lemanh1\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -3455,18 +3450,18 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj": {
-              "projectPath": "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.Application\\SoftTrack.Software.csproj"
+            "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj": {
+              "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj"
             },
-            "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj": {
-              "projectPath": "E:\\Do_An\\SAM\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj"
+            "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj": {
+              "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj"
             }
           }
         }
@@ -3517,7 +3512,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
