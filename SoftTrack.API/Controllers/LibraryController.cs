@@ -10,10 +10,10 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class LibraryController : Controller
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
 
-        public LibraryController(IConfiguration configuration, soft_track4Context context)
+        public LibraryController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
             _context = context;
@@ -30,7 +30,7 @@ namespace SoftTrack.API.Controllers
                     Name = library.Name,
                     Publisher = library.Publisher,
                     LibraryKey = library.LibraryKey,
-                    Start_Date = library.Start_Date.ToString("dd/MM/yyyy"),
+                    Start_Date = library.StartDate.ToString("dd/MM/yyyy"),
                     Time = library.Time,
                     Status = library.Status
                 })
@@ -55,7 +55,7 @@ namespace SoftTrack.API.Controllers
                 };
                 if (DateTime.TryParseExact(libraryDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
-                    library.Start_Date = parsedDate;
+                    library.StartDate = parsedDate;
                 }
                 _context.Libraries.Add(library);
                 await _context.SaveChangesAsync();
@@ -97,7 +97,7 @@ namespace SoftTrack.API.Controllers
 
             if (updatedLibraryDto.Start_Date != "string")
             {
-                updatedLibrary.Start_Date = DateTime.Parse(updatedLibraryDto.Start_Date);
+                updatedLibrary.StartDate = DateTime.Parse(updatedLibraryDto.Start_Date);
             }
             if (updatedLibraryDto.Time != 0)
             {
@@ -128,7 +128,7 @@ namespace SoftTrack.API.Controllers
                     Name = library.Name,
                     Publisher = library.Publisher,
                     LibraryKey = library.LibraryKey,
-                    Start_Date = library.Start_Date.ToString("dd/MM/yyyy"),
+                    Start_Date = library.StartDate.ToString("dd/MM/yyyy"),
                     Time = library.Time,
                     Status = library.Status
                 })

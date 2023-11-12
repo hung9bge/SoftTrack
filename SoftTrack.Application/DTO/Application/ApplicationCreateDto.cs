@@ -20,5 +20,7 @@ namespace SoftTrack.Manage.DTO
         public string Docs { get; set; }
         public string Language { get; set; }
         public string Db { get; set; }
+        public int? Status { get; set; }
+
     }
 }

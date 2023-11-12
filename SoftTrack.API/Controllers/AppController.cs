@@ -9,9 +9,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class AppController : Controller
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
-        public AppController(IConfiguration configuration, soft_track4Context context)
+        public AppController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
             _context = context;
@@ -36,7 +36,9 @@ namespace SoftTrack.API.Controllers
                     Download = app.Download,
                     Docs = app.Docs,
                     Language = app.Language,
-                    Db = app.Db
+                    Db = app.Db,
+                    Status = app.Status,
+                    
                 })
                 .ToListAsync();
 
@@ -63,7 +65,8 @@ namespace SoftTrack.API.Controllers
                     Download = appCreateDto.Download,
                     Docs = appCreateDto.Docs,
                     Language = appCreateDto.Language,
-                    Db = appCreateDto.Db
+                    Db = appCreateDto.Db,
+                    Status= appCreateDto.Status,
                     // Gán các giá trị khác tương ứng từ appCreateDto
                 };
 
@@ -103,6 +106,7 @@ namespace SoftTrack.API.Controllers
             updatedApp.Docs = (updatedAppDto.Docs != null && updatedAppDto.Docs != "string") ? updatedAppDto.Docs : updatedApp.Docs;
             updatedApp.Language = (updatedAppDto.Language != null && updatedAppDto.Language != "string") ? updatedAppDto.Language : updatedApp.Language;
             updatedApp.Db = (updatedAppDto.Db != null && updatedAppDto.Db != "string") ? updatedAppDto.Db : updatedApp.Db;
+            updatedApp.Status = (updatedAppDto.Status != null && updatedAppDto.Status != 0) ? updatedAppDto.Status : updatedApp.Status;
 
             // Lưu thay đổi vào cơ sở dữ liệu
             await _context.SaveChangesAsync();
@@ -146,6 +150,7 @@ namespace SoftTrack.API.Controllers
                     Docs = app.Docs,
                     Language = app.Language,
                     Db = app.Db,
+                    Status = app.Status,
                   
                 })
                 .ToListAsync();
@@ -179,6 +184,7 @@ namespace SoftTrack.API.Controllers
                     Docs = app.Docs,
                     Language = app.Language,
                     Db = app.Db,
+                    Status = app.Status,
                 })
                 .ToListAsync();
 

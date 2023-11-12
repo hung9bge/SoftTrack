@@ -10,9 +10,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class Software_Asset : ControllerBase
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
 
-        public Software_Asset(soft_track4Context context)
+        public Software_Asset(soft_track5Context context)
         {
             _context = context;
         }
@@ -88,7 +88,7 @@ namespace SoftTrack.API.Controllers
                 newLicense.Status = licenseDto.Status_License;
                 if (DateTime.TryParseExact(licenseDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
-                    newLicense.Start_Date = parsedDate;
+                    newLicense.StartDate = parsedDate;
                 }
 
                 //Thêm giấy phép vào DbSet Licenses

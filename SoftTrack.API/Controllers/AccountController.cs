@@ -16,9 +16,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class AccountController : Controller
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
-        public AccountController( IConfiguration configuration, soft_track4Context context)
+        public AccountController( IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
             _context = context;

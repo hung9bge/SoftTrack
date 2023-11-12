@@ -14,9 +14,9 @@ namespace SoftTrack.API.Controllers
     [Route("api/[controller]")]
     public class ReportController : ControllerBase
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
         
-        public ReportController(soft_track4Context context)
+        public ReportController(soft_track5Context context)
         {
             _context = context;
         }
@@ -34,8 +34,8 @@ namespace SoftTrack.API.Controllers
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
-                Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
-                End_Date = report.End_Date?.ToString("dd/MM/yyyy"), 
+                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                End_Date = report.EndDate?.ToString("dd/MM/yyyy"), 
                 Status = report.Status
             });
 
@@ -61,8 +61,8 @@ namespace SoftTrack.API.Controllers
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
-                Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
-                End_Date = report.End_Date?.ToString("dd/MM/yyyy"),
+                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                End_Date = report.EndDate?.ToString("dd/MM/yyyy"),
                 Status = report.Status
             };
 
@@ -73,7 +73,7 @@ namespace SoftTrack.API.Controllers
         {
             var reports = await _context.Reports
                .Where(report => report.Type == type)
-               .OrderByDescending(report => report.Start_Date)  // Sắp xếp giảm dần theo Start_Date mới nhất
+               .OrderByDescending(report => report.StartDate)  // Sắp xếp giảm dần theo Start_Date mới nhất
                .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
@@ -81,8 +81,8 @@ namespace SoftTrack.API.Controllers
                     Title = report.Title,
                     Description = report.Description,
                     Type = report.Type,
-                    Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
-                    End_Date = report.End_Date.HasValue ? report.End_Date.Value.ToString("dd/MM/yyyy") : null,
+                    Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
                     Status = report.Status
                 })
                 .ToListAsync();
@@ -107,8 +107,8 @@ namespace SoftTrack.API.Controllers
                     Title = report.Title,   
                     Description = report.Description,
                     Type = report.Type,
-                    Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
-                    End_Date = report.End_Date.HasValue ? report.End_Date.Value.ToString("dd/MM/yyyy") : null,
+                    Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
                     Status = report.Status
 
                 })
@@ -135,11 +135,11 @@ namespace SoftTrack.API.Controllers
 
             if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
             {
-                newReport.Start_Date = parsedDate;
+                newReport.StartDate = parsedDate;
             }
             if (DateTime.TryParseExact(reportCreateDto.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
             {
-                newReport.End_Date = parsedDate1;
+                newReport.EndDate = parsedDate1;
             }
 
             _context.Reports.Add(newReport);
@@ -180,7 +180,7 @@ namespace SoftTrack.API.Controllers
                 //}          
                 if (!string.IsNullOrEmpty(reportUpdateDto.End_Date))
                 {
-                    existingReport.End_Date = DateTime.Parse(reportUpdateDto.End_Date);
+                    existingReport.EndDate = DateTime.Parse(reportUpdateDto.End_Date);
                 }
                
                 if (reportUpdateDto.Status != 0)
@@ -218,8 +218,8 @@ namespace SoftTrack.API.Controllers
                 Title= report.Title,
                 Description = report.Description,
                 Type = report.Type,
-                Start_Date = report.Start_Date.ToString("dd/MM/yyyy"),
-                End_Date = report.End_Date.HasValue ? report.End_Date.Value.ToString("dd/MM/yyyy") : null,
+                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
                 Status = report.Status
             }).ToList();
 

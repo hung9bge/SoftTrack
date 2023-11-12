@@ -42,7 +42,7 @@ namespace SoftTrack.API
             //builder.Services.AddScoped<IAccountService, AccountService>();
             //builder.Services.AddScoped<IDeviceService, DeviceService>();
 
-            builder.Services.AddDbContext<soft_track4Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
+            builder.Services.AddDbContext<soft_track5Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 
             builder.Services.AddAuthentication(options =>
             {

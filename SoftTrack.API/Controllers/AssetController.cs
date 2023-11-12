@@ -10,9 +10,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class AssetController : Controller
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
-        public AssetController(IConfiguration configuration, soft_track4Context context)
+        public AssetController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
             _context = context;

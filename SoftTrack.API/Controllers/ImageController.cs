@@ -9,9 +9,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class ImageController : Controller
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
-        public ImageController(IConfiguration configuration, soft_track4Context context)
+        public ImageController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
             _context = context;

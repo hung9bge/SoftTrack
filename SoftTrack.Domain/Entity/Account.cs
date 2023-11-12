@@ -1,10 +1,9 @@
-﻿using SoftTrack.Domain;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace SoftTrack.Domain
 {
-    public class Account
+    public partial class Account
     {
         public Account()
         {

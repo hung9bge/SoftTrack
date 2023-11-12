@@ -6,13 +6,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace SoftTrack.Domain
 {
-    public partial class soft_track4Context : DbContext
+    public partial class soft_track5Context : DbContext
     {
-        public soft_track4Context()
+        public soft_track5Context()
         {
         }
 
-        public soft_track4Context(DbContextOptions<soft_track4Context> options)
+        public soft_track5Context(DbContextOptions<soft_track5Context> options)
             : base(options)
         {
         }
@@ -50,13 +50,11 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.Email)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
@@ -79,56 +77,37 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.Db)
                     .HasMaxLength(255)
-                    .HasColumnName("DB")
-                    .IsFixedLength();
+                    .HasColumnName("DB");
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Description).HasMaxLength(255);
 
-                entity.Property(e => e.Docs)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Docs).HasMaxLength(255);
 
-                entity.Property(e => e.Download)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Download).HasMaxLength(255);
 
-                entity.Property(e => e.Language)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Language).HasMaxLength(255);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.Os)
                     .HasMaxLength(255)
-                    .HasColumnName("OS")
-                    .IsFixedLength();
+                    .HasColumnName("OS");
 
                 entity.Property(e => e.Osversion)
                     .HasMaxLength(255)
-                    .HasColumnName("OSVersion")
-                    .IsFixedLength();
+                    .HasColumnName("OSVersion");
 
-                entity.Property(e => e.Publisher)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Publisher).HasMaxLength(255);
 
-                entity.Property(e => e.Release)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Release).HasMaxLength(255);
 
-                entity.Property(e => e.Type)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Type).HasMaxLength(255);
 
                 entity.Property(e => e.Version)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.HasOne(d => d.Acc)
                     .WithMany(p => p.Applications)
@@ -143,64 +122,47 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.AssetId).HasColumnName("AssetID");
 
-                entity.Property(e => e.Bandwidth)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Bandwidth).HasMaxLength(255);
 
                 entity.Property(e => e.Cpu)
                     .HasMaxLength(255)
-                    .HasColumnName("CPU")
-                    .IsFixedLength();
+                    .HasColumnName("CPU");
 
                 entity.Property(e => e.Gpu)
                     .HasMaxLength(255)
-                    .HasColumnName("GPU")
-                    .IsFixedLength();
+                    .HasColumnName("GPU");
 
                 entity.Property(e => e.IpAddress)
                     .HasMaxLength(255)
-                    .HasColumnName("IP_Address")
-                    .IsFixedLength();
+                    .HasColumnName("IP_Address");
 
                 entity.Property(e => e.LastSuccesfullScan)
                     .HasColumnType("date")
                     .HasColumnName("Last_Succesfull_Scan");
 
-                entity.Property(e => e.Manufacturer)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Manufacturer).HasMaxLength(255);
 
-                entity.Property(e => e.Memory)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Memory).HasMaxLength(255);
 
-                entity.Property(e => e.Model)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Model).HasMaxLength(255);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.Os)
                     .HasMaxLength(255)
-                    .HasColumnName("OS")
-                    .IsFixedLength();
+                    .HasColumnName("OS");
 
                 entity.Property(e => e.Ram)
                     .HasMaxLength(255)
-                    .HasColumnName("RAM")
-                    .IsFixedLength();
+                    .HasColumnName("RAM");
 
                 entity.Property(e => e.SerialNumber)
                     .HasMaxLength(255)
-                    .HasColumnName("Serial_Number")
-                    .IsFixedLength();
+                    .HasColumnName("Serial_Number");
 
-                entity.Property(e => e.Version)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Version).HasMaxLength(255);
             });
 
             modelBuilder.Entity<AssetApplication>(entity =>
@@ -269,8 +231,7 @@ namespace SoftTrack.Domain
                 entity.Property(e => e.Image1)
                     .IsRequired()
                     .HasMaxLength(255)
-                    .HasColumnName("Image")
-                    .IsFixedLength();
+                    .HasColumnName("Image");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
@@ -291,20 +252,17 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.LibraryKey)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.Publisher)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
-                entity.Property(e => e.Start_Date)
+                entity.Property(e => e.StartDate)
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
 
@@ -321,11 +279,9 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.LicenseId).HasColumnName("LicenseID");
 
-                entity.Property(e => e.LicenseKey)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.LicenseKey).HasMaxLength(255);
 
-                entity.Property(e => e.Start_Date)
+                entity.Property(e => e.StartDate)
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
             });
@@ -338,27 +294,23 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.AppId).HasColumnName("AppID");
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Description).HasMaxLength(255);
 
-                entity.Property(e => e.End_Date)
+                entity.Property(e => e.EndDate)
                     .HasColumnType("date")
                     .HasColumnName("End_Date");
 
-                entity.Property(e => e.Start_Date)
+                entity.Property(e => e.StartDate)
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
 
                 entity.Property(e => e.Title)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.Type)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.HasOne(d => d.App)
                     .WithMany(p => p.Reports)
@@ -375,8 +327,7 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
             });
 
             modelBuilder.Entity<Software>(entity =>
@@ -387,27 +338,23 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
                 entity.Property(e => e.Os)
                     .HasMaxLength(255)
-                    .HasColumnName("OS")
-                    .IsFixedLength();
+                    .HasColumnName("OS");
 
                 entity.Property(e => e.Publisher)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
 
-                entity.Property(e => e.Release)
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                entity.Property(e => e.Release).HasMaxLength(255);
+
+                entity.Property(e => e.Type).HasMaxLength(255);
 
                 entity.Property(e => e.Version)
                     .IsRequired()
-                    .HasMaxLength(255)
-                    .IsFixedLength();
+                    .HasMaxLength(255);
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -10,9 +10,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class LicenseController : Controller
     {
-        private readonly soft_track4Context _context;
+        private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
-        public LicenseController(IConfiguration configuration, soft_track4Context context)
+        public LicenseController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
             _context = context;
@@ -41,11 +41,13 @@ namespace SoftTrack.API.Controllers
                 .Where(item => item.AssetId == key)
                 .Select(item => new LisenceListDto
                 {
+                    SoftwareId = item.SoftwareId,
                     LicenseId = item.License.LicenseId,
                     LicenseKey = item.License.LicenseKey,
-                    Start_Date = item.License.Start_Date.HasValue ? item.License.Start_Date.Value.ToString("dd/MM/yyyy") : null,
+                    Start_Date = item.License.StartDate.HasValue ? item.License.StartDate.Value.ToString("dd/MM/yyyy") : null,
                     Time = item.License.Time,
-                    Status = item.License.Status
+                    Status = item.License.Status,
+                    
                 })
                 .ToListAsync();
 

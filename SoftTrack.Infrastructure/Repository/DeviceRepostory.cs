@@ -6,8 +6,8 @@
 //{
 //    public class DeviceRepository : IDeviceRepository
 //    {
-//        private readonly soft_track4Context _context;
-//        public DeviceRepository(soft_track4Context context)
+//        private readonly soft_track5Context _context;
+//        public DeviceRepository(soft_track5Context context)
 //        {
 //            _context = context;
 //        }

@@ -10,9 +10,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly soft_track4Context _context;   
+        private readonly soft_track5Context _context;   
 
-        public RoleController(soft_track4Context context)
+        public RoleController(soft_track5Context context)
         {
             _context = context;  
         }
