@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SoftTrack.API.Models;
 using SoftTrack.Domain;
 using SoftTrack.Manage.DTO;
 
@@ -11,10 +12,12 @@ namespace SoftTrack.API.Controllers
     {
         private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
-        public ImageController(IConfiguration configuration, soft_track5Context context)
+        public static IWebHostEnvironment _webHostEnvironment;
+        public ImageController(IConfiguration configuration, soft_track5Context context, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
         [HttpGet("ListImages")]
         public async Task<ActionResult<IEnumerable<ImageDto>>> ListAllImagesAsync()
@@ -52,14 +55,26 @@ namespace SoftTrack.API.Controllers
             return lst;
         }
         [HttpPost("CreateImage")]
-        public async Task<IActionResult> CreateImageAsync([FromBody] ImageCreateDto item)
+        public async Task<IActionResult> CreateImageAsync(ImageUpload item)
         {
             if (ModelState.IsValid)
             {
+                string path = _webHostEnvironment.WebRootPath + "/upload/";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+                if (item.Image1 != null)
+                {
+                    path += "photos/report/";
+                    path += Guid.NewGuid().ToString() + "_" + item.Images.FileName;
+                    //string serverPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
+                    await item.Images.CopyToAsync(new FileStream(path, FileMode.Create));
+                }
                 var tmp = new Image
                 {
                     ReportId = item.ReportId,
-                    Image1 = item.Image1
+                    Image1 = path
                 };
                 
                 _context.Images.Add(tmp);

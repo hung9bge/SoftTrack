@@ -37,11 +37,11 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpGet("list_Softwares_by_Asset/{key}")]
-        public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwaresByAssetAsync(int key)
+        public async Task<ActionResult<IEnumerable<SoftwareListDto>>> GetSoftwaresByAssetAsync(int key)
         {
             var lst = await _context.AssetSoftwares
                 .Where(item => item.AssetId == key)
-                .Select(item => new SoftwareDto
+                .Select(item => new SoftwareListDto
                 {
                     SoftwareId = item.Software.SoftwareId,
                     Name = item.Software.Name,
@@ -49,7 +49,8 @@ namespace SoftTrack.API.Controllers
                     Version = item.Software.Version,
                     Release = item.Software.Release,
                     Os = item.Software.Os,
-                    Status = item.Software.Status
+                    InstallDate = item.InstallDate.HasValue ? item.InstallDate.Value.ToString("dd/MM/yyyy") : null,
+                    AssetSoftwareStatus = item.Status
                 })
                 .ToListAsync();
 
@@ -71,6 +72,7 @@ namespace SoftTrack.API.Controllers
                     Publisher = item.Publisher,
                     Version = item.Version,
                     Release = item.Release,
+                    Type = item.Type,
                     Os = item.Os,
                     Status = item.Status
                 };
@@ -117,6 +119,11 @@ namespace SoftTrack.API.Controllers
             if (updatedSoftwareDto.Release != null && updatedSoftwareDto.Release != "string")
             {
                 updatedSoftware.Release = updatedSoftwareDto.Release;
+            }
+
+            if (updatedSoftwareDto.Type != null && updatedSoftwareDto.Type != "string")
+            {
+                updatedSoftware.Type = updatedSoftwareDto.Type;
             }
 
             if (updatedSoftwareDto.Os != null && updatedSoftwareDto.Os != "string")
