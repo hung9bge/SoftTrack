@@ -239,10 +239,17 @@ namespace SoftTrack.API.Controllers
                 }
 
                 // Truy vấn danh sách email đã tồn tại trong bảng Account
+                //var existingEmails = await _context.Accounts
+                //    .Where(a => a.Status != 3) // Lọc tài khoản có trạng thái true (hoạt động)
+                //    .Select(a => a.Email)
+                //    .ToListAsync();
+                // Truy email từ bảng "Account" mà các "Asset" của email đó có chứa "App" trong "Report" theo "ReportId," 
                 var existingEmails = await _context.Accounts
-                    .Where(a => a.Status != 3) // Lọc tài khoản có trạng thái true (hoạt động)
-                    .Select(a => a.Email)
-                    .ToListAsync();
+                .Where(account => account.Applications
+                    .Any(app => app.AssetApplications
+                        .Any(assetApp => assetApp.AppId == idReport)))
+                .Select(account => account.Email)
+                .ToListAsync();
 
                 if (existingEmails.Count == 0)
                 {
