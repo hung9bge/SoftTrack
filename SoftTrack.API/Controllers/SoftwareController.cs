@@ -29,6 +29,7 @@ namespace SoftTrack.API.Controllers
                     Version = item.Version,
                     Release = item.Release,
                     Os = item.Os,
+                    Type = item.Type,
                     Status = item.Status
                 })
                 .ToListAsync();
@@ -49,6 +50,7 @@ namespace SoftTrack.API.Controllers
                     Version = item.Software.Version,
                     Release = item.Software.Release,
                     Os = item.Software.Os,
+                    Type = item.Software.Type,
                     InstallDate = item.InstallDate.HasValue ? item.InstallDate.Value.ToString("dd/MM/yyyy") : null,
                     AssetSoftwareStatus = item.Status
                 })
