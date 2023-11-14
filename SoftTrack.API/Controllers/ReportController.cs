@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SoftTrack.API.Models;
 using SoftTrack.Domain;
 using SoftTrack.Manage.DTO;
 using System.Globalization;
@@ -15,10 +16,12 @@ namespace SoftTrack.API.Controllers
     public class ReportController : ControllerBase
     {
         private readonly soft_track5Context _context;
-        
-        public ReportController(soft_track5Context context)
+        public static IWebHostEnvironment _webHostEnvironment;
+
+        public ReportController(soft_track5Context context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: api/Reports
@@ -118,35 +121,70 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpPost("CreateReport")]
-        public async Task<IActionResult> CreateReport([FromBody] ReportCreateDto reportCreateDto)
+        public async Task<IActionResult> CreateReport(ReportModel reportModel)
         {
-            string dateString = DateTime.Now.ToString("dd/MM/yyyy");
+            if (ModelState.IsValid)
+            {
+
+                string dateString = DateTime.Now.ToString("dd/MM/yyyy");
          
-            var newReport = new Report
-            {
+                var newReport = new Report
+                {
              
-                AppId = reportCreateDto.AppId,
-                Title= reportCreateDto.Title,
-                Description = reportCreateDto.Description,
-                Type = reportCreateDto.Type,       
-                Status = reportCreateDto.Status
+                    AppId = reportModel.AppId,
+                    Title= reportModel.Title,
+                    Description = reportModel.Description,
+                    Type = reportModel.Type,       
+                    Status = reportModel.Status
 
-            };
+                };
 
-            if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-            {
-                newReport.StartDate = parsedDate;
+                if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                {
+                    newReport.StartDate = parsedDate;
+                }
+                if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
+                {
+                    newReport.EndDate = parsedDate1;
+                }
+
+                _context.Reports.Add(newReport);
+                await _context.SaveChangesAsync();
+
+                if (reportModel.Images != null)
+                {
+                    string folder = "soft_track/report/";
+
+                    //reportModel.Images = new List<Image>();
+
+                    foreach (var file in reportModel.Images)
+                    {
+                        var img = new Image()
+                        {
+                            ReportId = newReport.ReportId,
+                            Image1 = await UploadImage(folder, file)
+                        };
+                        if (img != null)
+                            _context.Images.Add(img);
+                    }
+                }
+                await _context.SaveChangesAsync();
+
+                return CreatedAtAction("GetReport", new { id = newReport.ReportId }, newReport);
             }
-            if (DateTime.TryParseExact(reportCreateDto.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
-            {
-                newReport.EndDate = parsedDate1;
-            }
+            return BadRequest(ModelState);
+        }
 
-            _context.Reports.Add(newReport);
-            await _context.SaveChangesAsync();
+        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        {
 
-            return CreatedAtAction("GetReport", new { id = newReport.ReportId }, newReport);
+            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
 
+            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
+
+            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
+
+            return "/" + folderPath;
         }
 
         // PUT: api/Reports/5
