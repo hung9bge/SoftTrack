@@ -237,7 +237,7 @@ namespace SoftTrack.API.Controllers
                 {
                     return NotFound("Không tìm thấy báo cáo với idReport đã cung cấp.");
                 }
-
+            
                 // Truy vấn danh sách email đã tồn tại trong bảng Account
                 //var existingEmails = await _context.Accounts
                 //    .Where(a => a.Status != 3) // Lọc tài khoản có trạng thái true (hoạt động)
@@ -247,7 +247,7 @@ namespace SoftTrack.API.Controllers
                 var existingEmails = await _context.Accounts
                 .Where(account => account.Applications
                     .Any(app => app.AssetApplications
-                        .Any(assetApp => assetApp.AppId == idReport)))
+                        .Any(assetApp => assetApp.AppId == report.AppId)))
                 .Select(account => account.Email)
                 .ToListAsync();
 
