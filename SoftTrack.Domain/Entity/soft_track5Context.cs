@@ -235,11 +235,11 @@ namespace SoftTrack.Domain
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
 
-                entity.HasOne(d => d.Report)
-                    .WithMany(p => p.Images)
-                    .HasForeignKey(d => d.ReportId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Image_Report");
+                //entity.HasOne(d => d.Report)
+                //    .WithMany(p => p.Images)
+                //    .HasForeignKey(d => d.ReportId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_Image_Report");
             });
 
             modelBuilder.Entity<Library>(entity =>

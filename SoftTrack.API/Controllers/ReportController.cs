@@ -171,9 +171,14 @@ namespace SoftTrack.API.Controllers
                             Image1 = await UploadImage(path, file)
                         };
                         if (img != null)
+                        {
                             _context.Images.Add(img);
+
+                        }
                     }
                 }
+
+                //_context.Reports.Add(newReport);
                 await _context.SaveChangesAsync();
 
                 return CreatedAtAction("GetReport", new { id = newReport.ReportId }, newReport);
@@ -183,12 +188,12 @@ namespace SoftTrack.API.Controllers
 
         private async Task<string> UploadImage(string path, IFormFile file)
         {
-
-            path += Guid.NewGuid().ToString() + "_" + file.FileName;
+            string filename = Guid.NewGuid().ToString() + "_" + file.FileName;
+            path += filename;
 
             await file.CopyToAsync(new FileStream(path, FileMode.Create));
 
-            return Guid.NewGuid().ToString() + "_" + file.FileName;
+            return filename;
         }
 
         // PUT: api/Reports/5

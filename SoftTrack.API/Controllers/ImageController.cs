@@ -54,6 +54,15 @@ namespace SoftTrack.API.Controllers
 
             return lst;
         }
+
+        [HttpGet("{filename}")]
+        public IActionResult Get([FromRoute] string filename)
+        {
+            var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", filename);
+            var imageFileStream = System.IO.File.OpenRead(path);
+            return File(imageFileStream, "image/jpeg");
+        }
+
         [HttpPost("CreateImage")]
         public async Task<IActionResult> CreateImageAsync(ImageUpload item)
         {
