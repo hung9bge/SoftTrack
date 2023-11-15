@@ -16,31 +16,31 @@ namespace SoftTrack.API.Controllers
         {
             _context = context;
         }
-        [HttpPost("CreateAssetSoftwareNoLicense")]
-        public async Task<IActionResult> CreateAssetSoftwareAsync([FromBody] AssetSoftwareDto assetSoftwareDto)
-        {
-            if (assetSoftwareDto.AssetId != 0 && assetSoftwareDto.SoftwareId != 0)
-            {
-                var assetSoftware = new AssetSoftware
-                {
-                    AssetId = assetSoftwareDto.AssetId,
-                    SoftwareId = assetSoftwareDto.SoftwareId,
-                    Status = assetSoftwareDto.Status
-                };
-                if (DateTime.TryParseExact(assetSoftwareDto.InstallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-                {
-                    assetSoftware.InstallDate = parsedDate;
-                }
-                _context.AssetSoftwares.Add(assetSoftware);
-                await _context.SaveChangesAsync();
+        //[HttpPost("CreateAssetSoftwareNoLicense")]
+        //public async Task<IActionResult> CreateAssetSoftwareAsync([FromBody] AssetSoftwareDto assetSoftwareDto)
+        //{
+        //    if (assetSoftwareDto.AssetId != 0 && assetSoftwareDto.SoftwareId != 0)
+        //    {
+        //        var assetSoftware = new AssetSoftware
+        //        {
+        //            AssetId = assetSoftwareDto.AssetId,
+        //            SoftwareId = assetSoftwareDto.SoftwareId,
+        //            Status = assetSoftwareDto.Status
+        //        };
+        //        if (DateTime.TryParseExact(assetSoftwareDto.InstallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+        //        {
+        //            assetSoftware.InstallDate = parsedDate;
+        //        }
+        //        _context.AssetSoftwares.Add(assetSoftware);
+        //        await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetAssetSoftware", new { AssetId = assetSoftware.AssetId, SoftwareId = assetSoftware.SoftwareId }, assetSoftware);
-            }
-            else
-            {
-                return Ok("Vui lòng điền thông tin.");
-            }
-        }
+        //        return CreatedAtAction("GetAssetSoftware", new { AssetId = assetSoftware.AssetId, SoftwareId = assetSoftware.SoftwareId }, assetSoftware);
+        //    }
+        //    else
+        //    {
+        //        return Ok("Vui lòng điền thông tin.");
+        //    }
+        //}
 
         [HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
         public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)
@@ -123,6 +123,73 @@ namespace SoftTrack.API.Controllers
                 }
 
                 return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+            }
+        }
+        [HttpPost("CreateWithHaveLicenseAndSoftware")]
+        public async Task<IActionResult> CreateLicenseSoftware([FromBody] AssetSoftwareDto licenseDto)
+        {
+            using (var transaction = await _context.Database.BeginTransactionAsync())
+            {
+                try
+                {
+                    // Kiểm tra xem Device tồn tại
+                    var asset = await _context.Assets.FindAsync(licenseDto.AssetId);
+
+                    if (asset == null)
+                    {
+                        return BadRequest("Asset không tồn tại.");
+                    }
+
+                    // Tạo mới Software
+                    var newSoftware = new Software
+                    {
+                        Name = licenseDto.Name,
+                        Publisher = licenseDto.Publisher,
+                        Version = licenseDto.Version,
+                        Release = licenseDto.Release,
+                        Type = licenseDto.Type,
+                        Os = licenseDto.Os,
+                        Status = licenseDto.Status_Software
+                    };
+
+                    _context.Softwares.Add(newSoftware);
+                    await _context.SaveChangesAsync();
+
+                    // Tạo mới License
+                    var newLicense = new License
+                    {
+                        LicenseKey = licenseDto.LicenseKey,
+                        Time = licenseDto.Time,
+                        Status = licenseDto.Status_License,
+                        StartDate = DateTime.ParseExact(licenseDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture)
+                    };
+
+                    _context.Licenses.Add(newLicense);
+                    await _context.SaveChangesAsync();
+
+                    // Tạo mới AssetSoftware và thêm vào DbSet AssetSoftware
+                    var assetSoftware = new AssetSoftware
+                    {
+                        AssetId = licenseDto.AssetId,
+                        SoftwareId = newSoftware.SoftwareId,
+                        LicenseId = newLicense.LicenseId,
+                        InstallDate = DateTime.Now,
+                        Status = licenseDto.Status_AssetSoftware
+                    };
+
+                    _context.AssetSoftwares.Add(assetSoftware);
+                    await _context.SaveChangesAsync();
+
+                    transaction.Commit();
+
+                    return Ok("Licenses và Software đã được thêm thành công.");
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+
+                    return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+                }
             }
         }
 
