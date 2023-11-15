@@ -121,7 +121,7 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpPost("CreateReport")]
-        public async Task<IActionResult> CreateReport(ReportModel reportModel)
+        public async Task<IActionResult> CreateReport([FromForm] ReportModel reportModel)
         {
             if (ModelState.IsValid)
             {
@@ -159,6 +159,8 @@ namespace SoftTrack.API.Controllers
 
                     foreach (var file in reportModel.Images)
                     {
+                        if (file.FileName == null)
+                            continue;
                         var img = new Image()
                         {
                             ReportId = newReport.ReportId,
