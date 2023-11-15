@@ -153,9 +153,13 @@ namespace SoftTrack.API.Controllers
 
                 if (reportModel.Images != null)
                 {
-                    string folder = "soft_track/report/";
+                    //string folder = "images/";
 
-                    //reportModel.Images = new List<Image>();
+                    string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
 
                     foreach (var file in reportModel.Images)
                     {
@@ -164,7 +168,7 @@ namespace SoftTrack.API.Controllers
                         var img = new Image()
                         {
                             ReportId = newReport.ReportId,
-                            Image1 = await UploadImage(folder, file)
+                            Image1 = await UploadImage(path, file)
                         };
                         if (img != null)
                             _context.Images.Add(img);
@@ -177,16 +181,14 @@ namespace SoftTrack.API.Controllers
             return BadRequest(ModelState);
         }
 
-        private async Task<string> UploadImage(string folderPath, IFormFile file)
+        private async Task<string> UploadImage(string path, IFormFile file)
         {
 
-            folderPath += Guid.NewGuid().ToString() + "_" + file.FileName;
+            path += Guid.NewGuid().ToString() + "_" + file.FileName;
 
-            string serverFolder = Path.Combine(_webHostEnvironment.WebRootPath, folderPath);
+            await file.CopyToAsync(new FileStream(path, FileMode.Create));
 
-            await file.CopyToAsync(new FileStream(serverFolder, FileMode.Create));
-
-            return "/" + folderPath;
+            return Guid.NewGuid().ToString() + "_" + file.FileName;
         }
 
         // PUT: api/Reports/5
