@@ -198,47 +198,112 @@ namespace SoftTrack.API.Controllers
 
         // PUT: api/Reports/5
         [HttpPut("UpdateReport/{id}")]
-        public async Task<IActionResult> UpdateReport(int id, [FromBody] ReportUpdateDto reportUpdateDto)
+        public async Task<IActionResult> UpdateReport(int id, [FromForm] ReportModel reportModel)
         {
+            if (reportModel == null)
+                return null;
             string dateString = DateTime.Now.ToString("dd/MM/yyyy");
 
             var existingReport = await _context.Reports.FindAsync(id);
 
-                if (existingReport == null)
+            if (existingReport == null)
+            {
+                return NotFound();
+            }
+
+            if (reportModel.AppId != 0)
+            {
+                existingReport.AppId = reportModel.AppId;
+            }
+            if (reportModel.Title != null && reportModel.Title != "string")
+            {
+                existingReport.Title = reportModel.Title;
+            }
+            if (reportModel.Description != null && reportModel.Description != "string")
+            {
+                existingReport.Description = reportModel.Description;
+            }
+
+            if (reportModel.Type != null && reportModel.Type != "string")
+            {
+                existingReport.Type = reportModel.Type;
+            }
+
+            if (!string.IsNullOrEmpty(reportModel.Start_Date))
+            {
+                if (DateTime.TryParseExact(reportModel.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
-                    return NotFound();
+                    existingReport.StartDate = parsedDate;
                 }
-                if (reportUpdateDto.Title != "string")
+            }
+
+            if (!string.IsNullOrEmpty(reportModel.End_Date))
+            {
+                if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
-                    existingReport.Title = reportUpdateDto.Title;
+                    existingReport.EndDate = parsedDate;
                 }
-                if (reportUpdateDto.Description != "string")
+            }
+
+            if (reportModel.Status != 0)
+            {
+                existingReport.Status = reportModel.Status;
+            }
+
+            _context.Reports.Update(existingReport);
+            await _context.SaveChangesAsync();
+
+
+            if (reportModel.Images != null)
+            {
+                var lst = await _context.Images
+                .Where(item => item.ReportId == id)
+                .Select(item => new Image
                 {
-                    existingReport.Description = reportUpdateDto.Description;
+                    ImageId = item.ImageId,
+                    ReportId = item.ReportId,
+                    Image1 = item.Image1
+                })
+                .ToListAsync();
+
+                if (lst.Any())
+                {
+                    foreach (var item in lst)
+                    {
+                        if (item != null)
+                        {
+                            _context.Images.Remove(item);
+                            await _context.SaveChangesAsync();
+                        }    
+                    }
                 }
 
-                //if (reportUpdateDto.Type != "string" )
-                //{
-                //    existingReport.Type = reportUpdateDto.Type;
-                //}
-                //if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-                //{
-                //    existingReport.Start_Date = parsedDate;
-                //}          
-                if (!string.IsNullOrEmpty(reportUpdateDto.End_Date))
+                string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                if (!Directory.Exists(path))
                 {
-                    existingReport.EndDate = DateTime.Parse(reportUpdateDto.End_Date);
-                }
-               
-                if (reportUpdateDto.Status != 0)
-                {
-                    existingReport.Status = reportUpdateDto.Status;
+                    Directory.CreateDirectory(path);
                 }
 
-                _context.Reports.Update(existingReport);
+                foreach (var file in reportModel.Images)
+                {
+                    if (file.FileName == null)
+                        continue;
+                    var img = new Image()
+                    {
+                        ReportId = id,
+                        Image1 = await UploadImage(path, file)
+                    };
+                    if (img != null)
+                    {
+                        _context.Images.Add(img);
+
+                    }
+                }
+
                 await _context.SaveChangesAsync();
+            }
 
-                return Ok("Report đã được cập nhật thành công.");
+            return Ok("Report đã được cập nhật thành công.");
             
         }
 
@@ -251,8 +316,9 @@ namespace SoftTrack.API.Controllers
             {
                 report.Status = 3;
                 await _context.SaveChangesAsync();
+                return Ok("Report đã được xóa thành công.");
             }
-            return Ok("Report đã được xóa thành công.");
+            return NotFound();
         }
 
         [HttpGet("list_reports_by_account/{accountId}")]
