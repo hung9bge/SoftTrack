@@ -8,6 +8,7 @@ namespace SoftTrack.Manage.DTO
 {
     public class ApplicationCreateDto
     {
+        public int AccId { get; set; }
         public string Name { get; set; }
         public string Publisher { get; set; }
         public string Version { get; set; }

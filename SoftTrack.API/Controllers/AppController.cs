@@ -53,7 +53,8 @@ namespace SoftTrack.API.Controllers
             {
                 // Tạo một đối tượng Application từ dữ liệu được chuyển đến từ đối tượng ApplicationCreateDto
                 var application = new Application
-                {
+                {   
+                    AccId = appCreateDto.AccId,
                     Name = appCreateDto.Name,
                     Publisher = appCreateDto.Publisher,
                     Version = appCreateDto.Version,
@@ -122,10 +123,13 @@ namespace SoftTrack.API.Controllers
 
             if (deleteApp != null)
             {
-                _context.Applications.Remove(deleteApp);
+                deleteApp.Status = 3;
                 await _context.SaveChangesAsync();
+                return Ok("assets đã được xóa thành công.");
             }
-            return StatusCode(StatusCodes.Status200OK);
+
+            return Ok("assets đã được xóa không thành công.");
+
         }
         [HttpGet("list_App_by_user/{key}")]
         public async Task<ActionResult<IEnumerable<ApplicationDto>>> GetAppForAccountAsync(int key)
