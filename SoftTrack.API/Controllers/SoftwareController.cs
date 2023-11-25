@@ -82,7 +82,7 @@ namespace SoftTrack.API.Controllers
                 _context.Softwares.Add(tmp);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetSoftware", new { id = tmp.SoftwareId }, tmp);
+                return CreatedAtAction("CreateSoftware", new { id = tmp.SoftwareId }, tmp);
             }
             else
             {

@@ -77,7 +77,7 @@ namespace SoftTrack.API.Controllers
                 _context.AssetApplications.Add(assetApp);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetAssetApplication", new { assetId = assetApp.AssetId, appId = assetApp.AppId }, assetApp);
+                return CreatedAtAction("CreateAssetApplication", new { assetId = assetApp.AssetId, appId = assetApp.AppId }, assetApp);
             }
             else
             {

@@ -89,7 +89,7 @@ namespace SoftTrack.API.Controllers
                 _context.Images.Add(tmp);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetImage", new { id = tmp.ImageId }, tmp);
+                return CreatedAtAction("CreateImage", new { id = tmp.ImageId }, tmp);
             }
             else
             {

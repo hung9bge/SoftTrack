@@ -155,7 +155,8 @@ namespace SoftTrack.API.Controllers
                 {
                     //string folder = "images/";
 
-                    string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                    //string path = "D:\\images\\photos\\" ;
+                    string path = "\\..\\anh\\";
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -181,7 +182,7 @@ namespace SoftTrack.API.Controllers
                 //_context.Reports.Add(newReport);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetReport", new { id = newReport.ReportId }, newReport);
+                return CreatedAtAction("CreateReport", new { id = newReport.ReportId }, newReport);
             }
             return BadRequest(ModelState);
         }

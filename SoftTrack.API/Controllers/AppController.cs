@@ -74,7 +74,7 @@ namespace SoftTrack.API.Controllers
                 _context.Applications.Add(application);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetApplication", new { id = application.AppId }, application);
+                return CreatedAtAction("CreateApp", new { id = application.AppId }, application);
             }
             else
             {

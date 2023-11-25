@@ -104,7 +104,7 @@ namespace SoftTrack.API.Controllers
                 _context.Assets.Add(asset);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetAsset", new { id = asset.AssetId }, asset);
+                return CreatedAtAction("CreateAsset", new { id = asset.AssetId }, asset);
             }
             else
             {

@@ -60,7 +60,7 @@ namespace SoftTrack.API.Controllers
                 _context.Libraries.Add(library);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("GetLibrary", new { id = library.LibraryId }, library);
+                return CreatedAtAction("CreateLibrary", new { id = library.LibraryId }, library);
             }
             else
             {
