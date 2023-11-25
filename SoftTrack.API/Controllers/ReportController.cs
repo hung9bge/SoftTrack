@@ -37,12 +37,12 @@ namespace SoftTrack.API.Controllers
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
-                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
-                End_Date = report.EndDate?.ToString("dd/MM/yyyy"), 
+                Start_Date = report.StartDate.ToString("yyyy/MM/dd"),
+                End_Date = report.EndDate?.ToString("yyyy/MM/dd"), 
                 Status = report.Status
             });
 
-            return reportDtos.ToList();
+            return reportDtos.OrderByDescending(x => x.Start_Date).ToList();
         }
 
         // GET: api/Reports/5
@@ -84,8 +84,8 @@ namespace SoftTrack.API.Controllers
                     Title = report.Title,
                     Description = report.Description,
                     Type = report.Type,
-                    Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
-                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
+                    Start_Date = report.StartDate.ToString("yyyy/MM/dd"),
+                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("yyyy/MM/dd") : null,
                     Status = report.Status
                 })
                 .ToListAsync();
@@ -95,7 +95,7 @@ namespace SoftTrack.API.Controllers
                 return NotFound();
             }
 
-            return reports;
+            return reports.OrderByDescending(x => x.Start_Date).ToList();
         }
 
         [HttpGet("GetReportsForAppAndType/{AppId}/{type}")]
