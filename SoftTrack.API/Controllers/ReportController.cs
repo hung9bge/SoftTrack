@@ -28,7 +28,7 @@ namespace SoftTrack.API.Controllers
         [HttpGet("ReportAll")]
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReports()
         {
-            var reports = await _context.Reports.ToListAsync();
+            var reports = await _context.Reports.OrderByDescending(x => x.StartDate).ToListAsync();
 
             var reportDtos = reports.Select(report => new ReportDto
             {
@@ -37,12 +37,12 @@ namespace SoftTrack.API.Controllers
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
-                Start_Date = report.StartDate.ToString("yyyy/MM/dd"),
-                End_Date = report.EndDate?.ToString("yyyy/MM/dd"), 
+                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                End_Date = report.EndDate?.ToString("dd/MM/yyyy"), 
                 Status = report.Status
             });
 
-            return reportDtos.OrderByDescending(x => x.Start_Date).ToList();
+            return reportDtos.ToList();
         }
 
         // GET: api/Reports/5
@@ -84,8 +84,8 @@ namespace SoftTrack.API.Controllers
                     Title = report.Title,
                     Description = report.Description,
                     Type = report.Type,
-                    Start_Date = report.StartDate.ToString("yyyy/MM/dd"),
-                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("yyyy/MM/dd") : null,
+                    Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
                     Status = report.Status
                 })
                 .ToListAsync();
@@ -95,7 +95,7 @@ namespace SoftTrack.API.Controllers
                 return NotFound();
             }
 
-            return reports.OrderByDescending(x => x.Start_Date).ToList();
+            return reports;
         }
 
         [HttpGet("GetReportsForAppAndType/{AppId}/{type}")]
