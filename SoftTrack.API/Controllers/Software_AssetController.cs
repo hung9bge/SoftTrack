@@ -42,30 +42,6 @@ namespace SoftTrack.API.Controllers
         //    }
         //}
 
-        //[HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
-        //public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)
-        //{
-        //    var assetSoftware = await _context.AssetSoftwares.FindAsync(assetId, softwareId);
-
-        //    if (assetSoftware == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    // Xóa dữ liệu từ bảng AssetSoftware
-        //    _context.AssetSoftwares.Remove(assetSoftware);
-
-        //    // Xóa dữ liệu từ bảng License có LicenseId tương ứng
-        //    var license = await _context.Licenses.FindAsync(assetSoftware.LicenseId);
-        //    if (license != null)
-        //    {
-        //        _context.Licenses.Remove(license);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok("AssetSoftware and related License deleted successfully");
-        //}
         [HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
         public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)
         {
@@ -75,18 +51,42 @@ namespace SoftTrack.API.Controllers
             {
                 return NotFound();
             }
-            assetSoftware.Status = 3;
+
+            // Xóa dữ liệu từ bảng AssetSoftware
+            _context.AssetSoftwares.Remove(assetSoftware);
+
             // Xóa dữ liệu từ bảng License có LicenseId tương ứng
             var license = await _context.Licenses.FindAsync(assetSoftware.LicenseId);
             if (license != null)
             {
-                license.Status = 3;
+                _context.Licenses.Remove(license);
             }
 
             await _context.SaveChangesAsync();
 
             return Ok("AssetSoftware and related License deleted successfully");
         }
+        //[HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
+        //public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)
+        //{
+        //    var assetSoftware = await _context.AssetSoftwares.FindAsync(assetId, softwareId);
+
+        //    if (assetSoftware == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    assetSoftware.Status = 3;
+        //    Xóa dữ liệu từ bảng License có LicenseId tương ứng
+        //    var license = await _context.Licenses.FindAsync(assetSoftware.LicenseId);
+        //    if (license != null)
+        //    {
+        //        license.Status = 3;
+        //    }
+
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok("AssetSoftware and related License deleted successfully");
+        //}
         [HttpPost("CreateWithHaveLicense")]
         public async Task<IActionResult> CreateLicense([FromBody] LicenseDto licenseDto)
         {
@@ -111,10 +111,14 @@ namespace SoftTrack.API.Controllers
                 {
                     newLicense.StartDate = parsedDate;
                 }
-
+                if (newLicense != null)
+                {
+                    _context.Licenses.Add(newLicense);
+                    await _context.SaveChangesAsync();
+                }
                 //Thêm giấy phép vào DbSet Licenses
-                _context.Licenses.Add(newLicense);
-                await _context.SaveChangesAsync();
+                
+                
 
                 //Tạo AssetSoftware và thêm vào DbSet AssetSoftware
                 var assetSoftware = new AssetSoftware
@@ -172,7 +176,11 @@ namespace SoftTrack.API.Controllers
                         Os = licenseDto.Os,
                         Status = licenseDto.Status_Software
                     };
-
+                    if (newSoftware == null)
+                    {
+                        return BadRequest("Chưa nhập Software.");
+                        
+                    }
                     _context.Softwares.Add(newSoftware);
                     await _context.SaveChangesAsync();
 
@@ -184,9 +192,11 @@ namespace SoftTrack.API.Controllers
                         Status = licenseDto.Status_License,
                         StartDate = DateTime.ParseExact(licenseDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture)
                     };
-
-                    _context.Licenses.Add(newLicense);
-                    await _context.SaveChangesAsync();
+                    if (newLicense != null)
+                    {
+                        _context.Licenses.Add(newLicense);
+                        await _context.SaveChangesAsync();
+                    }               
 
                     // Tạo mới AssetSoftware và thêm vào DbSet AssetSoftware
                     var assetSoftware = new AssetSoftware
