@@ -84,55 +84,55 @@ namespace SoftTrack.API.Controllers
         //        return BadRequest(ModelState);
         //    }
         //}
-        //[HttpPut("UpdateLicense/{key}")]
-        //public async Task<IActionResult> UpdateLicenseAsync(int key, [FromBody] LicenseUpdateDto updatedLicenseDto)
-        //{
-        //    if (updatedLicenseDto == null)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
-        //    var updatedLicense = await _context.Licenses.FindAsync(key);
+        [HttpPut("UpdateLicense/{key}")]
+        public async Task<IActionResult> UpdateLicenseAsync(int key, [FromBody] LicenseUpdateDto updatedLicenseDto)
+        {
+            if (updatedLicenseDto == null)
+            {
+                return BadRequest(ModelState);
+            }
+            var updatedLicense = await _context.Licenses.FindAsync(key);
 
-        //    if (updatedLicense == null)
-        //    {
-        //        return NotFound("License not found");
-        //    }
+            if (updatedLicense == null)
+            {
+                return NotFound("License not found");
+            }
 
-        //    if (updatedLicenseDto.LicenseKey != null && updatedLicenseDto.LicenseKey != "string")
-        //    {
-        //        updatedLicense.LicenseKey = updatedLicenseDto.LicenseKey;
-        //    }
+            if (updatedLicenseDto.LicenseKey != null && updatedLicenseDto.LicenseKey != "string")
+            {
+                updatedLicense.LicenseKey = updatedLicenseDto.LicenseKey;
+            }
 
-        //    if (updatedLicenseDto.Start_Date != null && updatedLicenseDto.Start_Date != "string")
-        //    {
-        //        updatedLicense.Start_Date = DateTime.Parse(updatedLicenseDto.Start_Date);
-        //    }
+            if (updatedLicenseDto.StartDate != null && updatedLicenseDto.StartDate != "string")
+            {
+                updatedLicense.StartDate = DateTime.Parse(updatedLicenseDto.StartDate);
+            }
 
-        //    if (updatedLicenseDto.Time != 0)
-        //    {
-        //        updatedLicense.Time = updatedLicenseDto.Time;
-        //    }
+            if (updatedLicenseDto.Time != 0)
+            {
+                updatedLicense.Time = updatedLicenseDto.Time;
+            }
 
-        //    if (updatedLicenseDto.Status == 0)
-        //    {
-        //        updatedLicense.Status = 0;
-        //    }
+            if (updatedLicenseDto.Status == 0)
+            {
+                updatedLicense.Status = 0;
+            }
 
-        //    await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-        //    return Ok("License updated successfully");
-        //}
-        //[HttpDelete("DeleteLicenseWith_key")]
-        //public async Task<IActionResult> DeleteLicenseAsync(int id)
-        //{
-        //    var item = await _context.Licenses.FindAsync(id);
+            return Ok("License updated successfully");
+        }
+        [HttpDelete("DeleteLicenseWith_key")]
+        public async Task<IActionResult> DeleteLicenseAsync(int id)
+        {
+            var item = await _context.Licenses.FindAsync(id);
 
-        //    if (item != null)
-        //    {
-        //        _context.Licenses.Remove(item);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    return StatusCode(StatusCodes.Status200OK);
-        //}
+            if (item != null)
+            {
+                item.Status = 3 ;
+                await _context.SaveChangesAsync();
+            }
+            return StatusCode(StatusCodes.Status200OK);
+        }
     }
 }

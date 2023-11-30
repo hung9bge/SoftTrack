@@ -42,6 +42,30 @@ namespace SoftTrack.API.Controllers
         //    }
         //}
 
+        //[HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
+        //public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)
+        //{
+        //    var assetSoftware = await _context.AssetSoftwares.FindAsync(assetId, softwareId);
+
+        //    if (assetSoftware == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    // Xóa dữ liệu từ bảng AssetSoftware
+        //    _context.AssetSoftwares.Remove(assetSoftware);
+
+        //    // Xóa dữ liệu từ bảng License có LicenseId tương ứng
+        //    var license = await _context.Licenses.FindAsync(assetSoftware.LicenseId);
+        //    if (license != null)
+        //    {
+        //        _context.Licenses.Remove(license);
+        //    }
+
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok("AssetSoftware and related License deleted successfully");
+        //}
         [HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
         public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)
         {
@@ -51,15 +75,12 @@ namespace SoftTrack.API.Controllers
             {
                 return NotFound();
             }
-
-            // Xóa dữ liệu từ bảng AssetSoftware
-            _context.AssetSoftwares.Remove(assetSoftware);
-
+            assetSoftware.Status = 3;
             // Xóa dữ liệu từ bảng License có LicenseId tương ứng
             var license = await _context.Licenses.FindAsync(assetSoftware.LicenseId);
             if (license != null)
             {
-                _context.Licenses.Remove(license);
+                license.Status = 3;
             }
 
             await _context.SaveChangesAsync();
