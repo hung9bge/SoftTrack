@@ -120,8 +120,89 @@ namespace SoftTrack.API.Controllers
             return reportsForSoftware;
         }
 
-        [HttpPost("CreateReport")]
-        public async Task<IActionResult> CreateReport([FromForm] ReportModel reportModel)
+        [HttpPost("CreateReport_os")]
+        public async Task<IActionResult> CreateReportByOs([FromForm] ReportOsModel reportModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var applications = await _context.Applications
+                .Where(app => (app.Os == reportModel.Os && app.Osversion == reportModel.OsVersion))
+                .Select(app => app.AppId)
+                .ToListAsync();
+
+                string dateString = DateTime.Now.ToString("dd/MM/yyyy");
+
+                List<int> lstReportId = new List<int>();
+
+                foreach (var appid in applications)
+                { 
+                    var newReport = new Report
+                    {
+
+                        AppId = appid,
+                        Title = reportModel.Title,
+                        Description = reportModel.Description,
+                        Type = reportModel.Type,
+                        Status = reportModel.Status
+
+                    };
+
+                    if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                    {
+                        newReport.StartDate = parsedDate;
+                    }
+                    if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
+                    {
+                        newReport.EndDate = parsedDate1;
+                    }
+
+                    _context.Reports.Add(newReport);
+                    await _context.SaveChangesAsync();
+
+                    lstReportId.Add(newReport.ReportId);
+
+                }
+
+
+                if (reportModel.Images != null)
+                {
+                    string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+
+                    foreach (var file in reportModel.Images)
+                    {
+                        if (file.FileName == null)
+                            continue;
+                        var pathImage = await UploadImage(path, file);
+                        foreach (var id in lstReportId)
+                        {
+                            var img = new Image()
+                            {
+                                ReportId = id,
+                                Image1 = pathImage
+                            };
+                            if (img != null)
+                            {
+                                _context.Images.Add(img);
+
+                            }
+                        }
+                    }
+                }
+
+                //_context.Reports.Add(newReport);
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            return BadRequest(ModelState);
+        }
+
+        [HttpPost("CreateReport_appid")]
+        public async Task<IActionResult> CreateReportByAppid([FromForm] ReportModel reportModel)
         {
             if (ModelState.IsValid)
             {
@@ -153,10 +234,7 @@ namespace SoftTrack.API.Controllers
 
                 if (reportModel.Images != null)
                 {
-                    //string folder = "images/";
-
-                    //string path = "D:\\images\\photos\\" ;
-                    string path = "\\..\\anh\\";
+                    string path = _webHostEnvironment.WebRootPath + "\\images\\";
                     if (!Directory.Exists(path))
                     {
                         Directory.CreateDirectory(path);
@@ -182,7 +260,7 @@ namespace SoftTrack.API.Controllers
                 //_context.Reports.Add(newReport);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("CreateReport", new { id = newReport.ReportId }, newReport);
+                return CreatedAtAction("CreateReport_appid", new { id = newReport.ReportId }, newReport);
             }
             return BadRequest(ModelState);
         }
@@ -254,10 +332,7 @@ namespace SoftTrack.API.Controllers
             _context.Reports.Update(existingReport);
             await _context.SaveChangesAsync();
 
-
-            if (reportModel.Images != null)
-            {
-                var lst = await _context.Images
+            var lst = await _context.Images
                 .Where(item => item.ReportId == id)
                 .Select(item => new Image
                 {
@@ -267,18 +342,20 @@ namespace SoftTrack.API.Controllers
                 })
                 .ToListAsync();
 
-                if (lst.Any())
+            if (lst.Any())
+            {
+                foreach (var item in lst)
                 {
-                    foreach (var item in lst)
+                    if (item != null)
                     {
-                        if (item != null)
-                        {
-                            _context.Images.Remove(item);
-                            await _context.SaveChangesAsync();
-                        }    
+                        _context.Images.Remove(item);
+                        await _context.SaveChangesAsync();
                     }
                 }
+            }
 
+            if (reportModel.Images != null)
+            {
                 string path = _webHostEnvironment.WebRootPath + "\\images\\";
                 if (!Directory.Exists(path))
                 {
