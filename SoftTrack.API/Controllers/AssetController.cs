@@ -43,6 +43,34 @@ namespace SoftTrack.API.Controllers
 
             return assetDtos;
         }
+        [HttpGet("GetAssetsById/{id}")]
+        public async Task<ActionResult<IEnumerable<AssetDto>>> ListAssetsByIdAsync(int id)
+        {
+            var assetDtos = await _context.Assets
+                .Where(asset => asset.AssetId == id)
+                .Select(asset => new AssetDto
+                {
+                    AssetId = asset.AssetId,
+                    Name = asset.Name,
+                    Cpu = asset.Cpu,
+                    Gpu = asset.Gpu,
+                    Ram = asset.Ram,
+                    Memory = asset.Memory,
+                    Os = asset.Os,
+                    Version = asset.Version,
+                    IpAddress = asset.IpAddress,
+                    Bandwidth = asset.Bandwidth,
+                    Manufacturer = asset.Manufacturer,
+                    Model = asset.Model,
+                    SerialNumber = asset.SerialNumber,
+                    LastSuccesfullScan = asset.LastSuccesfullScan.HasValue ? asset.LastSuccesfullScan.Value.ToString("dd/MM/yyyy") : null,
+                    Status = asset.Status
+                })
+                .ToListAsync();
+
+            return assetDtos;
+        }
+
 
         [HttpGet("list_Asset_by_App/{key}")]
         public async Task<ActionResult<IEnumerable<AssetDto>>> GetAssetsByAppAsync(int key)
