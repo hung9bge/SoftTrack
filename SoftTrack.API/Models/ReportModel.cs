@@ -10,6 +10,6 @@
         public string Start_Date { get; set; }
         public string? End_Date { get; set; }
         public int Status { get; set; }
-        public IFormFileCollection Images { get; set; }
+        public IFormFileCollection? Images { get; set; }
     }
 }
