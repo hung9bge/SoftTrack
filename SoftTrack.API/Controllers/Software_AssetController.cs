@@ -103,37 +103,47 @@ namespace SoftTrack.API.Controllers
                 }
 
                 //Tạo giấy phép
-
-                newLicense.LicenseKey = licenseDto.LicenseKey;
-                newLicense.Time = licenseDto.Time;
-                newLicense.Status = licenseDto.Status_License;
-                if (DateTime.TryParseExact(licenseDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                if(licenseDto.LicenseKey != "string" )
                 {
-                    newLicense.StartDate = parsedDate;
+                    newLicense.LicenseKey = licenseDto.LicenseKey;
                 }
-                if (newLicense != null)
+                if (licenseDto.Time != 0 )
+                {
+                    newLicense.Time = licenseDto.Time;
+                }
+                if (licenseDto.Status_License != 0)
+                {
+                    newLicense.Status = licenseDto.Status_License;
+                }
+                if (licenseDto.Start_Date != "string")
+                {
+                    if (DateTime.TryParseExact(licenseDto.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                    {
+                        newLicense.StartDate = parsedDate;
+                    }
+                }
+               
+                if (newLicense.LicenseKey != null && newLicense.Time != 0 && newLicense.Status != 0 && newLicense.StartDate != null)
                 {
                     _context.Licenses.Add(newLicense);
                     await _context.SaveChangesAsync();
                 }
-                //Thêm giấy phép vào DbSet Licenses
-                
-                
-
                 //Tạo AssetSoftware và thêm vào DbSet AssetSoftware
                 var assetSoftware = new AssetSoftware
                 {
                     AssetId = licenseDto.AssetId,
-                    SoftwareId = licenseDto.SoftwareId,
-                    LicenseId = newLicense.LicenseId, // ID của giấy phép mới tạo
+                    SoftwareId = licenseDto.SoftwareId,                                
                     InstallDate = DateTime.Now, // Hoặc giá trị khác nếu cần
                     Status = 1 // Hoặc giá trị khác nếu cần
                 };
-
+                if (newLicense.LicenseId != 0)
+                {
+                    assetSoftware.LicenseId = newLicense.LicenseId; // ID của giấy phép mới tạo
+                }
                 _context.AssetSoftwares.Add(assetSoftware);
 
                 await _context.SaveChangesAsync();
-                return Ok("Licenses đã được thêm thành công.");
+                return Ok("Software Asset đã được tạo thành công.");
             }
             catch (Exception ex)
             {

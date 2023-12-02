@@ -230,7 +230,7 @@ namespace SoftTrack.API.Controllers
                 }
 
                 _context.Reports.Add(newReport);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
 
                 if (reportModel.Images != null)
                 {
@@ -260,7 +260,7 @@ namespace SoftTrack.API.Controllers
                 //_context.Reports.Add(newReport);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("CreateReport_appid", new { id = newReport.ReportId }, newReport);
+                return Ok("Report đã được thêm thành công.");
             }
             return BadRequest(ModelState);
         }
