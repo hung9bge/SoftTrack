@@ -3,6 +3,7 @@
     public class ReportModel
     {
         //public int ReportId { get; set; }
+
         public int AppId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

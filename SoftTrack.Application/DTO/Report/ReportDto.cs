@@ -9,6 +9,7 @@ namespace SoftTrack.Manage.DTO
     public class ReportDto
     {
         public int ReportId { get; set; }
+        public string EmailSend { get; set; }
         public int AppId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }

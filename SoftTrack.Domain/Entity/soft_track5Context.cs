@@ -11,7 +11,6 @@ namespace SoftTrack.Domain
         public soft_track5Context()
         {
         }
-
         public soft_track5Context(DbContextOptions<soft_track5Context> options)
             : base(options)
         {
@@ -37,7 +36,6 @@ namespace SoftTrack.Domain
                 optionsBuilder.UseSqlServer(config.GetConnectionString("MyConnectionString"));
             }
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Account>(entity =>
@@ -291,10 +289,11 @@ namespace SoftTrack.Domain
                 entity.ToTable("Report");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
-
+                entity.Property(e => e.AccId).HasColumnName("AccID");
                 entity.Property(e => e.AppId).HasColumnName("AppID");
 
                 entity.Property(e => e.Description).HasMaxLength(255);
+                
 
                 entity.Property(e => e.EndDate)
                     .HasColumnType("date")
@@ -311,6 +310,7 @@ namespace SoftTrack.Domain
                 entity.Property(e => e.Type)
                     .IsRequired()
                     .HasMaxLength(255);
+
 
                 entity.HasOne(d => d.App)
                     .WithMany(p => p.Reports)

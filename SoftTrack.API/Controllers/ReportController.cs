@@ -27,13 +27,19 @@ namespace SoftTrack.API.Controllers
         // GET: api/Reports
         [HttpGet("ReportAll")]
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReports()
-        {
-            var reports = await _context.Reports.OrderByDescending(x => x.StartDate).ToListAsync();
+        {      
+           var reports = await _context.Reports
+      .OrderByDescending(x => x.StartDate)        
+      .ToListAsync();
 
             var reportDtos = reports.Select(report => new ReportDto
             {
                 ReportId = report.ReportId,
                 AppId = report.AppId,
+                EmailSend = _context.Accounts
+                            .Where(acc => acc.AccId == report.AccId)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
@@ -44,12 +50,13 @@ namespace SoftTrack.API.Controllers
 
             return reportDtos.ToList();
         }
-
+     
         // GET: api/Reports/5
         [HttpGet("ReportWith{id}")]
         public async Task<ActionResult<ReportDto>> GetReport(int id)
         {
-            var report = await _context.Reports.FindAsync(id);
+            var report = await _context.Reports
+            .FirstOrDefaultAsync(x => x.ReportId == id);
 
             if (report == null)
             {
@@ -61,6 +68,10 @@ namespace SoftTrack.API.Controllers
             {
                 ReportId = report.ReportId,
                 AppId = report.AppId,
+                EmailSend = _context.Accounts
+                            .Where(acc => acc.AccId == report.AccId)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
@@ -76,12 +87,16 @@ namespace SoftTrack.API.Controllers
         {
             var reports = await _context.Reports
                .Where(report => report.Type == type)
-               .OrderByDescending(report => report.StartDate)  // Sắp xếp giảm dần theo Start_Date mới nhất
+               .OrderByDescending(report => report.StartDate)
                .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
                     AppId = report.AppId,
-                    Title = report.Title,
+                   EmailSend = _context.Accounts
+                            .Where(acc => acc.AccId == report.AccId)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
+                   Title = report.Title,
                     Description = report.Description,
                     Type = report.Type,
                     Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
@@ -102,11 +117,15 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForSoftware(int AppId, string type)
         {
             var reportsForSoftware = await _context.Reports
-                .Where(report => report.AppId == AppId && report.Type == type)
+                .Where(report => report.AppId == AppId && report.Type == type)              
                 .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
                     AppId = report.AppId,
+                    EmailSend = _context.Accounts
+                            .Where(acc => acc.AccId == report.AccId)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
                     Title = report.Title,   
                     Description = report.Description,
                     Type = report.Type,
@@ -120,31 +139,173 @@ namespace SoftTrack.API.Controllers
             return reportsForSoftware;
         }
 
-        [HttpPost("CreateReport_os")]
-        public async Task<IActionResult> CreateReportByOs([FromForm] ReportOsModel reportModel)
+        //[HttpPost("CreateReport_os")]
+        //public async Task<IActionResult> CreateReportByOs([FromForm] ReportOsModel reportModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {   
+        //        var applications = await _context.Applications
+        //        .Where(app => (app.Os == reportModel.Os && app.Osversion == reportModel.OsVersion))
+        //        .Select(app => app.AppId)
+        //        .ToListAsync();
+
+        //        string dateString = DateTime.Now.ToString("dd/MM/yyyy");
+
+        //        List<int> lstReportId = new List<int>();
+
+        //        foreach (var appid in applications)
+        //        { 
+        //            var newReport = new Report
+        //            {
+
+        //                AppId = appid,
+        //                Title = reportModel.Title,
+        //                Description = reportModel.Description,
+        //                Type = reportModel.Type,
+        //                Status = reportModel.Status
+
+        //            };
+
+        //            if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+        //            {
+        //                newReport.StartDate = parsedDate;
+        //            }
+        //            if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
+        //            {
+        //                newReport.EndDate = parsedDate1;
+        //            }
+
+        //            _context.Reports.Add(newReport);
+        //            await _context.SaveChangesAsync();
+
+        //            lstReportId.Add(newReport.ReportId);
+
+        //        }
+
+
+        //        if (reportModel.Images != null)
+        //        {
+        //            string path = _webHostEnvironment.WebRootPath + "\\images\\";
+        //            if (!Directory.Exists(path))
+        //            {
+        //                Directory.CreateDirectory(path);
+        //            }
+
+        //            foreach (var file in reportModel.Images)
+        //            {
+        //                if (file.FileName == null)
+        //                    continue;
+        //                var pathImage = await UploadImage(path, file);
+        //                foreach (var id in lstReportId)
+        //                {
+        //                    var img = new Image()
+        //                    {
+        //                        ReportId = id,
+        //                        Image1 = pathImage
+        //                    };
+        //                    if (img != null)
+        //                    {
+        //                        _context.Images.Add(img);
+
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        //_context.Reports.Add(newReport);
+        //        await _context.SaveChangesAsync();
+
+        //        return Ok();
+        //    }
+        //    return BadRequest(ModelState);
+        //}
+
+        //[HttpPost("CreateReport_appids")]
+        //public async Task<IActionResult> CreateReportByAppid([FromForm] ReportModel reportModel)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        string dateString = DateTime.Now.ToString("dd/MM/yyyy");
+
+        //        var newReport = new Report
+        //        {
+
+        //            AppId = reportModel.AppId,
+        //            Title = reportModel.Title,
+        //            Description = reportModel.Description,
+        //            Type = reportModel.Type,
+        //            Status = reportModel.Status
+
+        //        };
+
+        //        if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+        //        {
+        //            newReport.StartDate = parsedDate;
+        //        }
+        //        if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
+        //        {
+        //            newReport.EndDate = parsedDate1;
+        //        }
+
+        //        _context.Reports.Add(newReport);
+        //        //await _context.SaveChangesAsync();
+
+        //        if (reportModel.Images != null)
+        //        {
+        //            string path = _webHostEnvironment.WebRootPath + "\\images\\";
+        //            if (!Directory.Exists(path))
+        //            {
+        //                Directory.CreateDirectory(path);
+        //            }
+
+        //            foreach (var file in reportModel.Images)
+        //            {
+        //                if (file.FileName == null)
+        //                    continue;
+        //                var img = new Image()
+        //                {
+        //                    ReportId = newReport.ReportId,
+        //                    Image1 = await UploadImage(path, file)
+        //                };
+        //                if (img != null)
+        //                {
+        //                    _context.Images.Add(img);
+
+        //                }
+        //            }
+        //        }
+
+        //        //_context.Reports.Add(newReport);
+        //        await _context.SaveChangesAsync();
+
+        //        return Ok("Report đã được thêm thành công.");
+        //    }
+        //    return BadRequest(ModelState);
+        //}
+
+        [HttpPost("CreateReport_appids")]
+        public async Task<IActionResult> CreateReportByAppid( [FromForm] ReportCreateDto reportModel)
         {
             if (ModelState.IsValid)
             {
-                var applications = await _context.Applications
-                .Where(app => (app.Os == reportModel.Os && app.Osversion == reportModel.OsVersion))
-                .Select(app => app.AppId)
-                .ToListAsync();
+                if (reportModel.AppIds == null || !reportModel.AppIds.Any())
+            {
+                return BadRequest("Danh sách ID ứng dụng không hợp lệ.");
+            }
 
-                string dateString = DateTime.Now.ToString("dd/MM/yyyy");
-
-                List<int> lstReportId = new List<int>();
-
-                foreach (var appid in applications)
-                { 
+            string dateString = DateTime.Now.ToString("dd/MM/yyyy");
+                foreach (var appId in reportModel.AppIds)
+                {
                     var newReport = new Report
                     {
-
-                        AppId = appid,
+                        AppId = appId,
+                        AccId= reportModel.AccId,
                         Title = reportModel.Title,
                         Description = reportModel.Description,
                         Type = reportModel.Type,
                         Status = reportModel.Status
-
+                        
                     };
 
                     if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
@@ -158,31 +319,52 @@ namespace SoftTrack.API.Controllers
 
                     _context.Reports.Add(newReport);
                     await _context.SaveChangesAsync();
-
-                    lstReportId.Add(newReport.ReportId);
-
-                }
-
-
-                if (reportModel.Images != null)
-                {
-                    string path = _webHostEnvironment.WebRootPath + "\\images\\";
-                    if (!Directory.Exists(path))
+                    //lấy email PO quản lý app
+                    var account = _context.Applications
+                   .Where(app => app.AppId == newReport.AppId)
+                   .Select(app => app.Acc)
+                   .FirstOrDefault();
+                    //lấy email người tạo report quản lý app
+                    var accountsend = await _context.Accounts.FindAsync(newReport.AccId);
+                    var appPO = await _context.Applications.FindAsync(newReport.AppId);
+                    // Sử dụng thư viện gửi email để gửi thông báo
+                    var smtpClient = new SmtpClient
                     {
-                        Directory.CreateDirectory(path);
-                    }
+                        Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
+                        Port = 587, // Điền cổng của máy chủ SMTP
+                        Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
+                        EnableSsl = true // Sử dụng SSL
+                    };
 
-                    foreach (var file in reportModel.Images)
+                    var mailMessage = new MailMessage
                     {
-                        if (file.FileName == null)
-                            continue;
-                        var pathImage = await UploadImage(path, file);
-                        foreach (var id in lstReportId)
+                        From = new MailAddress(accountsend.Email),
+                        Subject = "Báo cáo lỗi "+ newReport.Title+"!",
+                        Body = "<html><body><h1>Báo cáo lỗi</h1><p>"+ "Tên app:" + appPO.Name +
+                        "Thông tin lỗi:"+newReport.Description + "</p></body></html>",
+                        IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+                    };
+
+                    mailMessage.To.Add(account.Email);
+
+                    await smtpClient.SendMailAsync(mailMessage);
+
+                    if (reportModel.Images != null)
+                    {
+                        string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                        if (!Directory.Exists(path))
                         {
+                            Directory.CreateDirectory(path);
+                        }
+
+                        foreach (var file in reportModel.Images)
+                        {
+                            if (file.FileName == null)
+                                continue;
                             var img = new Image()
                             {
-                                ReportId = id,
-                                Image1 = pathImage
+                                ReportId = newReport.ReportId,
+                                Image1 = await UploadImage(path, file)
                             };
                             if (img != null)
                             {
@@ -190,81 +372,12 @@ namespace SoftTrack.API.Controllers
 
                             }
                         }
-                    }
+                    }                
                 }
-
-                //_context.Reports.Add(newReport);
-                await _context.SaveChangesAsync();
-
-                return Ok();
-            }
-            return BadRequest(ModelState);
-        }
-
-        [HttpPost("CreateReport_appid")]
-        public async Task<IActionResult> CreateReportByAppid([FromForm] ReportModel reportModel)
-        {
-            if (ModelState.IsValid)
-            {
-
-                string dateString = DateTime.Now.ToString("dd/MM/yyyy");
-         
-                var newReport = new Report
-                {
-             
-                    AppId = reportModel.AppId,
-                    Title= reportModel.Title,
-                    Description = reportModel.Description,
-                    Type = reportModel.Type,       
-                    Status = reportModel.Status
-
-                };
-
-                if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-                {
-                    newReport.StartDate = parsedDate;
-                }
-                if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
-                {
-                    newReport.EndDate = parsedDate1;
-                }
-
-                _context.Reports.Add(newReport);
-                //await _context.SaveChangesAsync();
-
-                if (reportModel.Images != null)
-                {
-                    string path = _webHostEnvironment.WebRootPath + "\\images\\";
-                    if (!Directory.Exists(path))
-                    {
-                        Directory.CreateDirectory(path);
-                    }
-
-                    foreach (var file in reportModel.Images)
-                    {
-                        if (file.FileName == null)
-                            continue;
-                        var img = new Image()
-                        {
-                            ReportId = newReport.ReportId,
-                            Image1 = await UploadImage(path, file)
-                        };
-                        if (img != null)
-                        {
-                            _context.Images.Add(img);
-
-                        }
-                    }
-                }
-
-                //_context.Reports.Add(newReport);
-                await _context.SaveChangesAsync();
-
                 return Ok("Report đã được thêm thành công.");
             }
             return BadRequest(ModelState);
         }
-
         private async Task<string> UploadImage(string path, IFormFile file)
         {
             string filename = Guid.NewGuid().ToString() + "_" + file.FileName;
@@ -450,21 +563,6 @@ namespace SoftTrack.API.Controllers
                 // Gửi báo cáo đến danh sách email đã chọn
                 foreach (var email in existingEmails)
                 {
-                    // Tạo và gửi báo cáo thông qua email
-                    // Sử dụng thông tin từ report
-
-                    // Ví dụ sử dụng thư viện gửi email (như MimeKit hoặc SendGrid)
-                    // Thực hiện logic gửi email ở đây
-
-                    // Ví dụ sử dụng thư viện MimeKit
-                    //var message = new MimeMessage();
-                    //message.From.Add(new MailboxAddress("Your Name", "hunglmhe151034@fpt.edu.vn"));
-                    //message.To.Add(new MailboxAddress(email, email));
-                    //message.Subject = "Báo cáo lỗi report Sofware!";
-                    //message.Body = new TextPart("plain")
-                    //{
-                    //    Text = "Content of the Email:\n" + report.Description
-                    //};
 
                     // Sử dụng thư viện gửi email để gửi thông báo
                     var smtpClient = new SmtpClient

@@ -123,7 +123,7 @@ namespace SoftTrack.API.Controllers
                     }
                 }
                
-                if (newLicense.LicenseKey != null && newLicense.Time != 0 && newLicense.Status != 0 && newLicense.StartDate != null)
+                if (newLicense.LicenseKey != null && newLicense.Status != 0 && newLicense.StartDate != null)
                 {
                     _context.Licenses.Add(newLicense);
                     await _context.SaveChangesAsync();
