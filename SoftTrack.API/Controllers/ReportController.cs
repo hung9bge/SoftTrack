@@ -390,7 +390,7 @@ namespace SoftTrack.API.Controllers
 
         // PUT: api/Reports/5
         [HttpPut("UpdateReport/{id}")]
-        public async Task<IActionResult> UpdateReport(int id, [FromForm] ReportModel reportModel)
+        public async Task<IActionResult> UpdateReport(int id, [FromForm] ReportUpdateDto reportModel)
         {
             if (reportModel == null)
                 return null;
@@ -405,7 +405,7 @@ namespace SoftTrack.API.Controllers
 
             if (reportModel.AppId != 0)
             {
-                existingReport.AppId = reportModel.AppId;
+                existingReport.AppId = (int)reportModel.AppId;
             }
             if (reportModel.Title != null && reportModel.Title != "string")
             {
@@ -436,10 +436,39 @@ namespace SoftTrack.API.Controllers
                     existingReport.EndDate = parsedDate;
                 }
             }
-
-            if (reportModel.Status != 0)
+            _context.Reports.Update(existingReport);
+            if (reportModel.Status != 0 && existingReport.Status != reportModel.Status)
             {
                 existingReport.Status = reportModel.Status;
+
+                var account = _context.Applications
+                 .Where(app => app.AppId == existingReport.AppId)
+                 .Select(app => app.Acc)
+                 .FirstOrDefault();
+                //lấy email người tạo report quản lý app
+                var accountsend = await _context.Accounts.FindAsync(reportModel.AccId);
+                var appPO = await _context.Applications.FindAsync(existingReport.AppId);
+                // Sử dụng thư viện gửi email để gửi thông báo
+                var smtpClient = new SmtpClient
+                {
+                    Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
+                    Port = 587, // Điền cổng của máy chủ SMTP
+                    Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
+                    EnableSsl = true // Sử dụng SSL
+                };
+
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(accountsend.Email),
+                    Subject = "Báo cáo lỗi " + existingReport.Title + "!",
+                    Body = "<html><body><h1>Báo cáo lỗi</h1><p>" + "Tên app:" + appPO.Name +
+                    "Thông tin lỗi:" + existingReport.Description + "</p></body></html>",
+                    IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+                };
+
+                mailMessage.To.Add(account.Email);
+
+                await smtpClient.SendMailAsync(mailMessage);
             }
 
             _context.Reports.Update(existingReport);
