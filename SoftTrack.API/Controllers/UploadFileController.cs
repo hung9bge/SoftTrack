@@ -3,7 +3,7 @@ using SoftTrack.API.Models;
 
 namespace SoftTrack.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UploadFileController : Controller
     {

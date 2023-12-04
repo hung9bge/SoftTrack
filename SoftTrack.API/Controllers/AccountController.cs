@@ -12,7 +12,7 @@ using System.Text;
 
 namespace SoftTrack.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : Controller
     {
@@ -63,7 +63,7 @@ namespace SoftTrack.API.Controllers
             if (accounts == null && accounts.Count == 0)
             {
                 //Không tìm thấy tài khoản trùng khớp
-                return NotFound("Không tìm thấy tài khoản trùng khớp.");
+                return NotFound();
             }
 
             return accounts;
@@ -73,7 +73,7 @@ namespace SoftTrack.API.Controllers
         {
             if (!email.EndsWith("@fpt.edu.vn", StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest("Email không có đuôi @fpt.edu.vn.");
+                return NotFound();
             }
             var user = await _context.Accounts
             .Where(u => u.Email.ToLower() == email.ToLower())
@@ -82,7 +82,7 @@ namespace SoftTrack.API.Controllers
 
             if (user == null)
             {
-                return BadRequest("Email không tồn tại hoặc sai mật khẩu.");
+                return NotFound();
             }
 
             var roles = user.Role.Name;
@@ -132,7 +132,7 @@ namespace SoftTrack.API.Controllers
 
             if (existingAccount != null)
             {
-                return BadRequest("Email và vai trò đã tồn tại trong cơ sở dữ liệu.");
+                return NotFound();
             }
 
             // Tạo đối tượng Account từ DTO
@@ -148,20 +148,23 @@ namespace SoftTrack.API.Controllers
             _context.Accounts.Add(newAccount);
             await _context.SaveChangesAsync();
 
-            return Ok("Tài khoản đã được thêm thành công.");
+            return Ok();
         }
 
         [HttpDelete("DeleteAccountWith_key")]
         public async Task<IActionResult> DeleteAccountAsync(int accountId) {
             var account = await _context.Accounts.FindAsync(accountId);
 
-            if (account != null)
+            if (account == null || account.Status == 3)
+            {
+                return NotFound();
+            }
+            else
             {
                 account.Status = 3;
-
                 await _context.SaveChangesAsync();
-            }
-            return Ok("Tài khoản đã được update role thành công.");
+                return Ok();
+            }        
         } 
     
 
