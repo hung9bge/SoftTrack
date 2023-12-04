@@ -176,7 +176,7 @@ namespace SoftTrack.API.Controllers
 
             if (existingAccount == null)
             {
-                return NotFound("Tài khoản không tồn tại.");
+                return NotFound();
             }
 
             if (accountDto.Email != "string")
@@ -205,7 +205,7 @@ namespace SoftTrack.API.Controllers
             _context.Accounts.Update(existingAccount);
             await _context.SaveChangesAsync();
 
-            return Ok("Tài khoản đã được cập nhật thành công.");
+            return Ok();
         }
     }
 }

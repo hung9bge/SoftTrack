@@ -101,10 +101,9 @@ namespace SoftTrack.API.Controllers
             {
                 updatedLibrary.StartDate = DateTime.Parse(updatedLibraryDto.Start_Date);
             }
-            if (updatedLibraryDto.Time != 0)
-            {
+        
                 updatedLibrary.Time = updatedLibraryDto.Time;
-            }
+            
 
             if (updatedLibraryDto.Status != 0)
             {

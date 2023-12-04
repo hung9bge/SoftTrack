@@ -108,10 +108,9 @@ namespace SoftTrack.API.Controllers
                 updatedLicense.StartDate = DateTime.Parse(updatedLicenseDto.StartDate);
             }
 
-            if (updatedLicenseDto.Time != 0)
-            {
+            
                 updatedLicense.Time = updatedLicenseDto.Time;
-            }
+            
 
             if (updatedLicenseDto.Status == 0)
             {

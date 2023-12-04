@@ -51,6 +51,11 @@ namespace SoftTrack.API.Controllers
         {
             if (ModelState.IsValid) // Kiểm tra tính hợp lệ của dữ liệu đầu vào
             {
+                if(appCreateDto.AccId == 0)
+                {
+                    return NotFound();
+
+                }
                 // Tạo một đối tượng Application từ dữ liệu được chuyển đến từ đối tượng ApplicationCreateDto
                 var application = new Application
                 {   
@@ -78,7 +83,7 @@ namespace SoftTrack.API.Controllers
             }
             else
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
         }
 
