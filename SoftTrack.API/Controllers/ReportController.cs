@@ -285,7 +285,7 @@ namespace SoftTrack.API.Controllers
         //}
 
         [HttpPost("CreateReport_appids")]
-        public async Task<IActionResult> CreateReportByAppid( [FromForm] ReportCreateDto reportModel)
+        public async Task<IActionResult> CreateReportByAppid( [FromBody] ReportCreateDto reportModel)
         {
             if (ModelState.IsValid)
             {
@@ -390,7 +390,7 @@ namespace SoftTrack.API.Controllers
 
         // PUT: api/Reports/5
         [HttpPut("UpdateReport/{id}")]
-        public async Task<IActionResult> UpdateReport(int id, [FromForm] ReportUpdateDto reportModel)
+        public async Task<IActionResult> UpdateReport(int id, [FromBody] ReportUpdateDto reportModel)
         {
             if (reportModel == null)
                 return null;
@@ -406,6 +406,10 @@ namespace SoftTrack.API.Controllers
             if (reportModel.AppId != 0)
             {
                 existingReport.AppId = (int)reportModel.AppId;
+            }
+            if (reportModel.AccId != 0)
+            {
+                existingReport.AccId = reportModel.AccId;
             }
             if (reportModel.Title != null && reportModel.Title != "string")
             {
@@ -423,7 +427,7 @@ namespace SoftTrack.API.Controllers
 
             if (!string.IsNullOrEmpty(reportModel.Start_Date))
             {
-                if (DateTime.TryParseExact(reportModel.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
                     existingReport.StartDate = parsedDate;
                 }
@@ -436,11 +440,11 @@ namespace SoftTrack.API.Controllers
                     existingReport.EndDate = parsedDate;
                 }
             }
-            _context.Reports.Update(existingReport);
+          
             if (reportModel.Status != 0 && existingReport.Status != reportModel.Status)
             {
                 existingReport.Status = reportModel.Status;
-
+               
                 var account = _context.Applications
                  .Where(app => app.AppId == existingReport.AppId)
                  .Select(app => app.Acc)
@@ -461,7 +465,7 @@ namespace SoftTrack.API.Controllers
                 {
                     From = new MailAddress(accountsend.Email),
                     Subject = "Báo cáo lỗi " + existingReport.Title + "!",
-                    Body = "<html><body><h1>Báo cáo lỗi</h1><p>" + "Tên app:" + appPO.Name +
+                    Body = "<html><body><h1>Update báo cáo lỗi</h1><p>" + "Tên app:" + appPO.Name +
                     "Thông tin lỗi:" + existingReport.Description + "</p></body></html>",
                     IsBodyHtml = true // Đánh dấu email có chứa mã HTML
                 };
@@ -470,7 +474,6 @@ namespace SoftTrack.API.Controllers
 
                 await smtpClient.SendMailAsync(mailMessage);
             }
-
             _context.Reports.Update(existingReport);
             await _context.SaveChangesAsync();
 
