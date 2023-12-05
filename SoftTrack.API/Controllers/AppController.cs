@@ -130,10 +130,10 @@ namespace SoftTrack.API.Controllers
             {
                 deleteApp.Status = 3;
                 await _context.SaveChangesAsync();
-                return Ok("assets đã được xóa thành công.");
+                return Ok();
             }
 
-            return Ok("assets đã được xóa không thành công.");
+            return NotFound();
 
         }
         [HttpGet("list_App_by_user/{key}")]

@@ -17,29 +17,29 @@ namespace SoftTrack.API.Controllers
             _configuration = configuration;
             _context = context;
         }
-        //[HttpGet("ListLicenses")]
-        //public async Task<ActionResult<IEnumerable<LicenseDto>>> ListAllLicensesAsync()
-        //{
-        //    var lst = await _context.Licenses
-        //        .Select(item => new LicenseDto
-        //        {
-        //            LicenseId = item.LicenseId,
-        //            LicenseKey = item.LicenseKey,
-        //            Start_Date = item.Start_Date,
-        //            Time = item.Time,
-        //            Status = item.Status
-        //        })
-        //        .ToListAsync();
+        [HttpGet("ListLicenses")]
+        public async Task<ActionResult<IEnumerable<LisenceListDto>>> ListAllLicensesAsync()
+        {
+            var lst = await _context.Licenses
+                .Select(item => new LisenceListDto
+                {
+                    LicenseId = item.LicenseId,
+                    LicenseKey = item.LicenseKey,
+                    Start_Date = item.StartDate.HasValue ? item.StartDate.Value.ToString("dd/MM/yyyy") : null,
+                    Time = item.Time,
+                    Status = item.Status
+                })
+                .ToListAsync();
 
-        //    return lst;
-        //}
+            return lst;
+        }
 
         [HttpGet("list_Licenses_by_Asset/{key}")]
-        public async Task<ActionResult<IEnumerable<LisenceListDto>>> GetLicensesByAssetAsync(int key)
+        public async Task<ActionResult<IEnumerable<LisenceListByAssetDto>>> GetLicensesByAssetAsync(int key)
         {
             var lst = await _context.AssetSoftwares
                 .Where(item => item.AssetId == key)
-                .Select(item => new LisenceListDto
+                .Select(item => new LisenceListByAssetDto
                 {
                     SoftwareId = item.SoftwareId,
                     LicenseId = item.License.LicenseId,
