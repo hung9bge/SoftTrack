@@ -285,7 +285,7 @@ namespace SoftTrack.API.Controllers
         //}
 
         [HttpPost("CreateReport_appids")]
-        public async Task<IActionResult> CreateReportByAppid( [FromBody] ReportCreateDto reportModel)
+        public async Task<IActionResult> CreateReportByAppid( [FromForm] ReportCreateDto reportModel)
         {
             if (ModelState.IsValid)
             {
@@ -390,7 +390,7 @@ namespace SoftTrack.API.Controllers
 
         // PUT: api/Reports/5
         [HttpPut("UpdateReport/{id}")]
-        public async Task<IActionResult> UpdateReport(int id, [FromBody] ReportUpdateDto reportModel)
+        public async Task<IActionResult> UpdateReport(int id, [FromForm] ReportUpdateDto reportModel)
         {
             if (reportModel == null)
                 return null;

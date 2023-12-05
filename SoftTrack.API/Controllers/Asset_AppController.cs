@@ -25,7 +25,7 @@ namespace SoftTrack.API.Controllers
 
             if (updatedAssetApp == null)
             {
-                return NotFound("AssetApplication not found");
+                return NotFound();
             }
 
             // Cập nhật các trường cần thiết của AssetApplication
@@ -41,7 +41,7 @@ namespace SoftTrack.API.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok("AssetApplication updated successfully");
+            return Ok();
         }
         [HttpDelete("DeleteAssetApplication/{assetId}/{appId}")]
         public async Task<IActionResult> DeleteAssetApplicationAsync(int assetId, int appId)
@@ -54,9 +54,9 @@ namespace SoftTrack.API.Controllers
                 assetAppToDelete.Status = 3;
                 await _context.SaveChangesAsync();
 
-                return Ok("assets đã được xóa thành công.");
+                return Ok();
             }     
-            return NotFound("AssetApplication not found");
+            return NotFound();
         }
 
         [HttpPost("CreateAssetApplication")]
@@ -64,6 +64,11 @@ namespace SoftTrack.API.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (assetAppDto.AssetId == 0 || assetAppDto.AppId == 0)
+                {
+                    return NotFound();
+
+                }
                 var assetApp = new AssetApplication
                 {
                     AssetId = assetAppDto.AssetId,
@@ -81,7 +86,7 @@ namespace SoftTrack.API.Controllers
             }
             else
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
         }
 
