@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SoftTrack.Manage.DTO;
 using SoftTrack.Domain;
 using System.Globalization;
+using SoftTrack.Manage.DTO.Asset_App;
 
 namespace SoftTrack.API.Controllers
 {
@@ -18,7 +19,7 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpPut("UpdateAssetApplication/{assetId}/{appId}")]
-        public async Task<IActionResult> UpdateAssetApplicationAsync(int assetId, int appId, [FromBody] AssetApplicationDTO updatedAssetAppDto)
+        public async Task<IActionResult> UpdateAssetApplicationAsync(int assetId, int appId, [FromBody] Asset_AppUpdateDto updatedAssetAppDto)
         {
             var updatedAssetApp = await _context.AssetApplications
                 .FirstOrDefaultAsync(aa => aa.AssetId == assetId && aa.AppId == appId);
@@ -28,11 +29,12 @@ namespace SoftTrack.API.Controllers
                 return NotFound();
             }
 
-            // Cập nhật các trường cần thiết của AssetApplication
-            if (updatedAssetAppDto.InstallDate != "string")
+            // Cập nhật các trường cần thiết của AssetApplication         
+            if (DateTime.TryParseExact(updatedAssetAppDto.InstallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate) && updatedAssetAppDto.InstallDate != "string")
             {
-                updatedAssetApp.InstallDate = DateTime.Parse(updatedAssetAppDto.InstallDate);
-            }
+                updatedAssetApp.InstallDate = parsedDate;
+            }          
+           
             if (updatedAssetAppDto.Status == 0)
             {
                 updatedAssetApp.Status = updatedAssetAppDto.Status;
