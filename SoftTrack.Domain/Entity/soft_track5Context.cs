@@ -289,8 +289,9 @@ namespace SoftTrack.Domain
                 entity.ToTable("Report");
 
                 entity.Property(e => e.ReportId).HasColumnName("ReportID");
-                entity.Property(e => e.AccId).HasColumnName("AccID");
-                entity.Property(e => e.AppId).HasColumnName("AppID");
+                entity.Property(e => e.AppId).HasColumnName("AppId");
+                entity.Property(e => e.CreatorID).HasColumnName("CreatorID");
+                entity.Property(e => e.UpdaterID).HasColumnName("UpdaterID");
 
                 entity.Property(e => e.Description).HasMaxLength(255);
                 

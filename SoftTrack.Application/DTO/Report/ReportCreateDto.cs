@@ -11,7 +11,7 @@ namespace SoftTrack.Manage.DTO
     {
         public List<int> AppIds { get; set; }
         public int? AppId { get; set; }
-        public int AccId { get; set; }
+        public int CreatorID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }

@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SoftTrack.Application\SoftTrack.Manage.csproj" />
-    <ProjectReference Include="..\SoftTrack.Infrastructure\SoftTrack.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

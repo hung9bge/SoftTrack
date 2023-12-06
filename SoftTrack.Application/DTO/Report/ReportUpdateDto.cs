@@ -10,7 +10,7 @@ namespace SoftTrack.Manage.DTO
     public class ReportUpdateDto
     {
         public int? AppId { get; set; }
-        public int AccId { get; set; }
+        public int UpdaterID { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }

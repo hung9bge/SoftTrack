@@ -38,7 +38,7 @@ namespace SoftTrack.API.Controllers
                 ReportId = report.ReportId,
                 AppId = report.AppId,
                 EmailSend = _context.Accounts
-                            .Where(acc => acc.AccId == report.AccId)
+                            .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
                 Title = report.Title,
@@ -70,7 +70,7 @@ namespace SoftTrack.API.Controllers
                 ReportId = report.ReportId,
                 AppId = report.AppId,
                 EmailSend = _context.Accounts
-                            .Where(acc => acc.AccId == report.AccId)
+                            .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
                 Title = report.Title,
@@ -95,7 +95,7 @@ namespace SoftTrack.API.Controllers
                     ReportId = report.ReportId,
                     AppId = report.AppId,
                     EmailSend = _context.Accounts
-                            .Where(acc => acc.AccId == report.AccId)
+                            .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
                     Title = report.Title,
@@ -124,7 +124,7 @@ namespace SoftTrack.API.Controllers
                     ReportId = report.ReportId,
                     AppId = report.AppId,
                     EmailSend = _context.Accounts
-                            .Where(acc => acc.AccId == report.AccId)
+                            .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
                     Title = report.Title,   
@@ -300,7 +300,7 @@ namespace SoftTrack.API.Controllers
                     var newReport = new Report
                     {
                         AppId = appId,
-                        AccId= reportModel.AccId,
+                        CreatorID = reportModel.CreatorID,
                         Title = reportModel.Title,
                         Description = reportModel.Description,
                         Type = reportModel.Type,
@@ -393,8 +393,15 @@ namespace SoftTrack.API.Controllers
             if (reportModel == null)
                 return null;
             string dateString = DateTime.Now.ToString("dd/MM/yyyy");
-
+            // lấy dữ liệu report cần update
             var existingReport = await _context.Reports.FindAsync(id);
+            // lấy dữ liệu accpunt người tạo report 
+            var accountReport = await _context.Accounts.FindAsync(existingReport.CreatorID);
+            //lấy account quản lý app
+            var account = _context.Applications
+             .Where(app => app.AppId == existingReport.AppId)
+             .Select(app => app.Acc)
+             .FirstOrDefault();
 
             if (existingReport == null)
             {
@@ -405,10 +412,16 @@ namespace SoftTrack.API.Controllers
             {
                 existingReport.AppId = (int)reportModel.AppId;
             }
-            if (reportModel.AccId != 0)
+
+            if (existingReport.CreatorID != reportModel.UpdaterID)
             {
-                existingReport.AccId = reportModel.AccId;
+                existingReport.UpdaterID = reportModel.UpdaterID;
             }
+            else
+            {
+                existingReport.UpdaterID = existingReport.CreatorID;
+            }
+
             if (reportModel.Title != null && reportModel.Title != "string")
             {
                 existingReport.Title = reportModel.Title;
@@ -442,13 +455,9 @@ namespace SoftTrack.API.Controllers
             if (reportModel.Status != 0 && existingReport.Status != reportModel.Status)
             {
                 existingReport.Status = reportModel.Status;
-               
-                var account = _context.Applications
-                 .Where(app => app.AppId == existingReport.AppId)
-                 .Select(app => app.Acc)
-                 .FirstOrDefault();
-                //lấy email người tạo report quản lý app
-                var accountsend = await _context.Accounts.FindAsync(reportModel.AccId);
+                //lấy account người update report 
+                var accountsend = await _context.Accounts.FindAsync(reportModel.UpdaterID);
+                //lấy thông tin app trong report
                 var appPO = await _context.Applications.FindAsync(existingReport.AppId);
                 // Sử dụng thư viện gửi email để gửi thông báo
                 var smtpClient = new SmtpClient
@@ -467,8 +476,22 @@ namespace SoftTrack.API.Controllers
                     "Thông tin lỗi:" + existingReport.Description + "</p></body></html>",
                     IsBodyHtml = true // Đánh dấu email có chứa mã HTML
                 };
-
-                mailMessage.To.Add(account.Email);
+                // nếu acc update khác acc PO và acc update khác acc tạo report 
+                if ( accountsend.Email!= account.Email && accountsend.Email != accountReport.Email)
+                {
+                    mailMessage.To.Add(account.Email);
+                    mailMessage.To.Add(accountReport.Email);
+                }
+                // nếu người gửi là người tạo report thì gủi mail cho PO
+                if(accountsend.Email == accountReport.Email)
+                {
+                    mailMessage.To.Add(account.Email);
+                }
+                if ( accountsend.Email == account.Email && accountsend.Email != accountReport.Email)
+                {
+                    mailMessage.To.Add(accountReport.Email);
+                }                           
+                
 
                 await smtpClient.SendMailAsync(mailMessage);
             }

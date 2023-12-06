@@ -11,8 +11,9 @@ namespace SoftTrack.Domain
         }
 
         public int ReportId { get; set; }
+        public int CreatorID { get; set; }
+        public int? UpdaterID { get; set; }
         public int AppId { get; set; }
-        public int AccId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
