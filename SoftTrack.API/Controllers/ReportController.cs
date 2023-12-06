@@ -336,11 +336,6 @@ namespace SoftTrack.API.Controllers
                     {
                         newReport.EndDate = parsedDate1;
                     }
-                    if (DateTime.TryParseExact(reportModel.ClosedDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate2))
-                    {
-                        newReport.ClosedDate = parsedDate2;
-                    }
-
                     _context.Reports.Add(newReport);
                     await _context.SaveChangesAsync();
                     //lấy email PO quản lý app
@@ -467,17 +462,14 @@ namespace SoftTrack.API.Controllers
                     existingReport.EndDate = parsedDate;
                 }
             }
-            if (!string.IsNullOrEmpty(reportModel.ClosedDate))
-            {
-                if (DateTime.TryParseExact(reportModel.ClosedDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-                {
-                    existingReport.ClosedDate = parsedDate;
-                }
-            }
 
             if (reportModel.Status != 0 && existingReport.Status != reportModel.Status)
             {
                 existingReport.Status = reportModel.Status;
+                if (existingReport.Status == 2)
+                {                   
+                   existingReport.ClosedDate = DateTime.Now;                
+                }
                 //lấy account người update report 
                 var accountsend = await _context.Accounts.FindAsync(reportModel.UpdaterID);
                 //lấy thông tin app trong report
