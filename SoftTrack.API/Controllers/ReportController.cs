@@ -41,11 +41,16 @@ namespace SoftTrack.API.Controllers
                             .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
+                EmailUpp = _context.Accounts
+                            .Where(acc => acc.AccId == report.UpdaterID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
                 Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
                 End_Date = report.EndDate?.ToString("dd/MM/yyyy"), 
+                ClosedDate = report.ClosedDate?.ToString("dd/MM/yyyy"),
                 Status = report.Status
             });
 
@@ -73,11 +78,16 @@ namespace SoftTrack.API.Controllers
                             .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
+                EmailUpp = _context.Accounts
+                            .Where(acc => acc.AccId == report.UpdaterID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
                 Title = report.Title,
                 Description = report.Description,
                 Type = report.Type,
                 Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
                 End_Date = report.EndDate?.ToString("dd/MM/yyyy"),
+                ClosedDate = report.ClosedDate?.ToString("dd/MM/yyyy"),
                 Status = report.Status
             };
 
@@ -98,12 +108,17 @@ namespace SoftTrack.API.Controllers
                             .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
-                    Title = report.Title,
+                   EmailUpp = _context.Accounts
+                            .Where(acc => acc.AccId == report.UpdaterID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
+                   Title = report.Title,
                     Description = report.Description,
                     Type = report.Type,
                     Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
                     End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
-                    Status = report.Status
+                   ClosedDate = report.ClosedDate.HasValue ? report.ClosedDate.Value.ToString("dd/MM/yyyy") : null,
+                   Status = report.Status
                 })
                 .ToListAsync();
 
@@ -127,11 +142,16 @@ namespace SoftTrack.API.Controllers
                             .Where(acc => acc.AccId == report.CreatorID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
+                    EmailUpp = _context.Accounts
+                            .Where(acc => acc.AccId == report.UpdaterID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
                     Title = report.Title,   
                     Description = report.Description,
                     Type = report.Type,
                     Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
                     End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
+                    ClosedDate = report.ClosedDate.HasValue ? report.ClosedDate.Value.ToString("dd/MM/yyyy") : null,
                     Status = report.Status
 
                 })
@@ -316,6 +336,10 @@ namespace SoftTrack.API.Controllers
                     {
                         newReport.EndDate = parsedDate1;
                     }
+                    if (DateTime.TryParseExact(reportModel.ClosedDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate2))
+                    {
+                        newReport.ClosedDate = parsedDate2;
+                    }
 
                     _context.Reports.Add(newReport);
                     await _context.SaveChangesAsync();
@@ -334,7 +358,7 @@ namespace SoftTrack.API.Controllers
                         Port = 587, // Điền cổng của máy chủ SMTP
                         Credentials = new NetworkCredential("softtrackfpt@gmail.com", "aaje cjac hacp psjp"), // Thông tin xác thực tài khoản Gmail
                         EnableSsl = true // Sử dụng SSL
-                    };
+                    };  
 
                     var mailMessage = new MailMessage
                     {
@@ -396,7 +420,9 @@ namespace SoftTrack.API.Controllers
             // lấy dữ liệu report cần update
             var existingReport = await _context.Reports.FindAsync(id);
             // lấy dữ liệu accpunt người tạo report 
-            var accountReport = await _context.Accounts.FindAsync(existingReport.CreatorID);
+            var account_CR_report = await _context.Accounts.FindAsync(existingReport.CreatorID);
+            // lấy dữ liệu accpunt người update report 
+            var account_UP_report = await _context.Accounts.FindAsync(existingReport.UpdaterID);
             //lấy account quản lý app
             var account = _context.Applications
              .Where(app => app.AppId == existingReport.AppId)
@@ -412,16 +438,6 @@ namespace SoftTrack.API.Controllers
             {
                 existingReport.AppId = (int)reportModel.AppId;
             }
-
-            if (existingReport.CreatorID != reportModel.UpdaterID)
-            {
-                existingReport.UpdaterID = reportModel.UpdaterID;
-            }
-            else
-            {
-                existingReport.UpdaterID = existingReport.CreatorID;
-            }
-
             if (reportModel.Title != null && reportModel.Title != "string")
             {
                 existingReport.Title = reportModel.Title;
@@ -451,7 +467,14 @@ namespace SoftTrack.API.Controllers
                     existingReport.EndDate = parsedDate;
                 }
             }
-          
+            if (!string.IsNullOrEmpty(reportModel.ClosedDate))
+            {
+                if (DateTime.TryParseExact(reportModel.ClosedDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                {
+                    existingReport.ClosedDate = parsedDate;
+                }
+            }
+
             if (reportModel.Status != 0 && existingReport.Status != reportModel.Status)
             {
                 existingReport.Status = reportModel.Status;
@@ -476,24 +499,87 @@ namespace SoftTrack.API.Controllers
                     "Thông tin lỗi:" + existingReport.Description + "</p></body></html>",
                     IsBodyHtml = true // Đánh dấu email có chứa mã HTML
                 };
-                // nếu acc update khác acc PO và acc update khác acc tạo report 
-                if ( accountsend.Email!= account.Email && accountsend.Email != accountReport.Email)
+                         
+                if(account_UP_report == null)
                 {
-                    mailMessage.To.Add(account.Email);
-                    mailMessage.To.Add(accountReport.Email);
+                    //TH: nếu acc update khác acc PO và acc update khác acc tạo report 
+                    if (accountsend.Email != account.Email && accountsend.Email != account_CR_report.Email )
+                    {
+                        mailMessage.To.Add(account.Email);
+                        mailMessage.To.Add(account_CR_report.Email);
+                    }
+                    //TH: nếu acc update là acc PO => gửi cho acc tạo feedback                
+                    if (accountsend.Email == account.Email)
+                    {
+                        mailMessage.To.Add(account_CR_report.Email);
+                    }
+                    //TH: nếu acc uppdate là acc tạo report thì gủi mail cho PO
+                    if (accountsend.Email == account_CR_report.Email)
+                    {
+                        mailMessage.To.Add(account.Email);
+                    }
+
+                    existingReport.UpdaterID = reportModel.UpdaterID;
                 }
-                // nếu người gửi là người tạo report thì gủi mail cho PO
-                if(accountsend.Email == accountReport.Email)
+                if (account_UP_report != null)
                 {
-                    mailMessage.To.Add(account.Email);
+                    if (accountsend.Email != account.Email && accountsend.Email != account_CR_report.Email && accountsend.Email == account_UP_report.Email)
+                    {
+                        mailMessage.To.Add(account.Email);
+                        mailMessage.To.Add(account_CR_report.Email);
+                    }
+                    if (accountsend.Email != account.Email && accountsend.Email != account_CR_report.Email && accountsend.Email != account_UP_report.Email)
+                    {
+                        mailMessage.To.Add(account_UP_report.Email);
+                        mailMessage.To.Add(account.Email);
+                        mailMessage.To.Add(account_CR_report.Email);
+                    }
+
+                    if (accountsend.Email == account.Email && accountsend.Email != account_UP_report.Email)
+                    {
+                        mailMessage.To.Add(account_UP_report.Email);
+                        mailMessage.To.Add(account_CR_report.Email);
+                    }
+                    if (accountsend.Email == account.Email && accountsend.Email == account_UP_report.Email)
+                    {
+                        mailMessage.To.Add(account_CR_report.Email);
+                    }
+                    // nếu acc uppdate là acc tạo report thì gủi mail cho PO
+                    if (accountsend.Email == account_CR_report.Email && accountsend.Email != account_UP_report.Email)
+                    {
+                        mailMessage.To.Add(account_UP_report.Email);
+                        mailMessage.To.Add(account.Email);
+                    }
+                    if (accountsend.Email == account_CR_report.Email && accountsend.Email == account_UP_report.Email)
+                    {
+                        mailMessage.To.Add(account.Email);
+                    }
+
                 }
-                if ( accountsend.Email == account.Email && accountsend.Email != accountReport.Email)
+                if (existingReport.CreatorID != reportModel.UpdaterID || existingReport.UpdaterID != reportModel.UpdaterID)
                 {
-                    mailMessage.To.Add(accountReport.Email);
-                }                           
-                
+                    existingReport.UpdaterID = reportModel.UpdaterID;
+                }
+                if (existingReport.CreatorID == reportModel.UpdaterID)
+                {
+                    existingReport.UpdaterID = existingReport.CreatorID;
+                }
 
                 await smtpClient.SendMailAsync(mailMessage);
+            }
+            else
+            {
+                // acc tạo khác acc update
+                if (existingReport.CreatorID != reportModel.UpdaterID || existingReport.UpdaterID != reportModel.UpdaterID)
+                {
+                    existingReport.UpdaterID = reportModel.UpdaterID;
+                }
+                if (existingReport.CreatorID == reportModel.UpdaterID)
+                {
+                    existingReport.UpdaterID = existingReport.CreatorID;
+                }
+             
+
             }
             _context.Reports.Update(existingReport);
             await _context.SaveChangesAsync();
@@ -550,7 +636,6 @@ namespace SoftTrack.API.Controllers
             return Ok("Report đã được cập nhật thành công.");
             
         }
-
         // DELETE: api/Reports/5
         [HttpDelete("{id}")]
         public async Task<ActionResult<Report>> DeleteReport(int id)

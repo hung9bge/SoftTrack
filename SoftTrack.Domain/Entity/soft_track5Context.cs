@@ -304,6 +304,10 @@ namespace SoftTrack.Domain
                     .HasColumnType("date")
                     .HasColumnName("Start_Date");
 
+                entity.Property(e => e.ClosedDate)
+                    .HasColumnType("date")
+                    .HasColumnName("Closed_Date");
+
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(255);

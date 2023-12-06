@@ -16,6 +16,7 @@ namespace SoftTrack.Manage.DTO
         public string Type { get; set; }
         public string Start_Date { get; set; }
         public string? End_Date { get; set; }
+        public string? ClosedDate { get; set; }
         public int Status { get; set; }
         public IFormFileCollection? Images { get; set; }
     }
