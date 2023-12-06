@@ -21,7 +21,8 @@ namespace SoftTrack.API.Controllers
         [HttpGet("listRole")]
         public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
         {
-            var roles = await _context.Roles.ToListAsync();
+            var roles = await _context.Roles        
+                .ToListAsync();
             return Ok(roles);
         }
     }

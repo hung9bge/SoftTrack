@@ -29,8 +29,9 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReports()
         {      
            var reports = await _context.Reports
-      .OrderByDescending(x => x.StartDate)        
-      .ToListAsync();
+            .OrderBy(reports => reports.Status)                
+            .OrderBy(reports => reports.StartDate)        
+            .ToListAsync();
 
             var reportDtos = reports.Select(report => new ReportDto
             {
@@ -87,16 +88,17 @@ namespace SoftTrack.API.Controllers
         {
             var reports = await _context.Reports
                .Where(report => report.Type == type)
-               .OrderByDescending(report => report.StartDate)
+               .OrderBy(reports => reports.Status)
+               .OrderBy(reports => reports.StartDate)
                .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
                     AppId = report.AppId,
-                   EmailSend = _context.Accounts
+                    EmailSend = _context.Accounts
                             .Where(acc => acc.AccId == report.AccId)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
-                   Title = report.Title,
+                    Title = report.Title,
                     Description = report.Description,
                     Type = report.Type,
                     Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
@@ -109,7 +111,6 @@ namespace SoftTrack.API.Controllers
             {
                 return NotFound();
             }
-
             return reports;
         }
 
@@ -138,7 +139,6 @@ namespace SoftTrack.API.Controllers
 
             return reportsForSoftware;
         }
-
         //[HttpPost("CreateReport_os")]
         //public async Task<IActionResult> CreateReportByOs([FromForm] ReportOsModel reportModel)
         //{
@@ -325,28 +325,26 @@ namespace SoftTrack.API.Controllers
                    .Select(app => app.Acc)
                    .FirstOrDefault();
                     //lấy email người tạo report quản lý app
-                    var accountsend = await _context.Accounts.FindAsync(newReport.AccId);
+                    //var accountsend = await _context.Accounts.FindAsync(newReport.AccId);
                     var appPO = await _context.Applications.FindAsync(newReport.AppId);
                     // Sử dụng thư viện gửi email để gửi thông báo
                     var smtpClient = new SmtpClient
                     {
                         Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
                         Port = 587, // Điền cổng của máy chủ SMTP
-                        Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
+                        Credentials = new NetworkCredential("softtrackfpt@gmail.com", "aaje cjac hacp psjp"), // Thông tin xác thực tài khoản Gmail
                         EnableSsl = true // Sử dụng SSL
                     };
 
                     var mailMessage = new MailMessage
                     {
-                        From = new MailAddress(accountsend.Email),
+                        From = new MailAddress("softtrackfpt@gmail.com"),
                         Subject = "Báo cáo lỗi "+ newReport.Title+"!",
                         Body = "<html><body><h1>Báo cáo lỗi</h1><p>"+ "Tên app:" + appPO.Name +
                         "Thông tin lỗi:"+newReport.Description + "</p></body></html>",
                         IsBodyHtml = true // Đánh dấu email có chứa mã HTML
-                    };
-
+                    };  
                     mailMessage.To.Add(account.Email);
-
                     await smtpClient.SendMailAsync(mailMessage);
 
                     if (reportModel.Images != null)
@@ -457,7 +455,7 @@ namespace SoftTrack.API.Controllers
                 {
                     Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
                     Port = 587, // Điền cổng của máy chủ SMTP
-                    Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
+                    Credentials = new NetworkCredential("softtrackfpt@gmail.com", "aaje cjac hacp psjp"), // Thông tin xác thực tài khoản Gmail
                     EnableSsl = true // Sử dụng SSL
                 };
 
@@ -547,7 +545,11 @@ namespace SoftTrack.API.Controllers
         [HttpGet("list_reports_by_account/{accountId}")]
         public async Task<IActionResult> GetReportsForAccountAsync(int accountId)
         {
-            var reports = _context.Reports.Where(r => r.App.AccId == accountId).Select(report => new ReportDto
+            var reports = _context.Reports
+                .Where(r => r.App.AccId == accountId)
+                .OrderBy(reports => reports.Status)
+                .OrderBy(reports => reports.StartDate)
+                .Select(report => new ReportDto
             {
                 ReportId = report.ReportId,
                 AppId = report.AppId,
@@ -561,70 +563,70 @@ namespace SoftTrack.API.Controllers
 
             return Ok(reports);
         }
-        [HttpPost("SendReportByEmail/{idReport}")]
-        public async Task<IActionResult> SendReportByEmail(int idReport)
-        {
-            try
-            {
-                // Kiểm tra xem báo cáo (report) có tồn tại
-                var report = await _context.Reports.FindAsync(idReport);
+        //[HttpPost("SendReportByEmail/{idReport}")]
+        //public async Task<IActionResult> SendReportByEmail(int idReport)
+        //{
+        //    try
+        //    {
+        //        // Kiểm tra xem báo cáo (report) có tồn tại
+        //        var report = await _context.Reports.FindAsync(idReport);
 
-                if (report == null)
-                {
-                    return NotFound("Không tìm thấy báo cáo với idReport đã cung cấp.");
-                }
+        //        if (report == null)
+        //        {
+        //            return NotFound("Không tìm thấy báo cáo với idReport đã cung cấp.");
+        //        }
             
-                // Truy vấn danh sách email đã tồn tại trong bảng Account
-                //var existingEmails = await _context.Accounts
-                //    .Where(a => a.Status != 3) // Lọc tài khoản có trạng thái true (hoạt động)
-                //    .Select(a => a.Email)
-                //    .ToListAsync();
-                // Truy email từ bảng "Account" mà các "Asset" của email đó có chứa "App" trong "Report" theo "ReportId," 
-                var existingEmails = await _context.Accounts
-                .Where(account => account.Applications
-                    .Any(app => app.AssetApplications
-                        .Any(assetApp => assetApp.AppId == report.AppId)))
-                .Select(account => account.Email)
-                .ToListAsync();
+        //        // Truy vấn danh sách email đã tồn tại trong bảng Account
+        //        //var existingEmails = await _context.Accounts
+        //        //    .Where(a => a.Status != 3) // Lọc tài khoản có trạng thái true (hoạt động)
+        //        //    .Select(a => a.Email)
+        //        //    .ToListAsync();
+        //        // Truy email từ bảng "Account" mà các "Asset" của email đó có chứa "App" trong "Report" theo "ReportId," 
+        //        var existingEmails = await _context.Accounts
+        //        .Where(account => account.Applications
+        //            .Any(app => app.AssetApplications
+        //                .Any(assetApp => assetApp.AppId == report.AppId)))
+        //        .Select(account => account.Email)
+        //        .ToListAsync();
 
-                if (existingEmails.Count == 0)
-                {
-                    return BadRequest("Không tìm thấy email trong bảng Account.");
-                }
+        //        if (existingEmails.Count == 0)
+        //        {
+        //            return BadRequest("Không tìm thấy email trong bảng Account.");
+        //        }
 
-                // Gửi báo cáo đến danh sách email đã chọn
-                foreach (var email in existingEmails)
-                {
+        //        // Gửi báo cáo đến danh sách email đã chọn
+        //        foreach (var email in existingEmails)
+        //        {
 
-                    // Sử dụng thư viện gửi email để gửi thông báo
-                    var smtpClient = new SmtpClient
-                    {
-                        Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
-                        Port = 587, // Điền cổng của máy chủ SMTP
-                        Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
-                        EnableSsl = true // Sử dụng SSL
-                    };
+        //            // Sử dụng thư viện gửi email để gửi thông báo
+        //            var smtpClient = new SmtpClient
+        //            {
+        //                Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
+        //                Port = 587, // Điền cổng của máy chủ SMTP
+        //                Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
+        //                EnableSsl = true // Sử dụng SSL
+        //            };
 
-                    var mailMessage = new MailMessage
-                    {
-                        From = new MailAddress("hunglmhe151034@fpt.edu.vn"),
-                        Subject = "Báo cáo lỗi report Software!",
-                        Body = "<html><body><h1>Báo cáo lỗi</h1><p>" + report.Description + "</p></body></html>",
-                        IsBodyHtml = true // Đánh dấu email có chứa mã HTML
-                    };
+        //            var mailMessage = new MailMessage
+        //            {
+        //                From = new MailAddress("hunglmhe151034@fpt.edu.vn"),
+        //                Subject = "Báo cáo lỗi report Software!",
+        //                Body = "<html><body><h1>Báo cáo lỗi</h1><p>" + report.Description + "</p></body></html>",
+        //                IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+        //            };
 
-                    mailMessage.To.Add(email);
+        //            mailMessage.To.Add(email);
 
-                    await smtpClient.SendMailAsync(mailMessage);
-                }
+        //            await smtpClient.SendMailAsync(mailMessage);
+        //        }
 
-                return Ok("Báo cáo đã được gửi thành công đến danh sách email đã chọn.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
-            }
-        }
+        //        return Ok("Báo cáo đã được gửi thành công đến danh sách email đã chọn.");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+        //    }
+        //}
 
 
     }

@@ -21,8 +21,13 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<LisenceListDto>>> ListAllLicensesAsync()
         {
             var lst = await _context.Licenses
+                  .Include(l => l.AssetSoftwares)
+                  .OrderBy(l => l.Status)
+                .OrderBy(l => l.StartDate)
                 .Select(item => new LisenceListDto
                 {
+                    AssetId = item.AssetSoftwares.Select(la => la.AssetId).FirstOrDefault(),
+                    SoftwareId = item.AssetSoftwares.Select(la => la.SoftwareId).FirstOrDefault(),
                     LicenseId = item.LicenseId,
                     LicenseKey = item.LicenseKey,
                     Start_Date = item.StartDate.HasValue ? item.StartDate.Value.ToString("dd/MM/yyyy") : null,
@@ -39,6 +44,8 @@ namespace SoftTrack.API.Controllers
         {
             var lst = await _context.AssetSoftwares
                 .Where(item => item.AssetId == key)
+                 .OrderBy(l => l.Status)
+                .OrderBy(l => l.InstallDate)
                 .Select(item => new LisenceListByAssetDto
                 {
                     SoftwareId = item.SoftwareId,

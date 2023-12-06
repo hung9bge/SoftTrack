@@ -16,31 +16,6 @@ namespace SoftTrack.API.Controllers
         {
             _context = context;
         }
-        //[HttpPost("CreateAssetSoftwareNoLicense")]
-        //public async Task<IActionResult> CreateAssetSoftwareAsync([FromBody] AssetSoftwareDto assetSoftwareDto)
-        //{
-        //    if (assetSoftwareDto.AssetId != 0 && assetSoftwareDto.SoftwareId != 0)
-        //    {
-        //        var assetSoftware = new AssetSoftware
-        //        {
-        //            AssetId = assetSoftwareDto.AssetId,
-        //            SoftwareId = assetSoftwareDto.SoftwareId,
-        //            Status = assetSoftwareDto.Status
-        //        };
-        //        if (DateTime.TryParseExact(assetSoftwareDto.InstallDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-        //        {
-        //            assetSoftware.InstallDate = parsedDate;
-        //        }
-        //        _context.AssetSoftwares.Add(assetSoftware);
-        //        await _context.SaveChangesAsync();
-
-        //        return CreatedAtAction("GetAssetSoftware", new { AssetId = assetSoftware.AssetId, SoftwareId = assetSoftware.SoftwareId }, assetSoftware);
-        //    }
-        //    else
-        //    {
-        //        return Ok("Vui lòng điền thông tin.");
-        //    }
-        //}
 
         [HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
         public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)

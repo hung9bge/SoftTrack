@@ -21,6 +21,8 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<AssetDto>>> ListAllAssetsAsync()
         {
             var assetDtos = await _context.Assets
+                .OrderBy(asset => asset.Status)
+                .OrderBy(asset => asset.LastSuccesfullScan)
                 .Select(asset => new AssetDto
                 {
                     AssetId = asset.AssetId,
@@ -77,6 +79,8 @@ namespace SoftTrack.API.Controllers
         {
             var assetDtos = await _context.AssetApplications
                 .Where(aa => aa.AppId == key) // Assuming 'key' is AppId
+                .OrderBy(aa => aa.Status)
+                .OrderBy(aa => aa.InstallDate)
                 .Select(aa => new AssetDto
                 {
                     AssetId = aa.Asset.AssetId,

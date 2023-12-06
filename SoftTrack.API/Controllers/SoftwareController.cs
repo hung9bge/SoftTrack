@@ -21,6 +21,7 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<SoftwareDto>>> ListAllSoftwaresAsync()
         {
             var lst = await _context.Softwares
+                .OrderBy(item => item.Status)        
                 .Select(item => new SoftwareDto
                 {
                     SoftwareId = item.SoftwareId,
@@ -42,6 +43,8 @@ namespace SoftTrack.API.Controllers
         {
             var lst = await _context.AssetSoftwares
                 .Where(item => item.AssetId == key)
+                .OrderBy(item => item.Status)
+                .OrderBy(item => item.InstallDate)
                 .Select(item => new SoftwareListDto
                 {
                     SoftwareId = item.Software.SoftwareId,

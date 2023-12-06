@@ -24,6 +24,8 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<LibraryDto>>> ListAllLibrariesAsync()
         {
             var libraryDtos = await _context.Libraries
+                 .OrderBy(library => library.Status)
+                .OrderBy(library => library.StartDate)
                 .Select(library => new LibraryDto
                 {
                     LibraryId = library.LibraryId,
@@ -122,6 +124,8 @@ namespace SoftTrack.API.Controllers
         {
             var libraryDtos = await _context.Libraries
                 .Where(library => library.AppId == appId)
+                .OrderBy(library => library.Status)
+                .OrderBy(library => library.StartDate)
                 .Select(library => new LibraryDto
                 {
                     LibraryId = library.LibraryId,

@@ -21,6 +21,7 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<ApplicationDto>>> ListAllAppsAsync()
         {
             var appDtos = await _context.Applications
+                .OrderBy(app => app.Status)
                 .Select(app => new ApplicationDto
                 {
                     AppId = app.AppId,
@@ -142,6 +143,7 @@ namespace SoftTrack.API.Controllers
             // Assuming 'key' is AccId
             var applications = await _context.Applications
                 .Where(app => app.AccId == key)
+                .OrderBy(app => app.Status)
                 .Select(app => new ApplicationDto // Assuming you have a DTO for Application
                 {
                     // Map Application properties to ApplicationDto properties here

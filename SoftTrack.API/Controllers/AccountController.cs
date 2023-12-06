@@ -29,6 +29,7 @@ namespace SoftTrack.API.Controllers
 
             var accounts = await _context.Accounts
                 .Include(account => account.Role)
+                .OrderBy(account => account.Status)
                 .Select(account => new AccountDto
                 {
                     AccId = account.AccId,

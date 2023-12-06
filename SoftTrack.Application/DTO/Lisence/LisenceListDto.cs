@@ -8,6 +8,8 @@ namespace SoftTrack.Manage.DTO
 {
     public class LisenceListDto
     {
+        public int AssetId { get; set; }
+        public int SoftwareId { get; set; }
         public int LicenseId { get; set; }
         public string LicenseKey { get; set; }
         public String? Start_Date { get; set; }
