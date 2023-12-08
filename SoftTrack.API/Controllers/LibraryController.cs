@@ -113,11 +113,11 @@ namespace SoftTrack.API.Controllers
             }
 
             // Gán các giá trị khác tương ứng từ updatedLibraryDto
-
+            _context.Libraries.Update(updatedLibrary);
             // Lưu thay đổi vào cơ sở dữ liệu
             await _context.SaveChangesAsync();
 
-            return Ok("Library updated successfully");
+            return Ok();
         }
         [HttpGet("ListLibrariesByApp/{appId}")]
         public async Task<ActionResult<IEnumerable<LibraryDto>>> ListLibrariesByAppAsync(int appId)
@@ -148,20 +148,20 @@ namespace SoftTrack.API.Controllers
         }
 
 
-        [HttpDelete("DeleteLibraryWith_key")]
-        public async Task<IActionResult> DeleteLibraryAsync(int libraryId)
-        {
-            var library = await _context.Libraries.FindAsync(libraryId);
+        //[HttpDelete("DeleteLibraryWith_key")]
+        //public async Task<IActionResult> DeleteLibraryAsync(int libraryId)
+        //{
+        //    var library = await _context.Libraries.FindAsync(libraryId);
 
-            if (library != null)
-            {
-                library.Status = 3;
+        //    if (library != null)
+        //    {
+        //        library.Status = 3;
 
-                await _context.SaveChangesAsync();
-            }
+        //        await _context.SaveChangesAsync();
+        //    }
 
-            return Ok("Library has been deleted successfully.");
-        }
+        //    return Ok("Library has been deleted successfully.");
+        //}
     }
 
 }

@@ -136,27 +136,27 @@ namespace SoftTrack.API.Controllers
                 updatedSoftware.Os = updatedSoftwareDto.Os;
             }
 
-            if (updatedSoftwareDto.Status == 0)
+            if (updatedSoftwareDto.Status != 0)
             {
-                updatedSoftware.Status = 0;
+                updatedSoftware.Status = updatedSoftwareDto.Status;
             }
-
+            _context.Softwares.Update(updatedSoftware);
             await _context.SaveChangesAsync();
 
             return Ok("Software updated successfully");
         }
-        [HttpDelete("DeleteSoftwareWith_key")]
-        public async Task<IActionResult> DeleteSoftwareAsync(int id)
-        {
-            var item = await _context.Softwares.FindAsync(id);
+        //[HttpDelete("DeleteSoftwareWith_key")]
+        //public async Task<IActionResult> DeleteSoftwareAsync(int id)
+        //{
+        //    var item = await _context.Softwares.FindAsync(id);
 
-            if (item != null)
-            {
-                item.Status = 3;
+        //    if (item != null)
+        //    {
+        //        item.Status = 3;
 
-                await _context.SaveChangesAsync();
-            }
-            return Ok("Delete Software successfully!");
-        }
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return Ok("Delete Software successfully!");
+        //}
     }
 }

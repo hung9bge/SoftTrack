@@ -46,7 +46,7 @@ namespace SoftTrack.API.Controllers
             return assetDtos;
         }
         [HttpGet("GetAssetsById/{id}")]
-        public async Task<ActionResult<IEnumerable<AssetDto>>> ListAssetsByIdAsync(int id)
+        public async Task<ActionResult<IEnumerable<AssetDto>>> AssetsByIdAsync(int id)
         {
             var assetDtos = await _context.Assets
                 .Where(asset => asset.AssetId == id)
@@ -113,6 +113,15 @@ namespace SoftTrack.API.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Kiểm tra xem IpAddress đã tồn tại trong cơ sở dữ liệu chưa
+                var existingAssetWithIpAddress = await _context.Assets
+                    .FirstOrDefaultAsync(a => a.IpAddress == assetDto.IpAddress);
+
+                if (existingAssetWithIpAddress != null)
+                {
+                    // IpAddress đã tồn tại, trả về lỗi 
+                    return NotFound();
+                }
                 var asset = new Asset
                 {
                     Name = assetDto.Name,
@@ -133,6 +142,7 @@ namespace SoftTrack.API.Controllers
                 {
                     asset.LastSuccesfullScan = parsedDate;
                 }
+                
                 _context.Assets.Add(asset);
                 await _context.SaveChangesAsync();
 
@@ -140,7 +150,7 @@ namespace SoftTrack.API.Controllers
             }
             else
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
         }
         [HttpPut("UpdateAsset/{key}")]
@@ -152,7 +162,7 @@ namespace SoftTrack.API.Controllers
             {
                 // Xử lý khi không tìm thấy tài sản
                 // Ví dụ: Trả về lỗi hoặc thông báo
-                return NotFound("Asset not found");
+                return NotFound();
             }
 
             // Cập nhật các trường cần thiết của tài sản
@@ -213,33 +223,31 @@ namespace SoftTrack.API.Controllers
             {
                 updatedAsset.LastSuccesfullScan = DateTime.Parse(updatedAssetDto.LastSuccesfullScan);
             }
-            if (updatedAssetDto.Status == 0 )
+            if (updatedAssetDto.Status != 0 )
             {
                 updatedAsset.Status = updatedAssetDto.Status;
             }
 
-
             // Gán các giá trị khác tương ứng từ updatedAssetDto
 
             // Lưu thay đổi vào cơ sở dữ liệu
+            _context.Assets.Update(updatedAsset);
             await _context.SaveChangesAsync();
 
-            return Ok("Asset updated successfully");
+            return Ok();
         }
-        [HttpDelete("DeleteAssetWith_key")]
-        public async Task<IActionResult> DeleteAssetAsync(int assetId)
-        {
-            var assets = await _context.Assets.FindAsync(assetId);
+        //[HttpDelete("DeleteAssetWith_key")]
+        //public async Task<IActionResult> DeleteAssetAsync(int assetId)
+        //{
+        //    var assets = await _context.Assets.FindAsync(assetId);
 
-            if (assets != null)
-            {
-                assets.Status = 3;
+        //    if (assets != null)
+        //    {
+        //        assets.Status = 3;
 
-                await _context.SaveChangesAsync();
-            }
-            return Ok("assets đã được xóa thành công.");
-        }
-
-
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return Ok("assets đã được xóa thành công.");
+        //}
     }
 }

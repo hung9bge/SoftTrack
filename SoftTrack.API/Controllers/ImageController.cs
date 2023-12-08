@@ -19,20 +19,20 @@ namespace SoftTrack.API.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
-        [HttpGet("ListImages")]
-        public async Task<ActionResult<IEnumerable<ImageDto>>> ListAllImagesAsync()
-        {
-            var lst = await _context.Images
-                .Select(item => new ImageDto
-                {
-                    ImageId = item.ImageId,
-                    ReportId = item.ReportId,
-                    Image1 = item.Image1,
-                })
-                .ToListAsync();
+        //[HttpGet("ListImages")]
+        //public async Task<ActionResult<IEnumerable<ImageDto>>> ListAllImagesAsync()
+        //{
+        //    var lst = await _context.Images
+        //        .Select(item => new ImageDto
+        //        {
+        //            ImageId = item.ImageId,
+        //            ReportId = item.ReportId,
+        //            Image1 = item.Image1,
+        //        })
+        //        .ToListAsync();
 
-            return lst;
-        }
+        //    return lst;
+        //}
 
         [HttpGet("list_Images_by_Report/{key}")]
         public async Task<ActionResult<IEnumerable<ImageDto>>> GetImagesByReportAsync(int key)
@@ -52,89 +52,89 @@ namespace SoftTrack.API.Controllers
                 return NotFound();
             }
 
-            return lst;
+            return Ok();
         }
 
-        [HttpGet("{filename}")]
-        public IActionResult Get([FromRoute] string filename)
-        {
-            var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", filename);
-            var imageFileStream = System.IO.File.OpenRead(path);
-            return File(imageFileStream, "image/jpeg");
-        }
+        //[HttpGet("{filename}")]
+        //public IActionResult Get([FromRoute] string filename)
+        //{
+        //    var path = Path.Combine(_webHostEnvironment.WebRootPath, "images", filename);
+        //    var imageFileStream = System.IO.File.OpenRead(path);
+        //    return File(imageFileStream, "image/jpeg");
+        //}
 
-        [HttpPost("CreateImage")]
-        public async Task<IActionResult> CreateImageAsync(ImageUpload item)
-        {
-            if (ModelState.IsValid)
-            {
-                string path = _webHostEnvironment.WebRootPath + "/upload/";
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-                if (item.Image1 != null)
-                {
-                    path += "photos/report/";
-                    path += Guid.NewGuid().ToString() + "_" + item.Images.FileName;
-                    //string serverPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
-                    await item.Images.CopyToAsync(new FileStream(path, FileMode.Create));
-                }
-                var tmp = new Image
-                {
-                    ReportId = item.ReportId,
-                    Image1 = path
-                };
+        //[HttpPost("CreateImage")]
+        //public async Task<IActionResult> CreateImageAsync(ImageUpload item)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        string path = _webHostEnvironment.WebRootPath + "/upload/";
+        //        if (!Directory.Exists(path))
+        //        {
+        //            Directory.CreateDirectory(path);
+        //        }
+        //        if (item.Image1 != null)
+        //        {
+        //            path += "photos/report/";
+        //            path += Guid.NewGuid().ToString() + "_" + item.Images.FileName;
+        //            //string serverPath = Path.Combine(_webHostEnvironment.WebRootPath, path);
+        //            await item.Images.CopyToAsync(new FileStream(path, FileMode.Create));
+        //        }
+        //        var tmp = new Image
+        //        {
+        //            ReportId = item.ReportId,
+        //            Image1 = path
+        //        };
                 
-                _context.Images.Add(tmp);
-                await _context.SaveChangesAsync();
+        //        _context.Images.Add(tmp);
+        //        await _context.SaveChangesAsync();
 
-                return CreatedAtAction("CreateImage", new { id = tmp.ImageId }, tmp);
-            }
-            else
-            {
-                return BadRequest(ModelState);
-            }
-        }
-        [HttpPut("UpdateImage/{key}")]
-        public async Task<IActionResult> UpdateImageAsync(int key, [FromBody] ImageUpdateDto updatedImageDto)
-        {
-            if (updatedImageDto == null)
-            {
-                return BadRequest(ModelState);
-            }
-            var updatedImage = await _context.Images.FindAsync(key);
+        //        return CreatedAtAction("CreateImage", new { id = tmp.ImageId }, tmp);
+        //    }
+        //    else
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //}
+        //[HttpPut("UpdateImage/{key}")]
+        //public async Task<IActionResult> UpdateImageAsync(int key, [FromBody] ImageUpdateDto updatedImageDto)
+        //{
+        //    if (updatedImageDto == null)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+        //    var updatedImage = await _context.Images.FindAsync(key);
 
-            if (updatedImage == null)
-            {
-                return NotFound("Image not found");
-            }
+        //    if (updatedImage == null)
+        //    {
+        //        return NotFound("Image not found");
+        //    }
 
-            if (updatedImageDto.ReportId != 0)
-            {
-                updatedImage.ReportId = updatedImageDto.ReportId;
-            }
+        //    if (updatedImageDto.ReportId != 0)
+        //    {
+        //        updatedImage.ReportId = updatedImageDto.ReportId;
+        //    }
 
-            if (updatedImageDto.Image1 != null && updatedImageDto.Image1 != "string")
-            {
-                updatedImage.Image1 = updatedImageDto.Image1;
-            }
+        //    if (updatedImageDto.Image1 != null && updatedImageDto.Image1 != "string")
+        //    {
+        //        updatedImage.Image1 = updatedImageDto.Image1;
+        //    }
             
-            await _context.SaveChangesAsync();
+        //    await _context.SaveChangesAsync();
 
-            return Ok("Image updated successfully");
-        }
-        [HttpDelete("DeleteImageWith_key")]
-        public async Task<IActionResult> DeleteImageAsync(int imageId)
-        {
-            var item = await _context.Images.FindAsync(imageId);
+        //    return Ok("Image updated successfully");
+        //}
+        //[HttpDelete("DeleteImageWith_key")]
+        //public async Task<IActionResult> DeleteImageAsync(int imageId)
+        //{
+        //    var item = await _context.Images.FindAsync(imageId);
 
-            if (item != null)
-            {
-                _context.Images.Remove(item);
-                await _context.SaveChangesAsync();
-            }
-            return StatusCode(StatusCodes.Status200OK);
-        }
+        //    if (item != null)
+        //    {
+        //        _context.Images.Remove(item);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return StatusCode(StatusCodes.Status200OK);
+        //}
     }
 }

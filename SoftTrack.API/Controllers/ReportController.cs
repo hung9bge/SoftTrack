@@ -24,75 +24,75 @@ namespace SoftTrack.API.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        // GET: api/Reports
-        [HttpGet("ReportAll")]
-        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReports()
-        {      
-           var reports = await _context.Reports
-            .OrderBy(reports => reports.Status)                
-            .OrderBy(reports => reports.StartDate)        
-            .ToListAsync();
+        //// GET: api/Reports
+        //[HttpGet("ReportAll")]
+        //public async Task<ActionResult<IEnumerable<ReportDto>>> GetReports()
+        //{      
+        //   var reports = await _context.Reports
+        //    .OrderBy(reports => reports.Status)                
+        //    .OrderBy(reports => reports.StartDate)        
+        //    .ToListAsync();
 
-            var reportDtos = reports.Select(report => new ReportDto
-            {
-                ReportId = report.ReportId,
-                AppId = report.AppId,
-                EmailSend = _context.Accounts
-                            .Where(acc => acc.AccId == report.CreatorID)
-                            .Select(acc => acc.Email)
-                            .FirstOrDefault(),
-                EmailUpp = _context.Accounts
-                            .Where(acc => acc.AccId == report.UpdaterID)
-                            .Select(acc => acc.Email)
-                            .FirstOrDefault(),
-                Title = report.Title,
-                Description = report.Description,
-                Type = report.Type,
-                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
-                End_Date = report.EndDate?.ToString("dd/MM/yyyy"), 
-                ClosedDate = report.ClosedDate?.ToString("dd/MM/yyyy"),
-                Status = report.Status
-            });
+        //    var reportDtos = reports.Select(report => new ReportDto
+        //    {
+        //        ReportId = report.ReportId,
+        //        AppId = report.AppId,
+        //        EmailSend = _context.Accounts
+        //                    .Where(acc => acc.AccId == report.CreatorID)
+        //                    .Select(acc => acc.Email)
+        //                    .FirstOrDefault(),
+        //        EmailUpp = _context.Accounts
+        //                    .Where(acc => acc.AccId == report.UpdaterID)
+        //                    .Select(acc => acc.Email)
+        //                    .FirstOrDefault(),
+        //        Title = report.Title,
+        //        Description = report.Description,
+        //        Type = report.Type,
+        //        Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+        //        End_Date = report.EndDate?.ToString("dd/MM/yyyy"), 
+        //        ClosedDate = report.ClosedDate?.ToString("dd/MM/yyyy"),
+        //        Status = report.Status
+        //    });
 
-            return reportDtos.ToList();
-        }
+        //    return reportDtos.ToList();
+        //}
      
         // GET: api/Reports/5
-        [HttpGet("ReportWith{id}")]
-        public async Task<ActionResult<ReportDto>> GetReport(int id)
-        {
-            var report = await _context.Reports
-            .FirstOrDefaultAsync(x => x.ReportId == id);
+        //[HttpGet("ReportWith{id}")]
+        //public async Task<ActionResult<ReportDto>> GetReport(int id)
+        //{
+        //    var report = await _context.Reports
+        //    .FirstOrDefaultAsync(x => x.ReportId == id);
 
-            if (report == null)
-            {
-                return NotFound();
-            }
+        //    if (report == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            // Ánh xạ dữ liệu từ đối tượng Report sang đối tượng ReportDto
-            var reportDto = new ReportDto
-            {
-                ReportId = report.ReportId,
-                AppId = report.AppId,
-                EmailSend = _context.Accounts
-                            .Where(acc => acc.AccId == report.CreatorID)
-                            .Select(acc => acc.Email)
-                            .FirstOrDefault(),
-                EmailUpp = _context.Accounts
-                            .Where(acc => acc.AccId == report.UpdaterID)
-                            .Select(acc => acc.Email)
-                            .FirstOrDefault(),
-                Title = report.Title,
-                Description = report.Description,
-                Type = report.Type,
-                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
-                End_Date = report.EndDate?.ToString("dd/MM/yyyy"),
-                ClosedDate = report.ClosedDate?.ToString("dd/MM/yyyy"),
-                Status = report.Status
-            };
+        //    // Ánh xạ dữ liệu từ đối tượng Report sang đối tượng ReportDto
+        //    var reportDto = new ReportDto
+        //    {
+        //        ReportId = report.ReportId,
+        //        AppId = report.AppId,
+        //        EmailSend = _context.Accounts
+        //                    .Where(acc => acc.AccId == report.CreatorID)
+        //                    .Select(acc => acc.Email)
+        //                    .FirstOrDefault(),
+        //        EmailUpp = _context.Accounts
+        //                    .Where(acc => acc.AccId == report.UpdaterID)
+        //                    .Select(acc => acc.Email)
+        //                    .FirstOrDefault(),
+        //        Title = report.Title,
+        //        Description = report.Description,
+        //        Type = report.Type,
+        //        Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+        //        End_Date = report.EndDate?.ToString("dd/MM/yyyy"),
+        //        ClosedDate = report.ClosedDate?.ToString("dd/MM/yyyy"),
+        //        Status = report.Status
+        //    };
 
-            return reportDto;
-        }
+        //    return reportDto;
+        //}
         [HttpGet("ReportsByType/{type}")]
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsByType(string type)
         {
@@ -159,150 +159,6 @@ namespace SoftTrack.API.Controllers
 
             return reportsForSoftware;
         }
-        //[HttpPost("CreateReport_os")]
-        //public async Task<IActionResult> CreateReportByOs([FromForm] ReportOsModel reportModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {   
-        //        var applications = await _context.Applications
-        //        .Where(app => (app.Os == reportModel.Os && app.Osversion == reportModel.OsVersion))
-        //        .Select(app => app.AppId)
-        //        .ToListAsync();
-
-        //        string dateString = DateTime.Now.ToString("dd/MM/yyyy");
-
-        //        List<int> lstReportId = new List<int>();
-
-        //        foreach (var appid in applications)
-        //        { 
-        //            var newReport = new Report
-        //            {
-
-        //                AppId = appid,
-        //                Title = reportModel.Title,
-        //                Description = reportModel.Description,
-        //                Type = reportModel.Type,
-        //                Status = reportModel.Status
-
-        //            };
-
-        //            if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-        //            {
-        //                newReport.StartDate = parsedDate;
-        //            }
-        //            if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
-        //            {
-        //                newReport.EndDate = parsedDate1;
-        //            }
-
-        //            _context.Reports.Add(newReport);
-        //            await _context.SaveChangesAsync();
-
-        //            lstReportId.Add(newReport.ReportId);
-
-        //        }
-
-
-        //        if (reportModel.Images != null)
-        //        {
-        //            string path = _webHostEnvironment.WebRootPath + "\\images\\";
-        //            if (!Directory.Exists(path))
-        //            {
-        //                Directory.CreateDirectory(path);
-        //            }
-
-        //            foreach (var file in reportModel.Images)
-        //            {
-        //                if (file.FileName == null)
-        //                    continue;
-        //                var pathImage = await UploadImage(path, file);
-        //                foreach (var id in lstReportId)
-        //                {
-        //                    var img = new Image()
-        //                    {
-        //                        ReportId = id,
-        //                        Image1 = pathImage
-        //                    };
-        //                    if (img != null)
-        //                    {
-        //                        _context.Images.Add(img);
-
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        //_context.Reports.Add(newReport);
-        //        await _context.SaveChangesAsync();
-
-        //        return Ok();
-        //    }
-        //    return BadRequest(ModelState);
-        //}
-
-        //[HttpPost("CreateReport_appids")]
-        //public async Task<IActionResult> CreateReportByAppid([FromForm] ReportModel reportModel)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-
-        //        string dateString = DateTime.Now.ToString("dd/MM/yyyy");
-
-        //        var newReport = new Report
-        //        {
-
-        //            AppId = reportModel.AppId,
-        //            Title = reportModel.Title,
-        //            Description = reportModel.Description,
-        //            Type = reportModel.Type,
-        //            Status = reportModel.Status
-
-        //        };
-
-        //        if (DateTime.TryParseExact(dateString, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
-        //        {
-        //            newReport.StartDate = parsedDate;
-        //        }
-        //        if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
-        //        {
-        //            newReport.EndDate = parsedDate1;
-        //        }
-
-        //        _context.Reports.Add(newReport);
-        //        //await _context.SaveChangesAsync();
-
-        //        if (reportModel.Images != null)
-        //        {
-        //            string path = _webHostEnvironment.WebRootPath + "\\images\\";
-        //            if (!Directory.Exists(path))
-        //            {
-        //                Directory.CreateDirectory(path);
-        //            }
-
-        //            foreach (var file in reportModel.Images)
-        //            {
-        //                if (file.FileName == null)
-        //                    continue;
-        //                var img = new Image()
-        //                {
-        //                    ReportId = newReport.ReportId,
-        //                    Image1 = await UploadImage(path, file)
-        //                };
-        //                if (img != null)
-        //                {
-        //                    _context.Images.Add(img);
-
-        //                }
-        //            }
-        //        }
-
-        //        //_context.Reports.Add(newReport);
-        //        await _context.SaveChangesAsync();
-
-        //        return Ok("Report đã được thêm thành công.");
-        //    }
-        //    return BadRequest(ModelState);
-        //}
 
         [HttpPost("CreateReport_appids")]
         public async Task<IActionResult> CreateReportByAppid( [FromForm] ReportCreateDto reportModel)
@@ -629,105 +485,18 @@ namespace SoftTrack.API.Controllers
             
         }
         // DELETE: api/Reports/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Report>> DeleteReport(int id)
-        {
-            var report = await _context.Reports.FindAsync(id);
-            if (report != null)
-            {
-                report.Status = 3;
-                await _context.SaveChangesAsync();
-                return Ok("Report đã được xóa thành công.");
-            }
-            return NotFound();
-        }
-
-        [HttpGet("list_reports_by_account/{accountId}")]
-        public async Task<IActionResult> GetReportsForAccountAsync(int accountId)
-        {
-            var reports = _context.Reports
-                .Where(r => r.App.AccId == accountId)
-                .OrderBy(reports => reports.Status)
-                .OrderBy(reports => reports.StartDate)
-                .Select(report => new ReportDto
-            {
-                ReportId = report.ReportId,
-                AppId = report.AppId,
-                Title= report.Title,
-                Description = report.Description,
-                Type = report.Type,
-                Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
-                End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
-                Status = report.Status
-            }).ToList();
-
-            return Ok(reports);
-        }
-        //[HttpPost("SendReportByEmail/{idReport}")]
-        //public async Task<IActionResult> SendReportByEmail(int idReport)
+        //[HttpDelete("{id}")]
+        //public async Task<ActionResult<Report>> DeleteReport(int id)
         //{
-        //    try
+        //    var report = await _context.Reports.FindAsync(id);
+        //    if (report != null)
         //    {
-        //        // Kiểm tra xem báo cáo (report) có tồn tại
-        //        var report = await _context.Reports.FindAsync(idReport);
-
-        //        if (report == null)
-        //        {
-        //            return NotFound("Không tìm thấy báo cáo với idReport đã cung cấp.");
-        //        }
-            
-        //        // Truy vấn danh sách email đã tồn tại trong bảng Account
-        //        //var existingEmails = await _context.Accounts
-        //        //    .Where(a => a.Status != 3) // Lọc tài khoản có trạng thái true (hoạt động)
-        //        //    .Select(a => a.Email)
-        //        //    .ToListAsync();
-        //        // Truy email từ bảng "Account" mà các "Asset" của email đó có chứa "App" trong "Report" theo "ReportId," 
-        //        var existingEmails = await _context.Accounts
-        //        .Where(account => account.Applications
-        //            .Any(app => app.AssetApplications
-        //                .Any(assetApp => assetApp.AppId == report.AppId)))
-        //        .Select(account => account.Email)
-        //        .ToListAsync();
-
-        //        if (existingEmails.Count == 0)
-        //        {
-        //            return BadRequest("Không tìm thấy email trong bảng Account.");
-        //        }
-
-        //        // Gửi báo cáo đến danh sách email đã chọn
-        //        foreach (var email in existingEmails)
-        //        {
-
-        //            // Sử dụng thư viện gửi email để gửi thông báo
-        //            var smtpClient = new SmtpClient
-        //            {
-        //                Host = "smtp.gmail.com", // Điền host của máy chủ SMTP bạn đang sử dụng
-        //                Port = 587, // Điền cổng của máy chủ SMTP
-        //                Credentials = new NetworkCredential("hunglmhe151034@fpt.edu.vn", "ibpe vddw zuvd gxib"), // Thông tin xác thực tài khoản Gmail
-        //                EnableSsl = true // Sử dụng SSL
-        //            };
-
-        //            var mailMessage = new MailMessage
-        //            {
-        //                From = new MailAddress("hunglmhe151034@fpt.edu.vn"),
-        //                Subject = "Báo cáo lỗi report Software!",
-        //                Body = "<html><body><h1>Báo cáo lỗi</h1><p>" + report.Description + "</p></body></html>",
-        //                IsBodyHtml = true // Đánh dấu email có chứa mã HTML
-        //            };
-
-        //            mailMessage.To.Add(email);
-
-        //            await smtpClient.SendMailAsync(mailMessage);
-        //        }
-
-        //        return Ok("Báo cáo đã được gửi thành công đến danh sách email đã chọn.");
+        //        report.Status = 3;
+        //        await _context.SaveChangesAsync();
+        //        return Ok("Report đã được xóa thành công.");
         //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
-        //    }
+        //    return NotFound();
         //}
-
 
     }
 

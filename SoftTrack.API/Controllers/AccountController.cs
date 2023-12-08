@@ -40,7 +40,11 @@ namespace SoftTrack.API.Controllers
                     RoleName = account.Role.Name
                 })
                 .ToListAsync();
-
+            if (accounts == null )
+            {
+                //Không tìm thấy tài khoản nào
+                return NotFound();
+            }
             return accounts;
         }
         [HttpGet("SearchByEmail")]
@@ -61,7 +65,7 @@ namespace SoftTrack.API.Controllers
                 })
                 .ToListAsync();
 
-            if (accounts == null && accounts.Count == 0)
+            if (accounts == null)
             {
                 //Không tìm thấy tài khoản trùng khớp
                 return NotFound();
@@ -152,24 +156,22 @@ namespace SoftTrack.API.Controllers
             return Ok();
         }
 
-        [HttpDelete("DeleteAccountWith_key")]
-        public async Task<IActionResult> DeleteAccountAsync(int accountId) {
-            var account = await _context.Accounts.FindAsync(accountId);
+        //[HttpDelete("DeleteAccountWith_key")]
+        //public async Task<IActionResult> DeleteAccountAsync(int accountId) {
+        //    var account = await _context.Accounts.FindAsync(accountId);
 
-            if (account == null || account.Status == 3)
-            {
-                return NotFound();
-            }
-            else
-            {
-                account.Status = 3;
-                await _context.SaveChangesAsync();
-                return Ok();
-            }        
-        } 
+        //    if (account == null || account.Status == 3)
+        //    {
+        //        return NotFound();
+        //    }
+        //    else
+        //    {
+        //        account.Status = 3;
+        //        await _context.SaveChangesAsync();
+        //        return Ok();
+        //    }        
+        //} 
     
-
-
     [HttpPut("Update_Accpunt{id}")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)
         {

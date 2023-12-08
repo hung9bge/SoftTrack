@@ -35,11 +35,12 @@ namespace SoftTrack.API.Controllers
                 updatedAssetApp.InstallDate = parsedDate;
             }          
            
-            if (updatedAssetAppDto.Status == 0)
+            if (updatedAssetAppDto.Status != 0)
             {
                 updatedAssetApp.Status = updatedAssetAppDto.Status;
             }
             // Cập nhật các trường khác nếu cần
+            _context.AssetApplications.Update(updatedAssetApp);
 
             await _context.SaveChangesAsync();
 
@@ -51,14 +52,14 @@ namespace SoftTrack.API.Controllers
             var assetAppToDelete = await _context.AssetApplications
                 .FirstOrDefaultAsync(aa => aa.AssetId == assetId && aa.AppId == appId);
 
-            if (assetAppToDelete != null)
-            {
-                assetAppToDelete.Status = 3;
-                await _context.SaveChangesAsync();
+            if (assetAppToDelete == null)
+            {             
+                return NotFound();              
+            }
+            _context.AssetApplications.Remove(assetAppToDelete);
+            await _context.SaveChangesAsync();
+            return Ok();
 
-                return Ok();
-            }     
-            return NotFound();
         }
 
         [HttpPost("CreateAssetApplication")]

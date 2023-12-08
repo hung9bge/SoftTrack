@@ -116,27 +116,28 @@ namespace SoftTrack.API.Controllers
             updatedApp.Status = (updatedAppDto.Status != null && updatedAppDto.Status != 0) ? updatedAppDto.Status : updatedApp.Status;
 
             // Lưu thay đổi vào cơ sở dữ liệu
+            _context.Applications.Update(updatedApp);
             await _context.SaveChangesAsync();
 
             return Ok(updatedApp);
         }
 
 
-        [HttpDelete("DeleteAppWith_key")]
-        public async Task<IActionResult> DeleteAppAsync(int Appid)
-        {
-            var deleteApp = await _context.Applications.FindAsync(Appid);
+        //[HttpDelete("DeleteAppWith_key")]
+        //public async Task<IActionResult> DeleteAppAsync(int Appid)
+        //{
+        //    var deleteApp = await _context.Applications.FindAsync(Appid);
 
-            if (deleteApp != null)
-            {
-                deleteApp.Status = 3;
-                await _context.SaveChangesAsync();
-                return Ok();
-            }
+        //    if (deleteApp != null)
+        //    {
+        //        deleteApp.Status = 3;
+        //        await _context.SaveChangesAsync();
+        //        return Ok();
+        //    }
 
-            return NotFound();
+        //    return NotFound();
 
-        }
+        //}
         [HttpGet("list_App_by_user/{key}")]
         public async Task<ActionResult<IEnumerable<ApplicationDto>>> GetAppForAccountAsync(int key)
         {

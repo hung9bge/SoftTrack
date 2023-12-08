@@ -102,7 +102,7 @@ namespace SoftTrack.API.Controllers
 
             if (updatedLicense == null)
             {
-                return NotFound("License not found");
+                return NotFound();
             }
 
             if (updatedLicenseDto.LicenseKey != null && updatedLicenseDto.LicenseKey != "string")
@@ -113,32 +113,29 @@ namespace SoftTrack.API.Controllers
             if (updatedLicenseDto.StartDate != null && updatedLicenseDto.StartDate != "string")
             {
                 updatedLicense.StartDate = DateTime.Parse(updatedLicenseDto.StartDate);
-            }
+            }       
+                updatedLicense.Time = updatedLicenseDto.Time;      
 
-            
-                updatedLicense.Time = updatedLicenseDto.Time;
-            
-
-            if (updatedLicenseDto.Status == 0)
+            if (updatedLicenseDto.Status != 0)
             {
-                updatedLicense.Status = 0;
+                updatedLicense.Status = updatedLicenseDto.Status;
             }
-
+            _context.Licenses.Update(updatedLicense);
             await _context.SaveChangesAsync();
 
-            return Ok("License updated successfully");
+            return Ok();
         }
-        [HttpDelete("DeleteLicenseWith_key")]
-        public async Task<IActionResult> DeleteLicenseAsync(int id)
-        {
-            var item = await _context.Licenses.FindAsync(id);
+        //[HttpDelete("DeleteLicenseWith_key")]
+        //public async Task<IActionResult> DeleteLicenseAsync(int id)
+        //{
+        //    var item = await _context.Licenses.FindAsync(id);
 
-            if (item != null)
-            {
-                item.Status = 3 ;
-                await _context.SaveChangesAsync();
-            }
-            return StatusCode(StatusCodes.Status200OK);
-        }
+        //    if (item != null)
+        //    {
+        //        item.Status = 3 ;
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return StatusCode(StatusCodes.Status200OK);
+        //}
     }
 }
