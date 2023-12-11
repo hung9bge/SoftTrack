@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SoftTrack.Domain;
 using SoftTrack.Manage.DTO;
+using System.Data;
 using System.Globalization;
 
 namespace SoftTrack.API.Controllers
@@ -34,7 +35,10 @@ namespace SoftTrack.API.Controllers
                     Status = item.Status
                 })
                 .ToListAsync();
-
+            if (!lst.Any())
+            {
+                return NotFound();
+            }
             return lst;
         }
 

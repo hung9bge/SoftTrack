@@ -42,7 +42,10 @@ namespace SoftTrack.API.Controllers
                     Status = asset.Status
                 })
                 .ToListAsync();
-
+            if (!assetDtos.Any())
+            {
+                return NotFound();
+            }
             return assetDtos;
         }
         [HttpGet("GetAssetsById/{id}")]
@@ -69,7 +72,10 @@ namespace SoftTrack.API.Controllers
                     Status = asset.Status
                 })
                 .ToListAsync();
-
+            if (!assetDtos.Any())
+            {
+                return NotFound();
+            }
             return assetDtos;
         }
 

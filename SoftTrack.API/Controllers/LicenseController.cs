@@ -35,15 +35,18 @@ namespace SoftTrack.API.Controllers
                     Status = item.Status
                 })
                 .ToListAsync();
-
+            if (!lst.Any())
+            {
+                return NotFound();
+            }
             return lst;
         }
 
-        [HttpGet("list_Licenses_by_Asset/{key}")]
-        public async Task<ActionResult<IEnumerable<LisenceListByAssetDto>>> GetLicensesByAssetAsync(int key)
+        [HttpGet("list_Licenses_by_Asset/{id}")]
+        public async Task<ActionResult<IEnumerable<LisenceListByAssetDto>>> GetLicensesByAssetAsync(int id)
         {
             var lst = await _context.AssetSoftwares
-                .Where(item => item.AssetId == key)
+                .Where(item => item.AssetId == id)
                  .OrderBy(l => l.Status)
                 .OrderBy(l => l.InstallDate)
                 .Select(item => new LisenceListByAssetDto
@@ -91,14 +94,14 @@ namespace SoftTrack.API.Controllers
         //        return BadRequest(ModelState);
         //    }
         //}
-        [HttpPut("UpdateLicense/{key}")]
-        public async Task<IActionResult> UpdateLicenseAsync(int key, [FromBody] LicenseUpdateDto updatedLicenseDto)
+        [HttpPut("UpdateLicense/{id}")]
+        public async Task<IActionResult> UpdateLicenseAsync(int id, [FromBody] LicenseUpdateDto updatedLicenseDto)
         {
             if (updatedLicenseDto == null)
             {
                 return BadRequest(ModelState);
             }
-            var updatedLicense = await _context.Licenses.FindAsync(key);
+            var updatedLicense = await _context.Licenses.FindAsync(id);
 
             if (updatedLicense == null)
             {

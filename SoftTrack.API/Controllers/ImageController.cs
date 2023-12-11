@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SoftTrack.API.Models;
 using SoftTrack.Domain;
 using SoftTrack.Manage.DTO;
 

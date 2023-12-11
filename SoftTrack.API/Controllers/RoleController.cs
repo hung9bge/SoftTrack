@@ -23,6 +23,10 @@ namespace SoftTrack.API.Controllers
         {
             var roles = await _context.Roles        
                 .ToListAsync();
+            if (!roles.Any())
+            {
+                return NotFound();
+            }
             return Ok(roles);
         }
     }

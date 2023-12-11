@@ -41,27 +41,7 @@ namespace SoftTrack.API.Controllers
 
             return Ok("AssetSoftware and related License deleted successfully");
         }
-        //[HttpDelete("DeleteAssetSoftware/{assetId}/{softwareId}")]
-        //public async Task<IActionResult> DeleteAssetSoftwareAsync(int assetId, int softwareId)
-        //{
-        //    var assetSoftware = await _context.AssetSoftwares.FindAsync(assetId, softwareId);
 
-        //    if (assetSoftware == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    assetSoftware.Status = 3;
-        //    Xóa dữ liệu từ bảng License có LicenseId tương ứng
-        //    var license = await _context.Licenses.FindAsync(assetSoftware.LicenseId);
-        //    if (license != null)
-        //    {
-        //        license.Status = 3;
-        //    }
-
-        //    await _context.SaveChangesAsync();
-
-        //    return Ok("AssetSoftware and related License deleted successfully");
-        //}
         [HttpPost("CreateWithHaveLicense")]
         public async Task<IActionResult> CreateLicense([FromBody] LicenseDto licenseDto)
         {

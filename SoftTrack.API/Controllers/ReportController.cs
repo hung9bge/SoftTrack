@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SoftTrack.API.Models;
 using SoftTrack.Domain;
 using SoftTrack.Manage.DTO;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
 using System.Net.Mail;
@@ -156,7 +156,10 @@ namespace SoftTrack.API.Controllers
 
                 })
                 .ToListAsync();
-
+            if (!reportsForSoftware.Any())
+            {
+                return NotFound();
+            }
             return reportsForSoftware;
         }
 

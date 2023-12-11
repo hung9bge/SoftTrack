@@ -42,7 +42,10 @@ namespace SoftTrack.API.Controllers
                     
                 })
                 .ToListAsync();
-
+            if (appDtos == null)
+            {
+                return NotFound();
+            }
             return appDtos;
         }
 

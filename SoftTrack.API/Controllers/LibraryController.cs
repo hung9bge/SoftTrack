@@ -38,7 +38,10 @@ namespace SoftTrack.API.Controllers
                     Status = library.Status
                 })
                 .ToListAsync();
-
+            if (!libraryDtos.Any())
+            {
+                return NotFound();
+            }
             return libraryDtos;
         }
 
@@ -47,6 +50,12 @@ namespace SoftTrack.API.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existinglibrary = await _context.Libraries.FirstOrDefaultAsync(l => l.Name == libraryDto.Name);
+                if (existinglibrary != null)
+                {
+                    // Nếu đã có library cho AppId, trả về BadRequest
+                    return NotFound();
+                }
                 var library = new Library
                 {
                     AppId = libraryDto.AppId,
@@ -68,7 +77,7 @@ namespace SoftTrack.API.Controllers
             }
             else
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
         }
 

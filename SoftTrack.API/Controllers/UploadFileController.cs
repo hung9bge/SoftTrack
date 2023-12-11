@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SoftTrack.API.Models;
+using SoftTrack.Manage.DTO;
 
 namespace SoftTrack.API.Controllers
 {
