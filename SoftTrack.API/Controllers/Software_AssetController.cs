@@ -39,7 +39,7 @@ namespace SoftTrack.API.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok("AssetSoftware and related License deleted successfully");
+            return Ok();
         }
 
         [HttpPost("CreateWithHaveLicense")]
@@ -54,7 +54,7 @@ namespace SoftTrack.API.Controllers
 
                 if (asset == null || software == null)
                 {
-                    return BadRequest("asset hoặc software không tồn tại.");
+                    return NotFound();
                 }
 
                 //Tạo giấy phép
@@ -98,7 +98,7 @@ namespace SoftTrack.API.Controllers
                 _context.AssetSoftwares.Add(assetSoftware);
 
                 await _context.SaveChangesAsync();
-                return Ok("Software Asset đã được tạo thành công.");
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -112,7 +112,7 @@ namespace SoftTrack.API.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+                return NotFound();
             }
         }
         [HttpPost("CreateWithHaveLicenseAndSoftware")]
@@ -143,8 +143,8 @@ namespace SoftTrack.API.Controllers
                     };
                     if (newSoftware == null)
                     {
-                        return BadRequest("Chưa nhập Software.");
-                        
+                        return NotFound();
+
                     }
                     _context.Softwares.Add(newSoftware);
                     await _context.SaveChangesAsync();
@@ -178,13 +178,13 @@ namespace SoftTrack.API.Controllers
 
                     transaction.Commit();
 
-                    return Ok("Licenses và Software đã được thêm thành công.");
+                    return Ok();
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
 
-                    return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
+                    return NotFound();
                 }
             }
         }

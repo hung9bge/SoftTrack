@@ -42,11 +42,11 @@ namespace SoftTrack.API.Controllers
             return lst;
         }
 
-        [HttpGet("list_Softwares_by_Asset/{key}")]
-        public async Task<ActionResult<IEnumerable<SoftwareListDto>>> GetSoftwaresByAssetAsync(int key)
+        [HttpGet("list_Softwares_by_Asset/{id}")]
+        public async Task<ActionResult<IEnumerable<SoftwareListDto>>> GetSoftwaresByAssetAsync(int id)
         {
             var lst = await _context.AssetSoftwares
-                .Where(item => item.AssetId == key)
+                .Where(item => item.AssetId == id)
                 .OrderBy(item => item.Status)
                 .OrderBy(item => item.InstallDate)
                 .Select(item => new SoftwareListDto
@@ -93,21 +93,21 @@ namespace SoftTrack.API.Controllers
             }
             else
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
         }
-        [HttpPut("UpdateSoftware/{key}")]
-        public async Task<IActionResult> UpdateSoftwareAsync(int key, [FromBody] SoftwareUpdateDto updatedSoftwareDto)
+        [HttpPut("UpdateSoftware/{id}")]
+        public async Task<IActionResult> UpdateSoftwareAsync(int id, [FromBody] SoftwareUpdateDto updatedSoftwareDto)
         {
             if (updatedSoftwareDto == null)
             {
-                return BadRequest(ModelState);
+                return NotFound();
             }
-            var updatedSoftware = await _context.Softwares.FindAsync(key);
+            var updatedSoftware = await _context.Softwares.FindAsync(id);
 
             if (updatedSoftware == null)
             {
-                return NotFound("Software not found");
+                return NotFound();
             }
 
             if (updatedSoftwareDto.Name != null && updatedSoftwareDto.Name != "string")
@@ -147,7 +147,7 @@ namespace SoftTrack.API.Controllers
             _context.Softwares.Update(updatedSoftware);
             await _context.SaveChangesAsync();
 
-            return Ok("Software updated successfully");
+            return Ok();
         }
         //[HttpDelete("DeleteSoftwareWith_key")]
         //public async Task<IActionResult> DeleteSoftwareAsync(int id)
