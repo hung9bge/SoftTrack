@@ -23,6 +23,12 @@ namespace SoftTrack.API.Controllers
             _configuration = configuration;
             _context = context;
         }
+
+        public AccountController(soft_track5Context context)
+        {
+            _context = context;
+        }
+
         [HttpGet("ListAccount")]
         public async Task<ActionResult<IEnumerable<AccountDto>>> GetAccounts()
         {
@@ -210,5 +216,6 @@ namespace SoftTrack.API.Controllers
 
             return Ok();
         }
+
     }
 }

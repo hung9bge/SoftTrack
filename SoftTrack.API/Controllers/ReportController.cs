@@ -329,6 +329,10 @@ namespace SoftTrack.API.Controllers
                 {                   
                    existingReport.ClosedDate = DateTime.Now;                
                 }
+                if (existingReport.Status == 1)
+                {
+                    existingReport.ClosedDate = null;
+                }
                 //lấy account người update report 
                 var accountsend = await _context.Accounts.FindAsync(reportModel.UpdaterID);
                 //lấy thông tin app trong report
