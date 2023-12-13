@@ -174,7 +174,7 @@ namespace SoftTrack.API.Controllers
             }
         }
 
-        [HttpPut("Update_Accpunt{id}")]
+        [HttpPut("Update_Account{id}")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)
         {
             var existingAccount = await _context.Accounts.FindAsync(id);

@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using SoftTrack.API.Controllers;
 using SoftTrack.Domain;
@@ -5,7 +6,7 @@ using SoftTrack.Domain;
 namespace SoftTrackTest.AccountTest
 {
     [TestFixture]
-    public class GetAccountsByEmail
+    public class GetAccount
     {
         private AccountController _accountController;
         private soft_track5Context _softtrack5Context;
@@ -21,18 +22,13 @@ namespace SoftTrackTest.AccountTest
         public async Task Test1()
         {
             // Arrange
-            var email = "hunglmhe151034@fpt.edu.vn";
-            var result = await _accountController.GetAccountsByEmail(email);
+            
+            var result = await _accountController.GetAccounts();
+            if(result.Value == null)
+            {
+                Assert.IsNull(result.Value);
+            }
             Assert.IsNotEmpty(result.Value);
-
-        }
-        [Test]
-        public async Task Test2()
-        {
-            // Arrange
-            var email = "hunglmhe2001@fpt.edu.vn";
-            var result = await _accountController.GetAccountsByEmail(email);
-            Assert.IsEmpty(result.Value);
 
         }
     }

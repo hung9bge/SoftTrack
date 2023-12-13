@@ -7,7 +7,7 @@ using SoftTrack.API.Controllers;
 using SoftTrack.Domain;
 using System.Text;
 
-namespace TestProject1.AcconutTest
+namespace SoftTrackTest.AccountTest
 {
     [TestFixture]
     public class Login
@@ -46,6 +46,18 @@ namespace TestProject1.AcconutTest
         {
             // Arrange
             var email = "ahungthanhgank123@gmail.com";
+
+            // Act
+            var result = await _accountController.Login(email);
+
+            // Assert
+            Assert.IsInstanceOf<NotFoundResult>(result);
+        }
+        [Test]
+        public async Task Test3()
+        {
+            // Arrange
+            var email = "hunglmhe2001@fpt.edu.vn";
 
             // Act
             var result = await _accountController.Login(email);

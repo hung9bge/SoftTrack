@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <Folder Include="Asset_AppController\" />
-    <Folder Include="AppController\" />
     <Folder Include="LibraryController\" />
     <Folder Include="LicenseController\" />
     <Folder Include="ReportController\" />
