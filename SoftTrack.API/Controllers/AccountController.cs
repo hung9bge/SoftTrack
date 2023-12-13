@@ -157,23 +157,24 @@ namespace SoftTrack.API.Controllers
             return Ok();
         }
 
-        //[HttpDelete("DeleteAccountWith_key")]
-        //public async Task<IActionResult> DeleteAccountAsync(int accountId) {
-        //    var account = await _context.Accounts.FindAsync(accountId);
+        [HttpDelete("DeleteAccountWith_key")]
+        public async Task<IActionResult> DeleteAccountAsync(int accountId)
+        {
+            var account = await _context.Accounts.FindAsync(accountId);
 
-        //    if (account == null || account.Status == 3)
-        //    {
-        //        return NotFound();
-        //    }
-        //    else
-        //    {
-        //        account.Status = 3;
-        //        await _context.SaveChangesAsync();
-        //        return Ok();
-        //    }        
-        //} 
-    
-    [HttpPut("Update_Accpunt{id}")]
+            if (account == null || account.Status == 3)
+            {
+                return NotFound();
+            }
+            else
+            {
+                account.Status = 3;
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+        }
+
+        [HttpPut("Update_Accpunt{id}")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)
         {
             var existingAccount = await _context.Accounts.FindAsync(id);
