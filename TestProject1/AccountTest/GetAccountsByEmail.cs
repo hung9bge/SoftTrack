@@ -23,7 +23,7 @@ namespace TestProject1.AcconutTest
             // Arrange
             var email = "hunglmhe151034@fpt.edu.vn";
             var result = await _accountController.GetAccountsByEmail(email);
-            Assert.That(result.Value, Is.Not.Empty);
+            Assert.IsNotEmpty(result.Value);
 
         }
         [Test]
@@ -32,7 +32,7 @@ namespace TestProject1.AcconutTest
             // Arrange
             var email = "ahungthanhgank123@gmail.com";
             var result = await _accountController.GetAccountsByEmail(email);
-            Assert.That(result.Value, Is.Empty);
+            Assert.IsEmpty(result.Value);
 
         }
     }

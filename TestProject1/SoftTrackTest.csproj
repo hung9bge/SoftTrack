@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
@@ -19,6 +20,20 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SoftTrack.API\SoftTrack.API.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Asset_AppController\" />
+    <Folder Include="AppController\" />
+    <Folder Include="LibraryController\" />
+    <Folder Include="LicenseController\" />
+    <Folder Include="ReportController\" />
+    <Folder Include="RoleController\" />
+    <Folder Include="Software_AssetController\" />
+    <Folder Include="SoftwareController\" />
+    <Folder Include="UploadFileController\" />
+    <Folder Include="ImageController\" />
+    <Folder Include="AssetController\" />
   </ItemGroup>
 
 </Project>

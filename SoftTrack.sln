@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTrack.Manage", "SoftTra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTrack.Domain", "SoftTrack.Domain\SoftTrack.Domain.csproj", "{98618F24-411F-45DC-86E1-6AA5C35306EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{0886D1C3-B792-4869-B6DC-9C39E65A4847}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoftTrackTest", "TestProject1\SoftTrackTest.csproj", "{0886D1C3-B792-4869-B6DC-9C39E65A4847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

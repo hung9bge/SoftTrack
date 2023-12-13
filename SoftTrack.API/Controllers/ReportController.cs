@@ -98,7 +98,8 @@ namespace SoftTrack.API.Controllers
         {
             var reports = await _context.Reports
                .Where(report => report.Type == type)
-               .OrderBy(reports => reports.StartDate)
+               .OrderByDescending(reports => reports.StartDate)
+
                .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
