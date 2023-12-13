@@ -1,4 +1,5 @@
-﻿using SoftTrack.API.Controllers;
+﻿using Microsoft.Extensions.Configuration;
+using SoftTrack.API.Controllers;
 using SoftTrack.Domain;
 
 namespace SoftTrackTest.AcconutTest
@@ -8,11 +9,12 @@ namespace SoftTrackTest.AcconutTest
     {
         private AccountController _accountController;
         private soft_track5Context _softtrack5Context;
+        private IConfiguration _configuration;
         [SetUp]
         public void Setup()
         {
             _softtrack5Context = new soft_track5Context();
-            _accountController = new AccountController(_softtrack5Context);
+            _accountController = new AccountController(_configuration,_softtrack5Context);
         }
 
         [Test]
