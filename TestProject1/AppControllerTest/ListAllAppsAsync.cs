@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using SoftTrack.API.Controllers;
 using SoftTrack.Domain;
+using SoftTrack.Manage.DTO;
+using static SoftTrack.API.Controllers.AppController;
 
 namespace SoftTrackTest.AppControllerTest
 
@@ -24,13 +27,25 @@ namespace SoftTrackTest.AppControllerTest
         {
             // Arrange
 
-            var result = await appController.ListAllAppsAsync();
-            if (result.Value == null)
-            {
-                Assert.IsEmpty(result.Value);
-            }
+            var result = await appController.ListAllAppsAsync();        
             Assert.IsNotEmpty(result.Value);
 
         }
+        [Test]
+        public async Task Test2()
+        {
+            // Arrange
+            var mockAppController = new Mock<IAppController>();
+            mockAppController.Setup(x => x.ListAllAppsAsync())
+                             .ReturnsAsync((IEnumerable<ApplicationDto>)null);
+            var appController = mockAppController.Object;
+
+            // Act
+            var result = await appController.ListAllAppsAsync();
+
+            // Assert
+            Assert.IsNull(result);
+        }
+
     }
 }

@@ -117,8 +117,7 @@ namespace SoftTrack.API.Controllers
         [HttpPost("CreateAsset")]
         public async Task<IActionResult> CreateAssetAsync([FromBody] AssetCreateDto assetDto)
         {
-            if (ModelState.IsValid)
-            {
+        
                 // Kiểm tra xem IpAddress đã tồn tại trong cơ sở dữ liệu chưa
                 var existingAssetWithIpAddress = await _context.Assets
                     .FirstOrDefaultAsync(a => a.IpAddress == assetDto.IpAddress);
@@ -152,13 +151,9 @@ namespace SoftTrack.API.Controllers
                 _context.Assets.Add(asset);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("CreateAsset", new { id = asset.AssetId }, asset);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
+                return Ok();
+            }         
+        
         [HttpPut("UpdateAsset/{key}")]
         public async Task<IActionResult> UpdateAssetAsync(int key, [FromBody] AssetUpdateDto updatedAssetDto)
         {

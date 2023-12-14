@@ -11,6 +11,10 @@ namespace SoftTrack.API.Controllers
     {
         private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
+        public interface IAppController
+        {
+            Task<IEnumerable<ApplicationDto>> ListAllAppsAsync();
+        }
         public AppController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
@@ -83,7 +87,7 @@ namespace SoftTrack.API.Controllers
                 _context.Applications.Add(application);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("CreateApp", new { id = application.AppId }, application);
+                return Ok();
             }
             else
             {
@@ -122,7 +126,7 @@ namespace SoftTrack.API.Controllers
             _context.Applications.Update(updatedApp);
             await _context.SaveChangesAsync();
 
-            return Ok(updatedApp);
+            return Ok();
         }
 
 

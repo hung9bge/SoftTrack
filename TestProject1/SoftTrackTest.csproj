@@ -23,16 +23,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Asset_AppController\" />
-    <Folder Include="LibraryController\" />
-    <Folder Include="LicenseController\" />
-    <Folder Include="ReportController\" />
-    <Folder Include="RoleController\" />
-    <Folder Include="Software_AssetController\" />
-    <Folder Include="SoftwareController\" />
-    <Folder Include="UploadFileController\" />
-    <Folder Include="ImageController\" />
-    <Folder Include="AssetController\" />
+    <Folder Include="LibraryControllerTest\" />
+    <Folder Include="LicenseControllerTest\" />
+    <Folder Include="ReportControllerTest\" />
+    <Folder Include="RoleControllerTest\" />
+    <Folder Include="SoftwareControllerTest\" />
+    <Folder Include="UploadFileControllerTest\" />
+    <Folder Include="ImageControllerTest\" />
+    <Folder Include="AssetControllerTest\" />
   </ItemGroup>
 
 </Project>

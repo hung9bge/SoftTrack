@@ -72,9 +72,7 @@ namespace SoftTrack.API.Controllers
         }
         [HttpPost("CreateSoftware")]
         public async Task<IActionResult> CreateSoftwareAsync([FromBody] SoftwareCreateDto item)
-        {
-            if (ModelState.IsValid)
-            {
+        {      
                 var tmp = new Software
                 {
                     Name = item.Name,
@@ -85,16 +83,9 @@ namespace SoftTrack.API.Controllers
                     Os = item.Os,
                     Status = item.Status
                 };
-
                 _context.Softwares.Add(tmp);
                 await _context.SaveChangesAsync();
-
-                return CreatedAtAction("CreateSoftware", new { id = tmp.SoftwareId }, tmp);
-            }
-            else
-            {
-                return NotFound();
-            }
+                return Ok();                        
         }
         [HttpPut("UpdateSoftware/{id}")]
         public async Task<IActionResult> UpdateSoftwareAsync(int id, [FromBody] SoftwareUpdateDto updatedSoftwareDto)

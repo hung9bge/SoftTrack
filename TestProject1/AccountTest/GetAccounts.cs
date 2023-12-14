@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using SoftTrack.API.Controllers;
 using SoftTrack.Domain;
+using SoftTrack.Manage.DTO;
+using static SoftTrack.API.Controllers.AccountController;
+using static SoftTrack.API.Controllers.AppController;
 
 namespace SoftTrackTest.AccountTest
 {
@@ -30,6 +34,21 @@ namespace SoftTrackTest.AccountTest
             }
             Assert.IsNotEmpty(result.Value);
 
+        }
+        [Test]
+        public async Task Test2()
+        {
+            // Arrange
+            var mockAppController = new Mock<IAccountController>();
+            mockAppController.Setup(x => x.GetAccounts())
+                             .ReturnsAsync((IEnumerable<AccountDto>)null);
+            var _accountController = mockAppController.Object;
+
+            // Act
+            var result = await _accountController.GetAccounts();
+
+            // Assert
+            Assert.IsNull(result);
         }
     }
 }

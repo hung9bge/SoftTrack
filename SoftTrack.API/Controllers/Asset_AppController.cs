@@ -65,6 +65,16 @@ namespace SoftTrack.API.Controllers
         [HttpPost("CreateAssetApplication")]
         public async Task<IActionResult> CreateAssetApplicationAsync([FromBody] AssetApplicationDTO assetAppDto)
         {
+            var assetAppTo = await _context.AssetApplications
+                .FirstOrDefaultAsync(aa => aa.AssetId == assetAppDto.AssetId && aa.AppId == assetAppDto.AppId);
+            var asset = await _context.Assets
+                .FirstOrDefaultAsync(aa => aa.AssetId == assetAppDto.AssetId);
+            var App = await _context.Applications
+                .FirstOrDefaultAsync(aa => aa.AppId == assetAppDto.AppId);
+            if (assetAppTo != null || App == null || asset == null)
+            {
+                return NotFound();
+            }
             if (ModelState.IsValid)
             {
                 if (assetAppDto.AssetId == 0 || assetAppDto.AppId == 0)
@@ -85,7 +95,7 @@ namespace SoftTrack.API.Controllers
                 _context.AssetApplications.Add(assetApp);
                 await _context.SaveChangesAsync();
 
-                return CreatedAtAction("CreateAssetApplication", new { assetId = assetApp.AssetId, appId = assetApp.AppId }, assetApp);
+                return Ok();
             }
             else
             {

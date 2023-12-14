@@ -25,7 +25,6 @@ namespace SoftTrackTest.AppControllerTest
             // Arrange
             var id = 1;
             var result = await appController.GetAppByIdAsync(id);
-
             Assert.NotNull(result.Value);
 
         }
@@ -36,10 +35,7 @@ namespace SoftTrackTest.AppControllerTest
             var id = 123;
             var result = await appController.GetAppByIdAsync(id);
 
-
             Assert.IsNull(result.Value);
-
-
 
         }
     }

@@ -18,6 +18,10 @@ namespace SoftTrack.API.Controllers
     {
         private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
+        public interface IAccountController
+        {
+            Task<IEnumerable<AccountDto>> GetAccounts();
+        }
         public AccountController( IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
@@ -158,7 +162,7 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpDelete("DeleteAccountWith_key")]
-        public async Task<IActionResult> DeleteAccountAsync(int accountId)
+        public async Task<IActionResult> DeleteAccount(int accountId)
         {
             var account = await _context.Accounts.FindAsync(accountId);
 
