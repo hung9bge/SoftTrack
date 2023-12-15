@@ -12,7 +12,7 @@ namespace SoftTrack.Domain
         public int Status { get; set; }
 
         public virtual Asset Asset { get; set; }
-        public virtual License License { get; set; }
+        public virtual License? License { get; set; }
         public virtual Software Software { get; set; }
     }
 }

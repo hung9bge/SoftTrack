@@ -26,6 +26,7 @@ namespace SoftTrack.Domain
         public string Docs { get; set; }
         public string Language { get; set; }
         public string Db { get; set; }
+        public int? Status { get; set; }
 
         public virtual Account Acc { get; set; }
         public virtual ICollection<AssetApplication> AssetApplications { get; set; }

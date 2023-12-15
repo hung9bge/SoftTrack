@@ -9,6 +9,6 @@ namespace SoftTrack.Domain
         public int ReportId { get; set; }
         public string Image1 { get; set; }
 
-        public virtual Report Report { get; set; }
+        //public virtual Report Report { get; set; }
     }
 }

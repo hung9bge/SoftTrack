@@ -1,6 +1,6 @@
 ﻿using SoftTrack.Domain;
 
-namespace SoftTrack.Application.DTO
+namespace SoftTrack.Manage.DTO
 {
     public class DeviceDto
     {

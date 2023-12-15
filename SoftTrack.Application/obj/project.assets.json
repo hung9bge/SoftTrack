@@ -2490,9 +2490,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj",
-      "projectName": "SoftTrack.Application",
-      "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj",
+      "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj",
+      "projectName": "SoftTrack.Manage",
+      "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj",
       "packagesPath": "C:\\Users\\hung.lemanh1\\.nuget\\packages\\",
       "outputPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\obj\\",
       "projectStyle": "PackageReference",

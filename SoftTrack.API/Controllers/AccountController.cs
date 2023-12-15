@@ -3,11 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using SoftTrack.Application.DTO;
-using SoftTrack.Application.DTO.Report;
-using SoftTrack.Application.Interface;
-using SoftTrack.Application.Service;
 using SoftTrack.Domain;
+using SoftTrack.Manage.DTO;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -15,29 +12,29 @@ using System.Text;
 
 namespace SoftTrack.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AccountController : Controller
     {
-        private readonly soft_track4Context _context;
-
-        private readonly IAccountService _repo;
+        private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
-
-        public AccountController(IAccountService userRepository, IConfiguration configuration, IMapper mapper, soft_track4Context context)
+        public interface IAccountController
         {
-            _repo = userRepository;
+            Task<IEnumerable<AccountDto>> GetAccounts();
+        }
+        public AccountController( IConfiguration configuration, soft_track5Context context)
+        {
             _configuration = configuration;
-            _mapper = mapper;
             _context = context;
         }
+
         [HttpGet("ListAccount")]
         public async Task<ActionResult<IEnumerable<AccountDto>>> GetAccounts()
         {
 
             var accounts = await _context.Accounts
                 .Include(account => account.Role)
+                .OrderBy(account => account.Status)
                 .Select(account => new AccountDto
                 {
                     AccId = account.AccId,
@@ -48,7 +45,11 @@ namespace SoftTrack.API.Controllers
                     RoleName = account.Role.Name
                 })
                 .ToListAsync();
-
+            if (accounts == null )
+            {
+                //Không tìm thấy tài khoản nào
+                return NotFound();
+            }
             return accounts;
         }
         [HttpGet("SearchByEmail")]
@@ -69,10 +70,10 @@ namespace SoftTrack.API.Controllers
                 })
                 .ToListAsync();
 
-            if (accounts == null && accounts.Count == 0)
+            if (accounts == null)
             {
                 //Không tìm thấy tài khoản trùng khớp
-                return NotFound("Không tìm thấy tài khoản trùng khớp.");
+                return NotFound();
             }
 
             return accounts;
@@ -82,17 +83,19 @@ namespace SoftTrack.API.Controllers
         {
             if (!email.EndsWith("@fpt.edu.vn", StringComparison.OrdinalIgnoreCase))
             {
-                return BadRequest("Email không có đuôi @fpt.edu.vn.");
+                return NotFound();
             }
-
-            var user = await _repo.Login(email);
+            var user = await _context.Accounts
+            .Where(u => u.Email.ToLower() == email.ToLower())
+            .Include(u => u.Role) // Kết hợp thông tin về Role
+            .FirstOrDefaultAsync(); // Sử dụng FirstOrDefaultAsync để lấy một bản ghi hoặc null nếu không tìm thấy
 
             if (user == null)
             {
-                return BadRequest("Email không tồn tại hoặc sai mật khẩu.");
+                return NotFound();
             }
 
-            var roles = user.RoleName;
+            var roles = user.Role.Name;
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtKey"));
@@ -109,8 +112,15 @@ namespace SoftTrack.API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            var response = _mapper.Map<AccountDto>(user);
+            AccountDto response = new()
+            {
+                Name = user.Name,
+                Email = user.Email,
+                AccId = user.AccId,
+                RoleId = user.RoleId,
+                RoleName = user.Role.Name,
+                Status = user.Status,
+            };
 
             response.token = tokenHandler.WriteToken(token);
             return Ok(response);
@@ -132,7 +142,7 @@ namespace SoftTrack.API.Controllers
 
             if (existingAccount != null)
             {
-                return BadRequest("Email và vai trò đã tồn tại trong cơ sở dữ liệu.");
+                return NotFound();
             }
 
             // Tạo đối tượng Account từ DTO
@@ -148,32 +158,34 @@ namespace SoftTrack.API.Controllers
             _context.Accounts.Add(newAccount);
             await _context.SaveChangesAsync();
 
-            return Ok("Tài khoản đã được thêm thành công.");
+            return Ok();
         }
 
         [HttpDelete("DeleteAccountWith_key")]
-        public async Task<IActionResult> DeleteAccountAsync(int accountId) {
+        public async Task<IActionResult> DeleteAccount(int accountId)
+        {
             var account = await _context.Accounts.FindAsync(accountId);
 
-            if (account != null)
+            if (account == null || account.Status == 3)
             {
-                account.Status = false;
-
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            return Ok("Tài khoản đã được update role thành công.");
-        } 
-    
+            else
+            {
+                account.Status = 3;
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+        }
 
-
-    [HttpPut("Update_Accpunt{id}")]
+        [HttpPut("Update_Account{id}")]
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] AccountUpdateDto accountDto)
         {
             var existingAccount = await _context.Accounts.FindAsync(id);
 
             if (existingAccount == null)
             {
-                return NotFound("Tài khoản không tồn tại.");
+                return NotFound();
             }
 
             if (accountDto.Email != "string")
@@ -202,7 +214,8 @@ namespace SoftTrack.API.Controllers
             _context.Accounts.Update(existingAccount);
             await _context.SaveChangesAsync();
 
-            return Ok("Tài khoản đã được cập nhật thành công.");
+            return Ok();
         }
+
     }
 }

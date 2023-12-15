@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -20,14 +20,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="8.2.0" />
-    <PackageReference Include="MimeKit" Version="4.2.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
 
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SoftTrack.Application\SoftTrack.Application.csproj" />
-    <ProjectReference Include="..\SoftTrack.Infrastructure\SoftTrack.Infrastructure.csproj" />
+    <ProjectReference Include="..\SoftTrack.Application\SoftTrack.Manage.csproj" />
   </ItemGroup>
 
 </Project>

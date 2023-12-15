@@ -1,151 +1,157 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SoftTrack.Application.DTO;
-using SoftTrack.Application.Interface;
-using SoftTrack.Application.Service;
 using SoftTrack.Domain;
+using SoftTrack.Manage.DTO;
+using System.Data;
+using System.Globalization;
 
 namespace SoftTrack.API.Controllers
 {
-    [Route("api/v1/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class SoftwareController : Controller
     {
-        private readonly ISoftwareService _softwareService;
-        private readonly soft_track4Context _context;
-        public SoftwareController(ISoftwareService softwareService, soft_track4Context context)
+        private readonly soft_track5Context _context;
+        private readonly IConfiguration _configuration;
+        public SoftwareController(IConfiguration configuration, soft_track5Context context)
         {
-            _softwareService = softwareService;
+            _configuration = configuration;
             _context = context;
         }
-
-        [HttpGet("ListSoftware")]
-        public async Task<IActionResult> GetAllSoftwareAsync()
+        [HttpGet("ListSoftwares")]
+        public async Task<ActionResult<IEnumerable<SoftwareDto>>> ListAllSoftwaresAsync()
         {
-            var ressult = await _softwareService.GetAllSoftwareAsync();
-            return StatusCode(StatusCodes.Status200OK, ressult);
-        }
-
-        [HttpPost("CreateSW")]
-        public async Task<IActionResult> CreateSoftwareAsync(SoftwareCreateDto softwareCreateDto)
-        {
-            await _softwareService.CreateSoftwareAsync(softwareCreateDto);
-            return Ok("SoftWare đã được Add thành công.");
-           
-        }
-
-        [HttpPut("UpdateSW{key}")]
-        public async Task<IActionResult> UpdateSoftwareAsync(int key, SoftwareUpdateDto updatedSoftware)
-        {
-            await _softwareService.UpdateSoftwareAsync(key, updatedSoftware);
-            return Ok("SoftWare đã được cập nhật thành công.");
-           
-        }
-
-        [HttpDelete("DeleteSoftWareWith_key")]
-        public async Task<IActionResult> DeleteSoftwareAsync(int softwareid)
-        {
-            await _softwareService.DeleteSoftwareAsync(softwareid);
-            return StatusCode(StatusCodes.Status200OK);
-        }
-        [HttpGet("list_software_by_user/{key}")]
-        public async Task<IActionResult> GetSoftwareForAccountAsync(int key)
-        {
-            var ressult = await _softwareService.GetSoftwareForAccountAsync(key);
-            return StatusCode(StatusCodes.Status200OK, ressult);
-        }
-        [HttpGet("list_software/{key}")]
-        public async Task<IActionResult> GetSoftwareAsync(int key)
-        {
-            var ressult = await _softwareService.GetSoftwareAsync(key);
-            return StatusCode(StatusCodes.Status200OK, ressult);
-        }
-
-        [HttpGet("GetSoftwareForAccountAndDevice")]
-        public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwareForAccountAndDevice(int accountId, int deviceId)
-        {
-            var softwareForAccountAndDevice = await _context.Softwares
-                .Where(software => software.AccId == accountId)
-                .Where(software => software.DeviceSoftwares.Any(ds => ds.DeviceId == deviceId))
-                .Select(software => new SoftwareDto
+            var lst = await _context.Softwares
+                .OrderBy(item => item.Status)        
+                .Select(item => new SoftwareDto
                 {
-                    SoftwareId = software.SoftwareId,
-                    AccId= software.AccId,
-                    Name = software.Name,
-                    Publisher = software.Publisher,
-                    Version = software.Version,
-                    Release = software.Release,
-                    Type = software.Type,
-                    Os = software.Os,
-                    Description = software.Description,
-                    Docs = software.Docs,
-                    Download = software.Download,
-                    Status = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).Status,
-                    // Lấy InstallDate từ bảng liên quan
-                    InstallDate = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).InstallDate.ToString("dd/MM/yyyy")
+                    SoftwareId = item.SoftwareId,
+                    Name = item.Name,
+                    Publisher = item.Publisher,
+                    Version = item.Version,
+                    Release = item.Release,
+                    Os = item.Os,
+                    Type = item.Type,
+                    Status = item.Status
                 })
                 .ToListAsync();
-
-            return softwareForAccountAndDevice;
-        }
-            [HttpGet("GetSoftwareByReport/Type")]
-            public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwareByReport(string reportType)
+            if (!lst.Any())
             {
-                try
-                {
-                    // Truy vấn danh sách Software dựa trên ReportId
-                    var softwareList = await _context.Softwares
-                        .Where(s => s.Reports.Any(r => r.Type.ToLower() == reportType.ToLower()))
-                        .Select(s => new SoftwareDto
-                        {
-                            SoftwareId = s.SoftwareId,
-                            AccId = s.AccId,
-                            Name = s.Name,
-                            Publisher = s.Publisher,
-                            Version = s.Version,
-                            Release = s.Release,
-                            Type = s.Type,
-                            Os = s.Os,
-                            Description = s.Description,
-                            Download = s.Download,
-                            Docs = s.Docs,
-                            Status = s.Status
-                        })
-                        .ToListAsync();
-
-                    return Ok(softwareList);
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(500, "Đã xảy ra lỗi: " + ex.Message);
-                }
+                return NotFound();
             }
-        [HttpGet("GetSoftware/{deviceId}")]
-        public async Task<ActionResult<IEnumerable<SoftwareDto>>> GetSoftwareForDevice(int deviceId)
+            return lst;
+        }
+
+        [HttpGet("list_Softwares_by_Asset/{id}")]
+        public async Task<ActionResult<IEnumerable<SoftwareListDto>>> GetSoftwaresByAssetAsync(int id)
         {
-            var softwareForAccountAndDevice = await _context.Softwares        
-                .Where(software => software.DeviceSoftwares.Any(ds => ds.DeviceId == deviceId))
-                .Select(software => new SoftwareDto
+            var lst = await _context.AssetSoftwares
+                .Where(item => item.AssetId == id)
+                .OrderBy(item => item.Status)
+                .OrderBy(item => item.InstallDate)
+                .Select(item => new SoftwareListDto
                 {
-                    SoftwareId = software.SoftwareId,
-                    AccId = software.AccId,
-                    Name = software.Name,
-                    Publisher = software.Publisher,
-                    Version = software.Version,
-                    Release = software.Release,
-                    Type = software.Type,
-                    Os = software.Os,
-                    Description = software.Description,
-                    Docs = software.Docs,
-                    Download = software.Download,
-                    Status = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).Status,
-                    // Lấy InstallDate từ bảng liên quan
-                    InstallDate = software.DeviceSoftwares.FirstOrDefault(ds => ds.DeviceId == deviceId).InstallDate.ToString("dd/MM/yyyy")
+                    SoftwareId = item.Software.SoftwareId,
+                    Name = item.Software.Name,
+                    Publisher = item.Software.Publisher,
+                    Version = item.Software.Version,
+                    Release = item.Software.Release,
+                    Os = item.Software.Os,
+                    Type = item.Software.Type,
+                    InstallDate = item.InstallDate.HasValue ? item.InstallDate.Value.ToString("dd/MM/yyyy") : null,
+                    AssetSoftwareStatus = item.Status
                 })
                 .ToListAsync();
 
-            return softwareForAccountAndDevice;
-        }
+            if (!lst.Any())
+            {
+                return NotFound();
+            }
 
+            return lst;
+        }
+        [HttpPost("CreateSoftware")]
+        public async Task<IActionResult> CreateSoftwareAsync([FromBody] SoftwareCreateDto item)
+        {      
+                var tmp = new Software
+                {
+                    Name = item.Name,
+                    Publisher = item.Publisher,
+                    Version = item.Version,
+                    Release = item.Release,
+                    Type = item.Type,
+                    Os = item.Os,
+                    Status = item.Status
+                };
+                _context.Softwares.Add(tmp);
+                await _context.SaveChangesAsync();
+                return Ok();                        
+        }
+        [HttpPut("UpdateSoftware/{id}")]
+        public async Task<IActionResult> UpdateSoftwareAsync(int id, [FromBody] SoftwareUpdateDto updatedSoftwareDto)
+        {
+            if (updatedSoftwareDto == null)
+            {
+                return NotFound();
+            }
+            var updatedSoftware = await _context.Softwares.FindAsync(id);
+
+            if (updatedSoftware == null)
+            {
+                return NotFound();
+            }
+
+            if (updatedSoftwareDto.Name != null && updatedSoftwareDto.Name != "string")
+            {
+                updatedSoftware.Name = updatedSoftwareDto.Name;
+            }
+
+            if (updatedSoftwareDto.Publisher != null && updatedSoftwareDto.Publisher != "string")
+            {
+                updatedSoftware.Publisher = updatedSoftwareDto.Publisher;
+            }
+
+            if (updatedSoftwareDto.Version != null && updatedSoftwareDto.Version != "string")
+            {
+                updatedSoftware.Version = updatedSoftwareDto.Version;
+            }
+
+            if (updatedSoftwareDto.Release != null && updatedSoftwareDto.Release != "string")
+            {
+                updatedSoftware.Release = updatedSoftwareDto.Release;
+            }
+
+            if (updatedSoftwareDto.Type != null && updatedSoftwareDto.Type != "string")
+            {
+                updatedSoftware.Type = updatedSoftwareDto.Type;
+            }
+
+            if (updatedSoftwareDto.Os != null && updatedSoftwareDto.Os != "string")
+            {
+                updatedSoftware.Os = updatedSoftwareDto.Os;
+            }
+
+            if (updatedSoftwareDto.Status != 0)
+            {
+                updatedSoftware.Status = updatedSoftwareDto.Status;
+            }
+            _context.Softwares.Update(updatedSoftware);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+        //[HttpDelete("DeleteSoftwareWith_key")]
+        //public async Task<IActionResult> DeleteSoftwareAsync(int id)
+        //{
+        //    var item = await _context.Softwares.FindAsync(id);
+
+        //    if (item != null)
+        //    {
+        //        item.Status = 3;
+
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    return Ok("Delete Software successfully!");
+        //}
     }
 }

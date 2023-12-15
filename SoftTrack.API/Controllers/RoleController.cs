@@ -1,16 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using SoftTrack.Application.DTO;
-using SoftTrack.Application.Interface;
-using SoftTrack.Application.Service;
 using SoftTrack.Domain;
-using System.Data;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+
 
 namespace SoftTrack.API.Controllers
 {
@@ -18,9 +10,9 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly soft_track4Context _context;   
+        private readonly soft_track5Context _context;   
 
-        public RoleController(soft_track4Context context)
+        public RoleController(soft_track5Context context)
         {
             _context = context;  
         }
@@ -29,8 +21,12 @@ namespace SoftTrack.API.Controllers
         [HttpGet("listRole")]
         public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
         {
-            var roles = await _context.Roles.ToListAsync();
-       
+            var roles = await _context.Roles        
+                .ToListAsync();
+            if (!roles.Any())
+            {
+                return NotFound();
+            }
             return Ok(roles);
         }
     }

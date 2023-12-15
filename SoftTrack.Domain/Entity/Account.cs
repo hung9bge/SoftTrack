@@ -14,7 +14,7 @@ namespace SoftTrack.Domain
         public int RoleId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public int Staus { get; set; }
+        public int Status { get; set; }
 
         public virtual Role Role { get; set; }
         public virtual ICollection<Application> Applications { get; set; }

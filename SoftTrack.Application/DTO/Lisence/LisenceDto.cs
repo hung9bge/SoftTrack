@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SoftTrack.Application.DTO
+namespace SoftTrack.Manage.DTO
 {
     public class LicenseDto
     {
-        public int LicenseId { get; set; }
-        public string LicenseKey { get; set; }
-        public string StartDate { get; set; }
-        public int Time { get; set; }
-        public int? Status { get; set; }
+        public int AssetId { get; set; }
         public int SoftwareId { get; set; }
+        public String? InstallDate { get; set; }
+        public int Status_AssetSoftware { get; set; }
+        public string LicenseKey { get; set; }
+        public String? Start_Date { get; set; }
+        public int? Time { get; set; }
+        public int Status_License { get; set; }
 
     }
 }

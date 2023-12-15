@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace SoftTrack.Application.DTO
+namespace SoftTrack.Manage.DTO
 {
     public class AccountDto
     {
@@ -13,7 +12,7 @@ namespace SoftTrack.Application.DTO
         public int AccId { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public bool Status { get; set; }
+        public int Status { get; set; }
         public int RoleId { get; set; }
         public string RoleName { get; set; }
         public string token { get; set; }

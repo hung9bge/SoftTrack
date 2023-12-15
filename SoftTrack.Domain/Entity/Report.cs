@@ -11,13 +11,17 @@ namespace SoftTrack.Domain
         }
 
         public int ReportId { get; set; }
+        public int CreatorID { get; set; }
+        public int? UpdaterID { get; set; }
         public int AppId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public string Type { get; set; }
-        public DateTime? StartDate { get; set; }
+        public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public DateTime? ClosedDate { get; set; }
         public int Status { get; set; }
+       
 
         public virtual Application App { get; set; }
         public virtual ICollection<Image> Images { get; set; }

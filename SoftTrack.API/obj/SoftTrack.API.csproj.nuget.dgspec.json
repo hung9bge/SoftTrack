@@ -29,11 +29,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj": {
-                "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj"
-              },
-              "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj": {
-                "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj"
+              "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj": {
+                "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj"
               }
             }
           }
@@ -48,6 +45,10 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "MSTest.TestFramework": {
+              "target": "Package",
+              "version": "[3.1.1, )"
+            },
             "Microsoft.AspNetCore.Cors": {
               "target": "Package",
               "version": "[2.2.0, )"
@@ -55,10 +56,6 @@
             "Microsoft.AspNetCore.OData": {
               "target": "Package",
               "version": "[8.2.0, )"
-            },
-            "MimeKit": {
-              "target": "Package",
-              "version": "[4.2.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -88,12 +85,12 @@
         }
       }
     },
-    "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj": {
+    "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj",
-        "projectName": "SoftTrack.Application",
-        "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Application.csproj",
+        "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj",
+        "projectName": "SoftTrack.Manage",
+        "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\SoftTrack.Manage.csproj",
         "packagesPath": "C:\\Users\\hung.lemanh1\\.nuget\\packages\\",
         "outputPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Application\\obj\\",
         "projectStyle": "PackageReference",
@@ -220,65 +217,6 @@
               "version": "[7.0.0, )"
             }
           },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj",
-        "projectName": "SoftTrack.Infrastructure",
-        "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\SoftTrack.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\hung.lemanh1\\.nuget\\packages\\",
-        "outputPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Infrastructure\\obj\\",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "C:\\Users\\hung.lemanh1\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net6.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net6.0": {
-            "targetAlias": "net6.0",
-            "projectReferences": {
-              "D:\\Do_an\\SoftTrack\\SoftTrack.Domain\\SoftTrack.Domain.csproj": {
-                "projectPath": "D:\\Do_an\\SoftTrack\\SoftTrack.Domain\\SoftTrack.Domain.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "net6.0": {
-          "targetAlias": "net6.0",
           "imports": [
             "net461",
             "net462",
