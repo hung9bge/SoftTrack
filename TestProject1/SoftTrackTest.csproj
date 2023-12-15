@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="LibraryControllerTest\" />
     <Folder Include="LicenseControllerTest\" />
-    <Folder Include="ReportControllerTest\" />
     <Folder Include="RoleControllerTest\" />
     <Folder Include="SoftwareControllerTest\" />
     <Folder Include="UploadFileControllerTest\" />

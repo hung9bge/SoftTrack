@@ -130,7 +130,7 @@ namespace SoftTrack.API.Controllers
         }
 
         [HttpGet("GetReportsForAppAndType/{AppId}/{type}")]
-        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForSoftware(int AppId, string type)
+        public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForAppAndType(int AppId, string type)
         {
             var reportsForSoftware = await _context.Reports
                 .Where(report => report.AppId == AppId && report.Type == type)
@@ -172,12 +172,17 @@ namespace SoftTrack.API.Controllers
             {
                 if (reportModel.AppIds == null || !reportModel.AppIds.Any())
             {
-                return BadRequest("Danh sách ID ứng dụng không hợp lệ.");
+                return NotFound();
             }
 
             string dateString = DateTime.Now.ToString("dd/MM/yyyy");
                 foreach (var appId in reportModel.AppIds)
                 {
+                    var InputApp = await _context.Applications.FindAsync(appId);
+                    if (InputApp == null)
+                    {
+                        return NotFound();
+                    }
                     var newReport = new Report
                     {
                         AppId = appId,
@@ -252,9 +257,9 @@ namespace SoftTrack.API.Controllers
                         }
                     }                
                 }
-                return Ok("Report đã được thêm thành công.");
+                return Ok();
             }
-            return BadRequest(ModelState);
+            return NotFound();
         }
         private async Task<string> UploadImage(string path, IFormFile file)
         {
@@ -275,17 +280,23 @@ namespace SoftTrack.API.Controllers
             string dateString = DateTime.Now.ToString("dd/MM/yyyy");
             // lấy dữ liệu report cần update
             var existingReport = await _context.Reports.FindAsync(id);
+            if (existingReport == null)
+            {
+                return NotFound();
+            }
             // lấy dữ liệu accpunt người tạo report 
-            var account_CR_report = await _context.Accounts.FindAsync(existingReport.CreatorID);
-            // lấy dữ liệu accpunt người update report 
+            var account_CR_report = await _context.Accounts.FindAsync(existingReport.CreatorID);          
+            // lấy dữ liệu accpunt người update có trong report         
             var account_UP_report = await _context.Accounts.FindAsync(existingReport.UpdaterID);
+            // lấy dữ liệu accpunt người update report         
+            var account_UP_newreport = await _context.Accounts.FindAsync(reportModel.UpdaterID);
             //lấy account quản lý app
             var account = _context.Applications
              .Where(app => app.AppId == existingReport.AppId)
              .Select(app => app.Acc)
              .FirstOrDefault();
-
-            if (existingReport == null)
+         
+            if (account_CR_report == null || account_UP_newreport == null || account == null )
             {
                 return NotFound();
             }
@@ -334,7 +345,7 @@ namespace SoftTrack.API.Controllers
                 if (existingReport.Status == 1)
                 {
                     existingReport.ClosedDate = null;
-                }
+                }   
                 //lấy account người update report 
                 var accountsend = await _context.Accounts.FindAsync(reportModel.UpdaterID);
                 //lấy thông tin app trong report
@@ -490,7 +501,7 @@ namespace SoftTrack.API.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return Ok("Report đã được cập nhật thành công.");
+            return Ok();
             
         }
         // DELETE: api/Reports/5
