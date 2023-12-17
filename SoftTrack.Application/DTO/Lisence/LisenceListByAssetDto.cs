@@ -9,10 +9,10 @@ namespace SoftTrack.Manage.DTO
     public class LisenceListByAssetDto
     {
         public int SoftwareId { get; set; }
-        public int LicenseId { get; set; }
-        public string LicenseKey { get; set; }
+        public int? LicenseId { get; set; }
+        public string? LicenseKey { get; set; }
         public String? Start_Date { get; set; }
         public int? Time { get; set; }
-        public int Status { get; set; }
+        public int? Status { get; set; }
     }
 }

@@ -29,7 +29,6 @@
     <Folder Include="SoftwareControllerTest\" />
     <Folder Include="UploadFileControllerTest\" />
     <Folder Include="ImageControllerTest\" />
-    <Folder Include="AssetControllerTest\" />
   </ItemGroup>
 
 </Project>
