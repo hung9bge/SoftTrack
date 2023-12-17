@@ -12,12 +12,6 @@ namespace SoftTrack.API.Controllers
         private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
         public static IWebHostEnvironment _webHostEnvironment;
-        public ImageController(IConfiguration configuration, soft_track5Context context, IWebHostEnvironment webHostEnvironment)
-        {
-            _configuration = configuration;
-            _context = context;
-            _webHostEnvironment = webHostEnvironment;
-        }
 
         public ImageController(IConfiguration configuration, soft_track5Context context)
         {
@@ -58,7 +52,7 @@ namespace SoftTrack.API.Controllers
                 return NotFound();
             }
 
-            return Ok();
+            return lst;
         }
 
         //[HttpGet("{filename}")]
