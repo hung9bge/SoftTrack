@@ -210,7 +210,7 @@ namespace SoftTrack.API.Controllers
                    .Select(app => app.Acc)
                    .FirstOrDefault();
                     //lấy email người tạo report quản lý app
-                    //var accountsend = await _context.Accounts.FindAsync(newReport.AccId);
+                    var accountsend = await _context.Accounts.FindAsync(newReport.CreatorID);
                     var appPO = await _context.Applications.FindAsync(newReport.AppId);
                     // Sử dụng thư viện gửi email để gửi thông báo
                     var smtpClient = new SmtpClient
@@ -219,16 +219,24 @@ namespace SoftTrack.API.Controllers
                         Port = 587, // Điền cổng của máy chủ SMTP
                         Credentials = new NetworkCredential("softtrackfpt@gmail.com", "aaje cjac hacp psjp"), // Thông tin xác thực tài khoản Gmail
                         EnableSsl = true // Sử dụng SSL
-                    };  
+                    };
 
                     var mailMessage = new MailMessage
                     {
                         From = new MailAddress("softtrackfpt@gmail.com"),
-                        Subject = "Báo cáo lỗi "+ newReport.Title+"!",
-                        Body = "<html><body><h1>Báo cáo lỗi</h1><p>"+ "Tên app:" + appPO.Name +
-                        "Thông tin lỗi:"+newReport.Description + "</p></body></html>",
+                        Subject = "Báo cáo lỗi " + newReport.Title + "!",
+                        Body = "<html><body style='font-family: Arial, sans-serif;'>" +
+                        "<h1 style='color: red;'>Thông tin chi tiết lỗi</h1>" +
+                        "<p><strong>Tên app:</strong> " + appPO.Name + "</p>" +
+                        "<p><strong>Người tạo:</strong> " + accountsend.Email + "</p>" +
+                        "<p><strong>Thông tin lỗi:</strong> " + newReport.Description + "</p>" +
+                        "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
+                        "<hr/>" +
+                        "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
+                        "</body></html>",
                         IsBodyHtml = true // Đánh dấu email có chứa mã HTML
-                    };  
+                    };
+
                     mailMessage.To.Add(account.Email);
                     await smtpClient.SendMailAsync(mailMessage);
 
