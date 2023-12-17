@@ -10,11 +10,17 @@ namespace SoftTrack.API.Controllers
     [ApiController]
     public class RoleController : ControllerBase
     {
-        private readonly soft_track5Context _context;   
+        private readonly soft_track5Context _context;
+        private readonly IConfiguration _configuration;
 
         public RoleController(soft_track5Context context)
         {
-            _context = context;  
+            _context = context;
+        }
+
+        public interface IRoleController
+        {
+            Task<IEnumerable<Role>> GetRoles();
         }
 
         // GET: api/roles

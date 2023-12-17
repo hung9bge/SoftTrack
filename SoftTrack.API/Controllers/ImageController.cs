@@ -18,6 +18,13 @@ namespace SoftTrack.API.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
+
+        public ImageController(IConfiguration configuration, soft_track5Context context)
+        {
+            _configuration = configuration;
+            _context = context;
+        }
+
         //[HttpGet("ListImages")]
         //public async Task<ActionResult<IEnumerable<ImageDto>>> ListAllImagesAsync()
         //{

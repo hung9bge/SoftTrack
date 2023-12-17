@@ -12,6 +12,10 @@ namespace SoftTrack.API.Controllers
     {
         private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
+        public interface IAssetController
+        {
+            Task<IEnumerable<AssetDto>> ListAllAssetsAsync();
+        }
         public AssetController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;

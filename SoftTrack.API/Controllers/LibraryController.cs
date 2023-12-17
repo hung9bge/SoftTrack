@@ -13,6 +13,10 @@ namespace SoftTrack.API.Controllers
     {
         private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
+        public interface ILibraryController
+        {
+            Task<IEnumerable<LibraryDto>> ListAllLibrariesAsync();
+        }
 
         public LibraryController(IConfiguration configuration, soft_track5Context context)
         {

@@ -12,6 +12,10 @@ namespace SoftTrack.API.Controllers
     {
         private readonly soft_track5Context _context;
         private readonly IConfiguration _configuration;
+        public interface ILicenseController
+        {
+            Task<IEnumerable<LicenseDto>> ListAllLicensesAsync();
+        }
         public LicenseController(IConfiguration configuration, soft_track5Context context)
         {
             _configuration = configuration;
