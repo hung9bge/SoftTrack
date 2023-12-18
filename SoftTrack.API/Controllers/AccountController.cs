@@ -69,13 +69,11 @@ namespace SoftTrack.API.Controllers
                     RoleName = account.Role.Name
                 })
                 .ToListAsync();
-
             if (accounts == null)
             {
                 //Không tìm thấy tài khoản trùng khớp
                 return NotFound();
             }
-
             return accounts;
         }
         [HttpPost("login")]
@@ -134,11 +132,9 @@ namespace SoftTrack.API.Controllers
                 // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
                 accountDto.Email += "@fpt.edu.vn";
             }
-
             // Sử dụng Entity Framework Core để kiểm tra sự tồn tại của tài khoản
-            var existingAccount = _context.Accounts
-                .Include(a => a.Role)
-                .FirstOrDefault(a => a.Email == accountDto.Email && a.Role.RoleId == accountDto.RoleId);
+            var existingAccount = _context.Accounts            
+                .FirstOrDefault(a => a.Email == accountDto.Email);
 
             if (existingAccount != null)
             {
