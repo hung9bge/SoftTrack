@@ -83,7 +83,6 @@ namespace SoftTrack.API.Controllers
             return assetDtos;
         }
 
-
         [HttpGet("list_Asset_by_App/{key}")]
         public async Task<ActionResult<IEnumerable<AssetDto>>> GetAssetsByAppAsync(int key)
         {
@@ -232,8 +231,6 @@ namespace SoftTrack.API.Controllers
             {
                 updatedAsset.Status = updatedAssetDto.Status;
             }
-
-            // Gán các giá trị khác tương ứng từ updatedAssetDto
 
             // Lưu thay đổi vào cơ sở dữ liệu
             _context.Assets.Update(updatedAsset);

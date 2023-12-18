@@ -212,6 +212,31 @@ namespace SoftTrack.API.Controllers
                     }
                     _context.Reports.Add(newReport);
                     await _context.SaveChangesAsync();
+                    if (reportModel.Images != null)
+                    {
+                        string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                        if (!Directory.Exists(path))
+                        {
+                            Directory.CreateDirectory(path);
+                        }
+
+                        foreach (var file in reportModel.Images)
+                        {
+                            if (file.FileName == null)
+                                continue;
+                            var img = new Image()
+                            {
+                                ReportId = newReport.ReportId,
+                                Image1 = await UploadImage(path, file)
+                            };
+                            if (img != null)
+                            {
+                                _context.Images.Add(img);
+
+                            }
+                        }
+                        await _context.SaveChangesAsync();
+                    }
                     //lấy email PO quản lý app
                     var account = _context.Applications
                    .Where(app => app.AppId == newReport.AppId)
@@ -244,35 +269,44 @@ namespace SoftTrack.API.Controllers
                         "</body></html>",
                         IsBodyHtml = true // Đánh dấu email có chứa mã HTML
                     };
-
+                    
+                    foreach (var img in _context.Images.Where(i => i.ReportId == newReport.ReportId))
+                    {
+                     string path = "Image/" + img.Image1;
+                        Attachment attachment = new Attachment(path);
+                        mailMessage.Attachments.Add(attachment);
+                    }
                     mailMessage.To.Add(account.Email);
                     await smtpClient.SendMailAsync(mailMessage);
 
-                    if (reportModel.Images != null)
-                    {
-                        string path = _webHostEnvironment.WebRootPath + "\\images\\";
-                        if (!Directory.Exists(path))
-                        {
-                            Directory.CreateDirectory(path);
-                        }
+              
 
-                        foreach (var file in reportModel.Images)
-                        {
-                            if (file.FileName == null)
-                                continue;
-                            var img = new Image()
-                            {
-                                ReportId = newReport.ReportId,
-                                Image1 = await UploadImage(path, file)
-                            };
-                            if (img != null)
-                            {
-                                _context.Images.Add(img);
 
-                            }
-                        }
-                        await _context.SaveChangesAsync();
-                    }                
+                    //if (reportModel.Images != null)
+                    //{
+                    //    string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                    //    if (!Directory.Exists(path))
+                    //    {
+                    //        Directory.CreateDirectory(path);
+                    //    }
+
+                    //    foreach (var file in reportModel.Images)
+                    //    {
+                    //        if (file.FileName == null)
+                    //            continue;
+                    //        var img = new Image()
+                    //        {
+                    //            ReportId = newReport.ReportId,
+                    //            Image1 = await UploadImage(path, file)
+                    //        };
+                    //        if (img != null)
+                    //        {
+                    //            _context.Images.Add(img);
+
+                    //        }
+                    //    }
+                    //    await _context.SaveChangesAsync();
+                    //}                
                 }
                 return Ok();
             }
@@ -280,8 +314,8 @@ namespace SoftTrack.API.Controllers
         }
         private async Task<string> UploadImage(string path, IFormFile file)
         {
-            string filename = Guid.NewGuid().ToString() + "_" + file.FileName;
-            path += filename;
+            string filename = /*Guid.NewGuid().ToString() + "_" +*/ file.FileName;
+            path = file.FileName;
 
             await file.CopyToAsync(new FileStream(path, FileMode.Create));
 
@@ -391,8 +425,13 @@ namespace SoftTrack.API.Controllers
                         "</body></html>",
                     IsBodyHtml = true // Đánh dấu email có chứa mã HTML
                 };
-                         
-                if(account_UP_report == null)
+                foreach (var img in _context.Images.Where(i => i.ReportId == existingReport.ReportId))
+                {
+                    string path = "Image/" + img.Image1;
+                    Attachment attachment = new Attachment(path);
+                    mailMessage.Attachments.Add(attachment);
+                }
+                if (account_UP_report == null)
                 {
                     //TH: nếu acc update khác acc PO và acc update khác acc tạo report 
                     if (accountsend.Email != account.Email && accountsend.Email != account_CR_report.Email )
@@ -456,7 +495,7 @@ namespace SoftTrack.API.Controllers
                 {
                     existingReport.UpdaterID = existingReport.CreatorID;
                 }
-
+                mailMessage.To.Add(account.Email);
                 await smtpClient.SendMailAsync(mailMessage);
             }
             else
@@ -469,9 +508,7 @@ namespace SoftTrack.API.Controllers
                 if (existingReport.CreatorID == reportModel.UpdaterID)
                 {
                     existingReport.UpdaterID = existingReport.CreatorID;
-                }
-             
-
+                }       
             }
             _context.Reports.Update(existingReport);
             await _context.SaveChangesAsync();

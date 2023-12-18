@@ -29,4 +29,8 @@
     <ProjectReference Include="..\SoftTrack.Application\SoftTrack.Manage.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Image\" />
+  </ItemGroup>
+
 </Project>
