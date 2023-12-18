@@ -50,7 +50,7 @@ namespace SoftTrack.API.Controllers
         public async Task<ActionResult<IEnumerable<LisenceListByAssetDto>>> GetLicensesByAssetAsync(int id)
         {
             var lst = await _context.AssetSoftwares
-                .Where(item => item.AssetId == id)
+                 .Where(item => item.AssetId == id && item.LicenseId != null)
                  .OrderBy(l => l.Status)
                 .OrderBy(l => l.InstallDate)
                 .Select(item => new LisenceListByAssetDto

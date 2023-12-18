@@ -337,10 +337,16 @@ namespace SoftTrack.API.Controllers
             }
 
             if (!string.IsNullOrEmpty(reportModel.End_Date))
-            {
+            {                             
                 if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
                 {
-                    existingReport.EndDate = parsedDate;
+                    if (parsedDate > DateTime.Now) { 
+                        existingReport.EndDate = parsedDate;
+                    }
+                    else
+                    {
+                        return NotFound();
+                    }
                 }
             }
 
@@ -369,11 +375,18 @@ namespace SoftTrack.API.Controllers
                 };
 
                 var mailMessage = new MailMessage
-                {
-                    From = new MailAddress(accountsend.Email),
+                {             
+                         From = new MailAddress("softtrackfpt@gmail.com"),
                     Subject = "Báo cáo lỗi " + existingReport.Title + "!",
-                    Body = "<html><body><h1>Update báo cáo lỗi</h1><p>" + "Tên app:" + appPO.Name +
-                    "Thông tin lỗi:" + existingReport.Description + "</p></body></html>",
+                    Body = "<html><body style='font-family: Arial, sans-serif;'>" +
+                        "<h1 style='color: red;'>Thông tin chi tiết lỗi</h1>" +
+                        "<p><strong>Tên app:</strong> " + account.Name + "</p>" +
+                        "<p><strong>Người update:</strong> " + accountsend.Email + "</p>" +
+                        "<p><strong>Thông tin lỗi:</strong> " + existingReport.Description + "</p>" +
+                        "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
+                        "<hr/>" +
+                        "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
+                        "</body></html>",
                     IsBodyHtml = true // Đánh dấu email có chứa mã HTML
                 };
                          
