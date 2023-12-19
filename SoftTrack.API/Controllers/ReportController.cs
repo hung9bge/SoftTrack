@@ -272,7 +272,7 @@ namespace SoftTrack.API.Controllers
                     
                     foreach (var img in _context.Images.Where(i => i.ReportId == newReport.ReportId))
                     {
-                     string path = "Image/" + img.Image1;
+                     string path = _webHostEnvironment.WebRootPath + "\\images\\" + img.Image1;
                         Attachment attachment = new Attachment(path);
                         mailMessage.Attachments.Add(attachment);
                         //using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -301,8 +301,8 @@ namespace SoftTrack.API.Controllers
         }
         private async Task<string> UploadImage(string path, IFormFile file)
         {
-            string filename = /*Guid.NewGuid().ToString() + "_" +*/ file.FileName;
-            path = "Image/" + file.FileName;       
+            string filename = Guid.NewGuid().ToString() + "_" + file.FileName;
+            path += filename;       
             using (var stream = new FileStream(path, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
@@ -415,7 +415,7 @@ namespace SoftTrack.API.Controllers
                 };
                 foreach (var img in _context.Images.Where(i => i.ReportId == existingReport.ReportId))
                 {
-                    string path = "Image/" + img.Image1;
+                    string path = _webHostEnvironment.WebRootPath + "\\images\\" + img.Image1;
                     Attachment attachment = new Attachment(path);
                     mailMessage.Attachments.Add(attachment);
                     //using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
