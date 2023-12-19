@@ -275,38 +275,25 @@ namespace SoftTrack.API.Controllers
                      string path = "Image/" + img.Image1;
                         Attachment attachment = new Attachment(path);
                         mailMessage.Attachments.Add(attachment);
+                        //using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        //{
+                        //    Attachment attachment = new Attachment(fileStream, Path.GetFileName(path));
+                        //    mailMessage.Attachments.Add(attachment);
+
                     }
                     mailMessage.To.Add(account.Email);
-                    await smtpClient.SendMailAsync(mailMessage);
-
-              
-
-
-                    //if (reportModel.Images != null)
-                    //{
-                    //    string path = _webHostEnvironment.WebRootPath + "\\images\\";
-                    //    if (!Directory.Exists(path))
-                    //    {
-                    //        Directory.CreateDirectory(path);
-                    //    }
-
-                    //    foreach (var file in reportModel.Images)
-                    //    {
-                    //        if (file.FileName == null)
-                    //            continue;
-                    //        var img = new Image()
-                    //        {
-                    //            ReportId = newReport.ReportId,
-                    //            Image1 = await UploadImage(path, file)
-                    //        };
-                    //        if (img != null)
-                    //        {
-                    //            _context.Images.Add(img);
-
-                    //        }
-                    //    }
-                    //    await _context.SaveChangesAsync();
-                    //}                
+                    try
+                    {
+                        await smtpClient.SendMailAsync(mailMessage);
+                    }
+                    finally
+                    {
+                        // Đóng tất cả các tệp tin đính kèm
+                        foreach (Attachment attachment in mailMessage.Attachments)
+                        {
+                            attachment.Dispose();
+                        }
+                    }
                 }
                 return Ok();
             }
@@ -315,10 +302,11 @@ namespace SoftTrack.API.Controllers
         private async Task<string> UploadImage(string path, IFormFile file)
         {
             string filename = /*Guid.NewGuid().ToString() + "_" +*/ file.FileName;
-            path = file.FileName;
-
-            await file.CopyToAsync(new FileStream(path, FileMode.Create));
-
+            path = "Image/" + file.FileName;       
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
             return filename;
         }
 
@@ -430,7 +418,14 @@ namespace SoftTrack.API.Controllers
                     string path = "Image/" + img.Image1;
                     Attachment attachment = new Attachment(path);
                     mailMessage.Attachments.Add(attachment);
+                    //using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    //{
+                    //    Attachment attachment = new Attachment(fileStream, Path.GetFileName(path));
+                    //    mailMessage.Attachments.Add(attachment);
+
                 }
+                mailMessage.To.Add(account.Email);
+           
                 if (account_UP_report == null)
                 {
                     //TH: nếu acc update khác acc PO và acc update khác acc tạo report 
@@ -496,7 +491,18 @@ namespace SoftTrack.API.Controllers
                     existingReport.UpdaterID = existingReport.CreatorID;
                 }
                 mailMessage.To.Add(account.Email);
-                await smtpClient.SendMailAsync(mailMessage);
+                try
+                {
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+                finally
+                {
+                    // Đóng tất cả các tệp tin đính kèm
+                    foreach (Attachment attachment in mailMessage.Attachments)
+                    {
+                        attachment.Dispose();
+                    }
+                }
             }
             else
             {

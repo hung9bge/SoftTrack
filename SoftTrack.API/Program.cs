@@ -30,7 +30,7 @@ namespace SoftTrack.API
             }));
 
             // Mapper
-            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+      
 
             builder.Services.AddDbContext<soft_track5Context>(op => op.UseSqlServer(builder.Configuration.GetConnectionString("MyConnectionString")));
 
