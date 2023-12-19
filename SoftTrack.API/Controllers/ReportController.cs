@@ -396,7 +396,19 @@ namespace SoftTrack.API.Controllers
                 }
             }
 
-            
+            if (reportModel.Status != 0 && existingReport.Status != reportModel.Status)
+            {
+                existingReport.Status = reportModel.Status;
+                if (existingReport.Status == 2)
+                {
+                    existingReport.ClosedDate = DateTime.Now;
+                }
+                if (existingReport.Status == 1)
+                {
+                    existingReport.ClosedDate = null;
+                }
+            }
+
             _context.Reports.Update(existingReport);
             await _context.SaveChangesAsync();
 
