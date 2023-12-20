@@ -390,9 +390,9 @@ namespace SoftTrack.API.Controllers
 
             if (!string.IsNullOrEmpty(reportModel.End_Date))
             {                             
-                if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
                 {                  
-                 existingReport.EndDate = parsedDate;                                   
+                 existingReport.EndDate = parsedDate1;                                   
                 }
             }
 
@@ -636,6 +636,8 @@ namespace SoftTrack.API.Controllers
                 }
             }
 
+            _context.Reports.Update(existingReport);
+            await _context.SaveChangesAsync();
             return Ok();
             
         }
