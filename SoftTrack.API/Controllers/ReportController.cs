@@ -396,30 +396,29 @@ namespace SoftTrack.API.Controllers
                 }
             }
 
-            var lst = await _context.Images
-                .Where(item => item.ReportId == id)
-                .Select(item => new Image
-                {
-                    ImageId = item.ImageId,
-                    ReportId = item.ReportId,
-                    Image1 = item.Image1
-                })
-                .ToListAsync();
-
-            if (lst.Any())
-            {
-                foreach (var item in lst)
-                {
-                    if (item != null)
-                    {
-                        _context.Images.Remove(item);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-            }
-
             if (reportModel.Images != null)
             {
+                var lst = await _context.Images
+                    .Where(item => item.ReportId == id)
+                    .Select(item => new Image
+                    {
+                        ImageId = item.ImageId,
+                        ReportId = item.ReportId,
+                        Image1 = item.Image1
+                    })
+                    .ToListAsync();
+
+                if (lst.Any())
+                {
+                    foreach (var item in lst)
+                    {
+                        if (item != null)
+                        {
+                            _context.Images.Remove(item);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
                 string path = _webHostEnvironment.WebRootPath + "\\images\\";
                 if (!Directory.Exists(path))
                 {
