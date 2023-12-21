@@ -132,10 +132,12 @@ namespace SoftTrack.API.Controllers
         [HttpGet("GetReportsForAppAndType/{AppId}/{type}")]
         public async Task<ActionResult<IEnumerable<ReportDto>>> GetReportsForAppAndType(int AppId, string type)
         {
-            var reportsForSoftware = await _context.Reports
-                .Where(report => report.AppId == AppId && report.Type == type)
-                  .OrderBy(reports => reports.Status)
-               .ThenBy(reports => reports.StartDate)
+            List<ReportDto> reports = new List<ReportDto>();
+
+            //status = unsolved => sort by createdate ->
+            List<ReportDto> lst1 = await _context.Reports
+                .Where(report => report.AppId == AppId && report.Type == type && report.Status == 1)
+                .OrderBy(reports => reports.StartDate)
                 .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
@@ -148,7 +150,7 @@ namespace SoftTrack.API.Controllers
                             .Where(acc => acc.AccId == report.UpdaterID)
                             .Select(acc => acc.Email)
                             .FirstOrDefault(),
-                    Title = report.Title,   
+                    Title = report.Title,
                     Description = report.Description,
                     Type = report.Type,
                     Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
@@ -156,13 +158,74 @@ namespace SoftTrack.API.Controllers
                     ClosedDate = report.ClosedDate.HasValue ? report.ClosedDate.Value.ToString("dd/MM/yyyy") : null,
                     Status = report.Status
 
-                })
-                .ToListAsync();
-            if (!reportsForSoftware.Any())
+                }).ToListAsync();
+
+            //status = solved, cancel, deleted ; closedate != null => sort by closedate <-
+            List<ReportDto> lst2 = await _context.Reports
+                .Where(report => report.AppId == AppId && report.Type == type && report.Status != 1 && report.ClosedDate.HasValue)
+                .OrderBy(report => report.Status)
+                .ThenByDescending(reports => reports.ClosedDate)
+                .Select(report => new ReportDto
+                {
+                    ReportId = report.ReportId,
+                    AppId = report.AppId,
+                    EmailSend = _context.Accounts
+                            .Where(acc => acc.AccId == report.CreatorID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
+                    EmailUpp = _context.Accounts
+                            .Where(acc => acc.AccId == report.UpdaterID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
+                    Title = report.Title,
+                    Description = report.Description,
+                    Type = report.Type,
+                    Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
+                    ClosedDate = report.ClosedDate.HasValue ? report.ClosedDate.Value.ToString("dd/MM/yyyy") : null,
+                    Status = report.Status
+
+                }).ToListAsync();
+
+            //status = solved, cancel, deleted ; closedate == null => sort by startdate <-
+            List<ReportDto> lst3 = await _context.Reports
+                .Where(report => report.AppId == AppId && report.Type == type && report.Status != 1 && !report.ClosedDate.HasValue)
+                .OrderBy(report => report.Status)
+                .ThenByDescending(reports => reports.StartDate)
+                .Select(report => new ReportDto
+                {
+                    ReportId = report.ReportId,
+                    AppId = report.AppId,
+                    EmailSend = _context.Accounts
+                            .Where(acc => acc.AccId == report.CreatorID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
+                    EmailUpp = _context.Accounts
+                            .Where(acc => acc.AccId == report.UpdaterID)
+                            .Select(acc => acc.Email)
+                            .FirstOrDefault(),
+                    Title = report.Title,
+                    Description = report.Description,
+                    Type = report.Type,
+                    Start_Date = report.StartDate.ToString("dd/MM/yyyy"),
+                    End_Date = report.EndDate.HasValue ? report.EndDate.Value.ToString("dd/MM/yyyy") : null,
+                    ClosedDate = report.ClosedDate.HasValue ? report.ClosedDate.Value.ToString("dd/MM/yyyy") : null,
+                    Status = report.Status
+
+                }).ToListAsync();
+
+            if (lst1.Any())
+                reports.AddRange(lst1);
+            if (lst2.Any())
+                reports.AddRange(lst2);
+            if (lst3.Any())
+                reports.AddRange(lst3);
+
+            if (!reports.Any())
             {
                 return NotFound();
             }
-            return reportsForSoftware;
+            return reports;
         }
 
         [HttpPost("CreateReport_appids")]
