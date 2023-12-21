@@ -126,8 +126,6 @@ D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.API.deps.json
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.API.runtimeconfig.json
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.API.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\SoftTrack.API.pdb
-D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\AutoMapper.dll
-D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
 D:\Do_an\SoftTrack\SoftTrack.API\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -111,15 +111,7 @@ namespace SoftTrack.API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            AccountDto response = new()
-            {
-                Name = user.Name,
-                Email = user.Email,
-                AccId = user.AccId,
-                RoleId = user.RoleId,
-                RoleName = user.Role.Name,
-                Status = user.Status,
-            };
+            AccountDto response = new();
 
             response.token = tokenHandler.WriteToken(token);
             return Ok(response);

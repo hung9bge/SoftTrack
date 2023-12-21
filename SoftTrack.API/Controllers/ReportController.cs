@@ -135,7 +135,7 @@ namespace SoftTrack.API.Controllers
             var reportsForSoftware = await _context.Reports
                 .Where(report => report.AppId == AppId && report.Type == type)
                   .OrderBy(reports => reports.Status)
-               .OrderByDescending(reports => reports.StartDate)
+               .ThenBy(reports => reports.StartDate)
                 .Select(report => new ReportDto
                 {
                     ReportId = report.ReportId,
@@ -254,59 +254,68 @@ namespace SoftTrack.API.Controllers
                         EnableSsl = true // Sử dụng SSL
                     };
 
-                    var mailMessage = new MailMessage
+                    MailMessage mailMessage;
+                    if (reportModel.Type == "Issue")
                     {
-                        From = new MailAddress("softtrackfpt@gmail.com"),
-                        Subject = "Báo cáo lỗi " + newReport.Title + "!",
-                        Body = "<html><body style='font-family: Arial, sans-serif;'>" +
-                        "<h1 style='color: red;'>Thông tin chi tiết lỗi</h1>" +
-                        "<p><strong>Tên app:</strong> " + appPO.Name + "</p>" +
-                        "<p><strong>Người tạo:</strong> " + accountsend.Email + "</p>" +
-                        "<p><strong>Thông tin lỗi:</strong> " + newReport.Description + "</p>" +
-                        "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
-                        "<hr/>" +
-                        "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
-                        "</body></html>",
-                        IsBodyHtml = true // Đánh dấu email có chứa mã HTML
-                    };
+                        mailMessage = new MailMessage
+                        {
+                            From = new MailAddress("softtrackfpt@gmail.com"),
+                            Subject = "Báo cáo lỗi " + newReport.Title + "!",
+                            Body = "<html><body style='font-family: Arial, sans-serif;'>" +
+                            "<h1 style='color: red;'>Thông tin chi tiết lỗi</h1>" +
+                            "<p><strong>Tên app:</strong> " + appPO.Name + "</p>" +
+                            "<p><strong>Người tạo:</strong> " + accountsend.Email + "</p>" +
+                            "<p><strong>Mô tả:</strong> " + newReport.Description + "</p>" +
+                            "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
+                            "<hr/>" +
+                            "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
+                            "</body></html>",
+                            IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+                        };
+                    }
+                    else
+                    {
+                        mailMessage = new MailMessage
+                        {
+                            From = new MailAddress("softtrackfpt@gmail.com"),
+                            Subject = "Báo cáo phản hồi về: " + newReport.Title + "!",
+                            Body = "<html><body style='font-family: Arial, sans-serif;'>" +
+                            "<h1 style='color: red;'>Thông tin chi tiết phản hồi </h1>" +
+                            "<p><strong>Tên app:</strong> " + appPO.Name + "</p>" +
+                            "<p><strong>Người tạo:</strong> " + accountsend.Email + "</p>" +
+                            "<p><strong>Mô tả:</strong> " + newReport.Description + "</p>" +
+                            "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
+                            "<hr/>" +
+                            "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
+                            "</body></html>",
+                            IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+                        };
+                    }
                     
                     foreach (var img in _context.Images.Where(i => i.ReportId == newReport.ReportId))
                     {
-                     string path = "Image/" + img.Image1;
+                     string path = _webHostEnvironment.WebRootPath + "\\images\\" + img.Image1;
                         Attachment attachment = new Attachment(path);
                         mailMessage.Attachments.Add(attachment);
+                        //using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                        //{
+                        //    Attachment attachment = new Attachment(fileStream, Path.GetFileName(path));
+                        //    mailMessage.Attachments.Add(attachment);
+
                     }
                     mailMessage.To.Add(account.Email);
-                    await smtpClient.SendMailAsync(mailMessage);
-
-              
-
-
-                    //if (reportModel.Images != null)
-                    //{
-                    //    string path = _webHostEnvironment.WebRootPath + "\\images\\";
-                    //    if (!Directory.Exists(path))
-                    //    {
-                    //        Directory.CreateDirectory(path);
-                    //    }
-
-                    //    foreach (var file in reportModel.Images)
-                    //    {
-                    //        if (file.FileName == null)
-                    //            continue;
-                    //        var img = new Image()
-                    //        {
-                    //            ReportId = newReport.ReportId,
-                    //            Image1 = await UploadImage(path, file)
-                    //        };
-                    //        if (img != null)
-                    //        {
-                    //            _context.Images.Add(img);
-
-                    //        }
-                    //    }
-                    //    await _context.SaveChangesAsync();
-                    //}                
+                    try
+                    {
+                        await smtpClient.SendMailAsync(mailMessage);
+                    }
+                    finally
+                    {
+                        // Đóng tất cả các tệp tin đính kèm
+                        foreach (Attachment attachment in mailMessage.Attachments)
+                        {
+                            attachment.Dispose();
+                        }
+                    }
                 }
                 return Ok();
             }
@@ -314,11 +323,12 @@ namespace SoftTrack.API.Controllers
         }
         private async Task<string> UploadImage(string path, IFormFile file)
         {
-            string filename = /*Guid.NewGuid().ToString() + "_" +*/ file.FileName;
-            path = file.FileName;
-
-            await file.CopyToAsync(new FileStream(path, FileMode.Create));
-
+            string filename = Guid.NewGuid().ToString() + "_" + file.FileName;
+            path += filename;       
+            using (var stream = new FileStream(path, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
             return filename;
         }
 
@@ -380,23 +390,75 @@ namespace SoftTrack.API.Controllers
 
             if (!string.IsNullOrEmpty(reportModel.End_Date))
             {                             
-                if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate))
+                if (DateTime.TryParseExact(reportModel.End_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out var parsedDate1))
                 {                  
-                 existingReport.EndDate = parsedDate;                                   
+                 existingReport.EndDate = parsedDate1;                                   
                 }
+            }
+
+            if (reportModel.Images != null)
+            {
+                var lst = await _context.Images
+                    .Where(item => item.ReportId == id)
+                    .Select(item => new Image
+                    {
+                        ImageId = item.ImageId,
+                        ReportId = item.ReportId,
+                        Image1 = item.Image1
+                    })
+                    .ToListAsync();
+
+                if (lst.Any())
+                {
+                    foreach (var item in lst)
+                    {
+                        if (item != null)
+                        {
+                            _context.Images.Remove(item);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+                string path = _webHostEnvironment.WebRootPath + "\\images\\";
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+
+                foreach (var file in reportModel.Images)
+                {
+                    if (file.FileName == null)
+                        continue;
+                    var img = new Image()
+                    {
+                        ReportId = id,
+                        Image1 = await UploadImage(path, file)
+                    };
+                    if (img != null)
+                    {
+                        _context.Images.Add(img);
+
+                    }
+                }
+
+                await _context.SaveChangesAsync();
             }
 
             if (reportModel.Status != 0 && existingReport.Status != reportModel.Status)
             {
                 existingReport.Status = reportModel.Status;
                 if (existingReport.Status == 2)
-                {                   
-                   existingReport.ClosedDate = DateTime.Now;                
+                {
+                    existingReport.ClosedDate = DateTime.Now;
                 }
                 if (existingReport.Status == 1)
                 {
                     existingReport.ClosedDate = null;
-                }   
+                }
+
+                _context.Reports.Update(existingReport);
+                await _context.SaveChangesAsync();
+
                 //lấy account người update report 
                 var accountsend = await _context.Accounts.FindAsync(reportModel.UpdaterID);
                 //lấy thông tin app trong report
@@ -410,31 +472,78 @@ namespace SoftTrack.API.Controllers
                     EnableSsl = true // Sử dụng SSL
                 };
 
-                var mailMessage = new MailMessage
-                {             
-                         From = new MailAddress("softtrackfpt@gmail.com"),
-                    Subject = "Báo cáo lỗi " + existingReport.Title + "!",
-                    Body = "<html><body style='font-family: Arial, sans-serif;'>" +
-                        "<h1 style='color: red;'>Thông tin chi tiết lỗi</h1>" +
-                        "<p><strong>Tên app:</strong> " + account.Name + "</p>" +
-                        "<p><strong>Người update:</strong> " + accountsend.Email + "</p>" +
-                        "<p><strong>Thông tin lỗi:</strong> " + existingReport.Description + "</p>" +
-                        "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
-                        "<hr/>" +
-                        "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
-                        "</body></html>",
-                    IsBodyHtml = true // Đánh dấu email có chứa mã HTML
-                };
+                string stateMsg = "Cancel";
+                switch (reportModel.Status)
+                {
+                    case 1:
+                        stateMsg = "Unsolved";
+                        break;
+                    case 2:
+                        stateMsg = "Solved";
+                        break;
+                    case 3:
+                        stateMsg = "Deleted";
+                        break;
+                    final:
+                        stateMsg = "Cancel";
+                }
+                MailMessage mailMessage;
+
+                if (reportModel.Type == "Issue")
+                {
+                    mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("softtrackfpt@gmail.com"),
+                        Subject = "Báo cáo lỗi " + existingReport.Title + "!",
+                        Body = "<html><body style='font-family: Arial, sans-serif;'>" +
+                            "<h1 style='color: red;'>Thông tin chi tiết lỗi</h1>" +
+                            "<p><strong>Tên app:</strong> " + account.Name + "</p>" +
+                            "<p><strong>Người update:</strong> " + accountsend.Email + "</p>" +
+                            "<p><strong>Trạng thái:</strong> " + stateMsg + "</p>" +
+                            "<p><strong>Mô tả:</strong> " + existingReport.Description + "</p>" +
+                            "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
+                            "<hr/>" +
+                            "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
+                            "</body></html>",
+                        IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+                    };
+                }
+                else
+                {
+                    mailMessage = new MailMessage
+                    {
+                        From = new MailAddress("softtrackfpt@gmail.com"),
+                        Subject = "Báo cáo phản hồi về: " + existingReport.Title + "!",
+                        Body = "<html><body style='font-family: Arial, sans-serif;'>" +
+                            "<h1 style='color: red;'>Thông tin chi tiết phản hồi</h1>" +
+                            "<p><strong>Tên app:</strong> " + account.Name + "</p>" +
+                            "<p><strong>Người update:</strong> " + accountsend.Email + "</p>" +
+                            "<p><strong>Trạng thái:</strong> " + stateMsg + "</p>" +
+                            "<p><strong>Mô tả:</strong> " + existingReport.Description + "</p>" +
+                            "<p><strong>Ngày khởi tạo:</strong> " + dateString + "</p>" +
+                            "<hr/>" +
+                            "<p style='font-size: 80%; color: #888;'>SoftTrack - Hệ thống quản lý lỗi</p>" +
+                            "</body></html>",
+                        IsBodyHtml = true // Đánh dấu email có chứa mã HTML
+                    };
+                }
                 foreach (var img in _context.Images.Where(i => i.ReportId == existingReport.ReportId))
                 {
-                    string path = "Image/" + img.Image1;
+                    string path = _webHostEnvironment.WebRootPath + "\\images\\" + img.Image1;
                     Attachment attachment = new Attachment(path);
                     mailMessage.Attachments.Add(attachment);
+                    //using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    //{
+                    //    Attachment attachment = new Attachment(fileStream, Path.GetFileName(path));
+                    //    mailMessage.Attachments.Add(attachment);
+
                 }
+                mailMessage.To.Add(account.Email);
+
                 if (account_UP_report == null)
                 {
                     //TH: nếu acc update khác acc PO và acc update khác acc tạo report 
-                    if (accountsend.Email != account.Email && accountsend.Email != account_CR_report.Email )
+                    if (accountsend.Email != account.Email && accountsend.Email != account_CR_report.Email)
                     {
                         mailMessage.To.Add(account.Email);
                         mailMessage.To.Add(account_CR_report.Email);
@@ -496,7 +605,22 @@ namespace SoftTrack.API.Controllers
                     existingReport.UpdaterID = existingReport.CreatorID;
                 }
                 mailMessage.To.Add(account.Email);
-                await smtpClient.SendMailAsync(mailMessage);
+                if (reportModel.Type == "Issue" || (reportModel.Type == "Feedback" && reportModel.Status == 2))
+                {
+                    try
+                    {
+                            await smtpClient.SendMailAsync(mailMessage);
+                    }
+                    catch 
+                    {
+                        // Đóng tất cả các tệp tin đính kèm
+                    }
+
+                }
+                foreach (Attachment attachment in mailMessage.Attachments)
+                {
+                    attachment.Dispose();
+                }
             }
             else
             {
@@ -508,60 +632,11 @@ namespace SoftTrack.API.Controllers
                 if (existingReport.CreatorID == reportModel.UpdaterID)
                 {
                     existingReport.UpdaterID = existingReport.CreatorID;
-                }       
+                }
             }
+
             _context.Reports.Update(existingReport);
             await _context.SaveChangesAsync();
-
-            var lst = await _context.Images
-                .Where(item => item.ReportId == id)
-                .Select(item => new Image
-                {
-                    ImageId = item.ImageId,
-                    ReportId = item.ReportId,
-                    Image1 = item.Image1
-                })
-                .ToListAsync();
-
-            if (lst.Any())
-            {
-                foreach (var item in lst)
-                {
-                    if (item != null)
-                    {
-                        _context.Images.Remove(item);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-            }
-
-            if (reportModel.Images != null)
-            {
-                string path = _webHostEnvironment.WebRootPath + "\\images\\";
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-
-                foreach (var file in reportModel.Images)
-                {
-                    if (file.FileName == null)
-                        continue;
-                    var img = new Image()
-                    {
-                        ReportId = id,
-                        Image1 = await UploadImage(path, file)
-                    };
-                    if (img != null)
-                    {
-                        _context.Images.Add(img);
-
-                    }
-                }
-
-                await _context.SaveChangesAsync();
-            }
-
             return Ok();
             
         }
