@@ -9,6 +9,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SoftTrack.API.Controllers
 {
@@ -88,7 +89,7 @@ namespace SoftTrack.API.Controllers
             .Include(u => u.Role) // Kết hợp thông tin về Role
             .FirstOrDefaultAsync(); // Sử dụng FirstOrDefaultAsync để lấy một bản ghi hoặc null nếu không tìm thấy
 
-            if (user == null)
+            if (user == null || user.Status == 3 )
             {
                 return NotFound();
             }
@@ -127,10 +128,15 @@ namespace SoftTrack.API.Controllers
         [HttpPost("Register")]
         public async Task<IActionResult> AddAccount([FromBody] AccountCreateDto accountDto)
         {
+            if (!IsValidEmail(accountDto.Email))
+            {
+                // Định dạng email không hợp lệ
+                return NotFound();
+            }
             if (!accountDto.Email.EndsWith("@fpt.edu.vn"))
             {
                 // Nếu không có đuôi "@fpt.edu.vn", thêm đuôi vào email
-                accountDto.Email += "@fpt.edu.vn";
+                return NotFound();
             }
             // Sử dụng Entity Framework Core để kiểm tra sự tồn tại của tài khoản
             var existingAccount = _context.Accounts            
@@ -155,6 +161,14 @@ namespace SoftTrack.API.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+        }
+        private bool IsValidEmail(string email)
+        {
+            // Biểu thức chính quy để kiểm tra định dạng email
+            string emailPattern = @"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$";
+            Regex regex = new Regex(emailPattern);
+
+            return regex.IsMatch(email);
         }
 
         [HttpDelete("DeleteAccountWith_key")]
